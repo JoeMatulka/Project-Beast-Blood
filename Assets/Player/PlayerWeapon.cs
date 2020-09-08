@@ -34,7 +34,6 @@ public class PlayerWeapon : MonoBehaviour
         if (weaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
             // Activate weapon hurt box
-            
         }
     }
 
