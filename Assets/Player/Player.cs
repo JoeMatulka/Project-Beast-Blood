@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     private void Start()
     {
         SceneLinkedSMB<Player>.Initialise(Animator, this);
-        //TODO Hardcoded for now, needs to be assigned from an equipment class later
+        //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
         Weapon.CurrentWeaponType = WeaponType.ONE_HAND;
     }
 

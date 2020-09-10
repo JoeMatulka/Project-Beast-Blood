@@ -16,15 +16,15 @@ public class PlayerWeapon : MonoBehaviour
 
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
+    // Length of ray cast when weapon attacks
+    private float weaponAttackRayLength;
 
-    private readonly Dictionary<int, WeaponAttackFrame> ONE_HAND_ATK_FRAMES = new Dictionary<int, WeaponAttackFrame> {
-        { 2, new WeaponAttackFrame(false, true) },
-        { 3, new WeaponAttackFrame(false, true) },
-    };
+    private LayerMask playerLayerMask;
 
     private void Awake()
     {
         animator = this.GetComponent<PlayerWeaponAnimator>();
+        playerLayerMask = ~LayerMask.NameToLayer("Player");
     }
 
     public void ActivateWeaponAttackFrame(AimDirection direction, int frame)
@@ -34,6 +34,11 @@ public class PlayerWeapon : MonoBehaviour
         if (weaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
             // Activate weapon hurt box
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, weaponAttackRayLength, playerLayerMask);
+            Debug.DrawRay(transform.position, Vector2.right, Color.green);
+            if (hit.collider != null) {
+                Debug.Log("Contact with " + hit.transform.gameObject.name);
+            }
         }
     }
 
@@ -51,7 +56,8 @@ public class PlayerWeapon : MonoBehaviour
             switch (currentWeaponType)
             {
                 case WeaponType.ONE_HAND:
-                    weaponAttackFrames = ONE_HAND_ATK_FRAMES;
+                    weaponAttackFrames = WeaponClassLibrary.ONE_HAND_ATK_FRAMES;
+                    weaponAttackRayLength = WeaponClassLibrary.ONE_HAND_ATK_WEAPON_LENGTH;
                     break;
                 default:
                     Debug.LogError("Could not find that weapon type, cannot assign weapon attack frames");
@@ -76,4 +82,20 @@ public class WeaponAttackFrame
         IsFrameArmor = isFrameArmor;
         IsActiveHurtBox = isActiveHurtBox;
     }
+}
+
+/**
+ * Class meant to hold the weapon type data by archtype, not intended for specific weapons, but for specific weapon types
+ */
+public class WeaponClassLibrary {
+    private WeaponClassLibrary() {
+        //Private constructor because class is not meant to be created
+    }
+
+    // One handed weapon
+    public static Dictionary<int, WeaponAttackFrame> ONE_HAND_ATK_FRAMES = new Dictionary<int, WeaponAttackFrame> {
+        { 2, new WeaponAttackFrame(false, true) },
+        { 3, new WeaponAttackFrame(false, true) },
+    };
+    public static float ONE_HAND_ATK_WEAPON_LENGTH = 2;
 }
