@@ -10,6 +10,7 @@ public enum WeaponType
 public class PlayerWeapon : MonoBehaviour
 {
     private PlayerWeaponAnimator animator;
+    private Player player;
 
     // This could be derived from the current equipped weapon instead of assigning a weapon type, assign an actual weapon and get the type from that
     private WeaponType currentWeaponType;
@@ -25,6 +26,7 @@ public class PlayerWeapon : MonoBehaviour
     {
         animator = this.GetComponent<PlayerWeaponAnimator>();
         playerLayerMask = ~LayerMask.GetMask("Player");
+        player = this.GetComponentInParent<Player>();
     }
 
     public void ActivateWeaponAttackFrame(AimDirection direction, int frame)
@@ -33,9 +35,33 @@ public class PlayerWeapon : MonoBehaviour
         WeaponAttackFrame attackFrame;
         if (weaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
+            //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
+            Vector2 rayDirection = Vector2.zero;
+            switch (direction) {
+                case AimDirection.UP:
+                    rayDirection = Vector2.up;
+                    break;
+                case AimDirection.UP_DIAG:
+                    rayDirection = new Vector2(1, 1);
+                    break;
+                case AimDirection.STRAIGHT:
+                    rayDirection = Vector2.right;
+                    break;
+                case AimDirection.DOWN_DIAG:
+                    rayDirection = new Vector2(1, -1);
+                    break;
+                case AimDirection.DOWN:
+                    rayDirection = Vector2.down;
+                    break;
+            }
+            // Flip x axis of aim if player is not facing right
+            if (!player.Controller.FacingRight) {
+                rayDirection = new Vector2(rayDirection.x * -1, rayDirection.y);
+            }
+
             // Activate weapon hurt box
-            RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, weaponAttackRayLength, playerLayerMask);
-            Debug.DrawRay(transform.position, Vector2.right * weaponAttackRayLength, Color.green);
+            RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, weaponAttackRayLength, playerLayerMask);
+            Debug.DrawRay(transform.position, rayDirection * weaponAttackRayLength, Color.green);
             if (hit.collider != null)
             {
                 // Made contact with hit
