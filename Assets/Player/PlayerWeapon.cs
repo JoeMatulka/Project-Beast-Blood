@@ -6,7 +6,7 @@ public enum WeaponType
     ONE_HAND, TWO_HAND, SHIELD, POLEARM, RANGED
 };
 
-[RequireComponent (typeof(PlayerWeaponAnimator))]
+[RequireComponent(typeof(PlayerWeaponAnimator))]
 public class PlayerWeapon : MonoBehaviour
 {
     private PlayerWeaponAnimator animator;
@@ -24,7 +24,7 @@ public class PlayerWeapon : MonoBehaviour
     private void Awake()
     {
         animator = this.GetComponent<PlayerWeaponAnimator>();
-        playerLayerMask = ~LayerMask.NameToLayer("Player");
+        playerLayerMask = ~LayerMask.GetMask("Player");
     }
 
     public void ActivateWeaponAttackFrame(AimDirection direction, int frame)
@@ -35,14 +35,16 @@ public class PlayerWeapon : MonoBehaviour
         {
             // Activate weapon hurt box
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.right, weaponAttackRayLength, playerLayerMask);
-            Debug.DrawRay(transform.position, Vector2.right, Color.green);
-            if (hit.collider != null) {
-                Debug.Log("Contact with " + hit.transform.gameObject.name);
+            Debug.DrawRay(transform.position, Vector2.right * weaponAttackRayLength, Color.green);
+            if (hit.collider != null)
+            {
+                // Made contact with hit
             }
         }
     }
 
-    public void EndAttack() {
+    public void EndAttack()
+    {
         animator.ClearSprite();
     }
 
@@ -87,8 +89,10 @@ public class WeaponAttackFrame
 /**
  * Class meant to hold the weapon type data by archtype, not intended for specific weapons, but for specific weapon types
  */
-public class WeaponClassLibrary {
-    private WeaponClassLibrary() {
+public class WeaponClassLibrary
+{
+    private WeaponClassLibrary()
+    {
         //Private constructor because class is not meant to be created
     }
 
@@ -97,5 +101,5 @@ public class WeaponClassLibrary {
         { 2, new WeaponAttackFrame(false, true) },
         { 3, new WeaponAttackFrame(false, true) },
     };
-    public static float ONE_HAND_ATK_WEAPON_LENGTH = 2;
+    public static float ONE_HAND_ATK_WEAPON_LENGTH = 1;
 }
