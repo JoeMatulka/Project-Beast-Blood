@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using HitboxSystem;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum WeaponType
@@ -37,7 +38,8 @@ public class PlayerWeapon : MonoBehaviour
         {
             //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
             Vector2 rayDirection = Vector2.zero;
-            switch (direction) {
+            switch (direction)
+            {
                 case AimDirection.UP:
                     rayDirection = Vector2.up;
                     break;
@@ -55,16 +57,23 @@ public class PlayerWeapon : MonoBehaviour
                     break;
             }
             // Flip x axis of aim if player is not facing right
-            if (!player.Controller.FacingRight) {
+            if (!player.Controller.FacingRight)
+            {
                 rayDirection = new Vector2(rayDirection.x * -1, rayDirection.y);
             }
 
             // Activate weapon hurt box
             RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, weaponAttackRayLength, playerLayerMask);
             Debug.DrawRay(transform.position, rayDirection * weaponAttackRayLength, Color.green);
-            if (hit.collider != null)
+            if (hit.transform != null)
             {
-                // Made contact with hit
+                Hitbox hitbox = hit.transform.GetComponent<Hitbox>();
+                if (hitbox != null)
+                {
+                    // Made contact with a hitbox
+                    // TODO Grab damage from weapon
+                    hitbox.Hit(new Damage(10, DamageType.RAW));
+                }
             }
         }
     }
