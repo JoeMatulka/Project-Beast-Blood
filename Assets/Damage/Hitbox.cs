@@ -12,7 +12,8 @@ namespace HitboxSystem
             this.damage = damage;
         }
 
-        public Damage Damage {
+        public Damage Damage
+        {
             get { return damage; }
         }
     }
@@ -20,10 +21,18 @@ namespace HitboxSystem
     [RequireComponent(typeof(BoxCollider2D))]
     public class Hitbox : MonoBehaviour
     {
+        private BoxCollider2D collider;
+
         public delegate void HitboxEventHandler(object sender, HitboxEventArgs e);
         private event HitboxEventHandler handler;
 
-        public void Hit(Damage dmg) {
+        private void Awake()
+        {
+            collider = this.GetComponent<BoxCollider2D>();
+        }
+
+        public void Hit(Damage dmg)
+        {
             HitboxEventArgs e = new HitboxEventArgs(dmg);
             Handler?.Invoke(this, e);
         }
@@ -32,6 +41,11 @@ namespace HitboxSystem
         {
             get { return handler; }
             set { handler = value; }
+        }
+
+        public BoxCollider2D Collider
+        {
+            get { return collider; }
         }
     }
 }
