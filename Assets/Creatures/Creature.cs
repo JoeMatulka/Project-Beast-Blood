@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
+[RequireComponent(typeof(CircleCollider2D))]
 public abstract class Creature : MonoBehaviour
 {
     [SerializeField]
@@ -24,10 +25,22 @@ public abstract class Creature : MonoBehaviour
 
     protected Rigidbody2D m_Rigidbody;
 
+    protected CircleCollider2D m_Collider;
+
     protected void InitialSetUp()
     {
         Parts = this.GetComponentsInChildren<CreaturePart>();
         m_Rigidbody = this.GetComponent<Rigidbody2D>();
+        m_Rigidbody.freezeRotation = true;
+        m_Collider = this.GetComponent<CircleCollider2D>();
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            BoxCollider2D playerBoxCollider = player.GetComponent<BoxCollider2D>();
+            CircleCollider2D playerCircleCollider = player.GetComponent<CircleCollider2D>();
+            Physics2D.IgnoreCollision(playerBoxCollider, m_Collider);
+            Physics2D.IgnoreCollision(playerCircleCollider, m_Collider);
+        }
     }
 
     protected bool CheckGrounded()
@@ -48,7 +61,7 @@ public abstract class Creature : MonoBehaviour
         //only control the player if grounded or airControl is turned on
         if (CheckGrounded())
         {
-            Vector3 targetVelocity  = new Vector2(0, m_Rigidbody.velocity.y);
+            Vector3 targetVelocity = new Vector2(0, m_Rigidbody.velocity.y);
 
             // And then smoothing it out and applying it to the character
             m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
