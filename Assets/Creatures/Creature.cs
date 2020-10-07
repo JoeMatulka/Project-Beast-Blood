@@ -2,6 +2,7 @@
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
+[RequireComponent(typeof(Animator))]
 public abstract class Creature : MonoBehaviour
 {
     [SerializeField]
