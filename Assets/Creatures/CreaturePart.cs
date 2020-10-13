@@ -5,11 +5,15 @@ using UnityEngine;
 */
 public class CreaturePart : MonoBehaviour
 {
+    [SerializeField]
     public float PartHealth = 1000;
 
     public bool IsBreakable;
 
     public Hitbox[] hitBoxes;
+
+    // Meant to allow certain parts to act as triggers to allow the player to easily navigate around the hit box
+    public bool IsHitBoxTrigger = false;
 
     private bool isBroken = false;
 
@@ -22,7 +26,7 @@ public class CreaturePart : MonoBehaviour
                 if (hitbox != null)
                 {
                     hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
-                    hitbox.Collider.isTrigger = true;
+                    hitbox.Collider.isTrigger = IsHitBoxTrigger;
                 }
                 else
                 {
