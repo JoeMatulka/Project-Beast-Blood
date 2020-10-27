@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
         {
             jump = true;
             Animator.SetBool("IsJumping", true);
+            // TODO Cancel some attack animations with jump
         }
 
         if (Input.GetButtonDown("Crouch"))
@@ -48,15 +49,17 @@ public class Player : MonoBehaviour
             MainWeaponAction();
         }
         
-        x_input = isAttacking || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+        x_input = (isAttacking && Controller.IsGrounded) || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
+        Animator.SetBool("IsAttacking", isAttacking);
     }
 
     public void OnLanding()
     {
         Animator.SetBool("IsJumping", false);
+        // TODO Cancel some attack animations on landing
     }
 
     private void FixedUpdate()
@@ -77,9 +80,9 @@ public class Player : MonoBehaviour
             {
                 Controller.Flip();
             }
+            isAttacking = true;
             Animator.SetInteger("Aim", (int) Aim.AimDirection);
             Animator.SetTrigger("WeaponAction");
-            isAttacking = true;
         }
     }
 

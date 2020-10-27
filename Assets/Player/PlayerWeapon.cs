@@ -65,9 +65,9 @@ public class PlayerWeapon : MonoBehaviour
             // Activate weapon hurt box
             RaycastHit2D hit = Physics2D.Raycast(transform.position, rayDirection, weaponAttackRayLength, playerLayerMask);
             Debug.DrawRay(transform.position, rayDirection * weaponAttackRayLength, Color.green);
-            if (hit.transform != null)
+            if (hit.collider != null)
             {
-                Hitbox hitbox = hit.transform.GetComponent<Hitbox>();
+                Hitbox hitbox = hit.collider.GetComponent<Hitbox>();
                 if (hitbox != null)
                 {
                     // Made contact with a hitbox

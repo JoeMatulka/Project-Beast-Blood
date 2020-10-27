@@ -20,23 +20,22 @@ public abstract class Creature : MonoBehaviour
     [SerializeField]
     private Transform groundCheck;
 
-    private readonly float GROUND_RADIUS = 0.5f;
+    private readonly float GROUND_RADIUS = 1f;
 
     private Vector3 velocity = Vector3.zero;
-
-    protected float attackRange;
 
     private bool isFacingRight = false;
 
     protected const float WALK_INPUT = 0.25f;
-
     protected const float RUN_INPUT = 1f;
 
     protected Rigidbody2D m_Rigidbody;
-
     protected CircleCollider2D m_Collider;
 
     protected Animator animator;
+
+    public Transform Target;
+    protected float attackRange;
 
     /**
      * Should be called in Awake phase of a creature object 
@@ -62,7 +61,7 @@ public abstract class Creature : MonoBehaviour
         this.attackRange = attackRange;
     }
 
-    public void UpdateBaseAnimationKeys()
+    protected void UpdateBaseAnimationKeys()
     {
         animator.SetFloat("Speed", Mathf.Abs(m_Rigidbody.velocity.x));
         animator.SetBool("IsGrounded", CheckGrounded());
@@ -81,7 +80,7 @@ public abstract class Creature : MonoBehaviour
         return false;
     }
 
-    public void Move(float move, bool jump)
+    protected void Move(float move, bool jump)
     {
         if (CheckGrounded())
         {
@@ -105,7 +104,7 @@ public abstract class Creature : MonoBehaviour
     }
 
 
-    public void Flip()
+    protected void Flip()
     {
         isFacingRight = !isFacingRight;
 
