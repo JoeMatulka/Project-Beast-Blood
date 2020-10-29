@@ -80,7 +80,7 @@ public abstract class Creature : MonoBehaviour
         return false;
     }
 
-    protected void Move(float move, bool jump)
+    protected virtual void Move(float move, bool jump)
     {
         if (CheckGrounded())
         {
