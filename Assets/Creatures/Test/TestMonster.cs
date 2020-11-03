@@ -5,7 +5,7 @@ public class TestMonster : Creature
     private const float HEALTH = 1000;
     private const float SPEED = 10;
     private const float JUMP_FORCE = 25;
-    private const float ATTACK_RANGE = 4;
+    private const float ATTACK_RANGE = 3;
 
 
     private float movement = 0;
@@ -22,12 +22,6 @@ public class TestMonster : Creature
         Target = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
-    void FixedUpdate()
-    {
-
-        Move(movement, jump);
-    }
-
     private void Update()
     {
         UpdateBaseAnimationKeys();
@@ -36,5 +30,14 @@ public class TestMonster : Creature
             // Move towards target to get into attack range
             movement = Target.position.x < transform.position.y ? -WALK_INPUT : WALK_INPUT;
         }
+        else {
+            // TODO move to own method, this is for testing
+            Attack();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        Move(movement, jump);
     }
 }

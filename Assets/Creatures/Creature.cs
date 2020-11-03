@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿using Gamekit2D;
+using UnityEngine;
+
+public enum CreatureType
+{
+    Bipedal
+}
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
@@ -15,6 +21,8 @@ public abstract class Creature : MonoBehaviour
     protected float JumpForce;
     [SerializeField]
     protected float Speed;
+    [SerializeField]
+    protected CreatureType m_Type;
     [SerializeField]
     private LayerMask WhatIsGround;
     [SerializeField]
@@ -36,6 +44,7 @@ public abstract class Creature : MonoBehaviour
 
     public Transform Target;
     protected float attackRange;
+    private bool isAttacking = false;
 
     /**
      * Should be called in Awake phase of a creature object 
@@ -47,6 +56,7 @@ public abstract class Creature : MonoBehaviour
         m_Rigidbody.freezeRotation = true;
         m_Collider = this.GetComponent<CircleCollider2D>();
         animator = this.GetComponent<Animator>();
+        SceneLinkedSMB<Creature>.Initialise(animator, this);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -82,7 +92,7 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void Move(float move, bool jump)
     {
-        if (CheckGrounded())
+        if (CheckGrounded() && !isAttacking)
         {
             Vector3 targetVelocity = new Vector2(move * Speed, m_Rigidbody.velocity.y);
 
@@ -103,6 +113,17 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
+    protected virtual void Attack()
+    {
+        animator.SetInteger("Attack_ID", CreatureAttackBehavior.GetAttack(Target.position, this));
+        animator.SetTrigger("Attack");
+        this.isAttacking = true;
+    }
+
+    public void EndAttack()
+    {
+        this.isAttacking = false;
+    }
 
     protected void Flip()
     {
@@ -111,6 +132,16 @@ public abstract class Creature : MonoBehaviour
         Vector3 theScale = transform.localScale;
         theScale.x *= -1;
         transform.localScale = theScale;
+    }
+
+    public bool IsFacingRight
+    {
+        get { return isFacingRight; }
+    }
+
+    public CreatureType Type
+    {
+        get { return m_Type; }
     }
 }
 
