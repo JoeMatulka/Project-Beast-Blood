@@ -1,4 +1,5 @@
 ﻿using Gamekit2D;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum CreatureType
@@ -45,6 +46,7 @@ public abstract class Creature : MonoBehaviour
     public Transform Target;
     protected float attackRange;
     private bool isAttacking = false;
+    public Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
     /**
      * Should be called in Awake phase of a creature object 
@@ -57,6 +59,7 @@ public abstract class Creature : MonoBehaviour
         m_Collider = this.GetComponent<CircleCollider2D>();
         animator = this.GetComponent<Animator>();
         SceneLinkedSMB<Creature>.Initialise(animator, this);
+        // TODO Recommend moving this to player object instead
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
@@ -69,6 +72,7 @@ public abstract class Creature : MonoBehaviour
         Speed = speed;
         JumpForce = jumpForce;
         this.attackRange = attackRange;
+        Debug.Log("Next time you code, fix the assigning of ActiveAttackFrames to the creature. They seem to be set and called once and then never again...");
     }
 
     protected void UpdateBaseAnimationKeys()
@@ -120,9 +124,18 @@ public abstract class Creature : MonoBehaviour
         this.isAttacking = true;
     }
 
+    public virtual void ActivateAttackFrame(int frame)
+    {
+        CreatureAttackFrame attackFrame;
+        if (ActiveAttackFrames.TryGetValue(frame, out attackFrame)) {
+            Debug.Log(frame);
+        }
+    }
+
     public void EndAttack()
     {
         this.isAttacking = false;
+        this.ActiveAttackFrames.Clear();
     }
 
     protected void Flip()

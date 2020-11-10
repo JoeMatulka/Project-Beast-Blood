@@ -17,6 +17,7 @@ namespace Gamekit2D
             AnimationClip clip = animator.GetCurrentAnimatorClipInfo(layerIndex)[0].clip;
             // Get current frame of the current animation clip
             int currentFrame = Mathf.RoundToInt(clip.length * (stateInfo.normalizedTime % 1) * clip.frameRate);
+            m_MonoBehaviour.ActivateAttackFrame(currentFrame);
         }
 
         public override void OnSLStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
