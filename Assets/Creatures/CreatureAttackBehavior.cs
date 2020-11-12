@@ -24,7 +24,7 @@ public static class CreatureAttackBehavior
     {
         int attack = 0;
         Vector2 creaturePos = creature.transform.localPosition;
-        if(((creature.IsFacingRight && targetPos.x < creaturePos.x) || (!creature.IsFacingRight && targetPos.x > creaturePos.x)) && targetPos.y <= creaturePos.y) {
+        if(((creature.IsFacingRight && targetPos.x > creaturePos.x) || (!creature.IsFacingRight && targetPos.x < creaturePos.x)) && targetPos.y <= creaturePos.y) {
             // Creature is currently facing target and target is lower than creature
             attack = (int) BipedalCreatureAttack.LOW_PUNCH;
             // Not a fan of this assignment like this, makes code hard to follow...

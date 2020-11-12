@@ -72,7 +72,7 @@ public abstract class Creature : MonoBehaviour
         Speed = speed;
         JumpForce = jumpForce;
         this.attackRange = attackRange;
-        Debug.Log("Next time you code, fix the assigning of ActiveAttackFrames to the creature. They seem to be set and called once and then never again...");
+        Debug.Log("Fix creature movement to right. Seems as though something is screwy in the move method and the flip values...");
     }
 
     protected void UpdateBaseAnimationKeys()
@@ -127,15 +127,15 @@ public abstract class Creature : MonoBehaviour
     public virtual void ActivateAttackFrame(int frame)
     {
         CreatureAttackFrame attackFrame;
-        if (ActiveAttackFrames.TryGetValue(frame, out attackFrame)) {
-            Debug.Log(frame);
+        if (ActiveAttackFrames.TryGetValue(frame, out attackFrame))
+        {
+            // TODO Apply attack frames to Creature
         }
     }
 
     public void EndAttack()
     {
         this.isAttacking = false;
-        this.ActiveAttackFrames.Clear();
     }
 
     protected void Flip()

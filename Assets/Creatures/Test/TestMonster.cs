@@ -28,7 +28,8 @@ public class TestMonster : Creature
         if (Target != null && Vector2.Distance(Target.position, transform.position) > attackRange)
         {
             // Move towards target to get into attack range
-            movement = Target.position.x < transform.position.y ? -WALK_INPUT : WALK_INPUT;
+            Vector2 targetRelative = Target.InverseTransformPoint(transform.position);
+            movement = targetRelative.x > 0 ? -WALK_INPUT : WALK_INPUT;
         }
         else {
             // TODO move to own method, this is for testing
