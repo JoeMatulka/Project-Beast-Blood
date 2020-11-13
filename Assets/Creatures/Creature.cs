@@ -45,6 +45,7 @@ public abstract class Creature : MonoBehaviour
 
     public Transform Target;
     protected float attackRange;
+    [SerializeField]
     private bool isAttacking = false;
     public Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
@@ -72,7 +73,7 @@ public abstract class Creature : MonoBehaviour
         Speed = speed;
         JumpForce = jumpForce;
         this.attackRange = attackRange;
-        Debug.Log("Fix creature movement to right. Seems as though something is screwy in the move method and the flip values...");
+        Debug.Log("Continue work on applying attack frames to creature");
     }
 
     protected void UpdateBaseAnimationKeys()
@@ -98,8 +99,8 @@ public abstract class Creature : MonoBehaviour
     {
         if (CheckGrounded() && !isAttacking)
         {
+            Debug.Log(move);
             Vector3 targetVelocity = new Vector2(move * Speed, m_Rigidbody.velocity.y);
-
             m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
 
             if (move > 0 && !isFacingRight)
@@ -119,9 +120,15 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void Attack()
     {
-        animator.SetInteger("Attack_ID", CreatureAttackBehavior.GetAttack(Target.position, this));
-        animator.SetTrigger("Attack");
-        this.isAttacking = true;
+        if (!isAttacking) {
+            int attackId = CreatureAttackBehavior.GetAttack(Target.position, this);
+            // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
+            if (attackId > 0) {
+                animator.SetInteger("Attack_ID", attackId);
+                animator.SetTrigger("Attack");
+                isAttacking = true;
+            }
+        }
     }
 
     public virtual void ActivateAttackFrame(int frame)
@@ -135,7 +142,7 @@ public abstract class Creature : MonoBehaviour
 
     public void EndAttack()
     {
-        this.isAttacking = false;
+        isAttacking = false;
     }
 
     protected void Flip()
