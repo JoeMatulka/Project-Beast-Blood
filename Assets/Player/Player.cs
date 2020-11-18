@@ -1,4 +1,5 @@
 ﻿using Gamekit2D;
+using HitboxSystem;
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
         Weapon.CurrentWeaponType = WeaponType.ONE_HAND;
+        Debug.Log("Apply Damage From Hitbox to player");
     }
 
     void Update()
@@ -48,12 +50,26 @@ public class Player : MonoBehaviour
         {
             MainWeaponAction();
         }
-        
+
         x_input = (isAttacking && Controller.IsGrounded) || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
         Animator.SetBool("IsAttacking", isAttacking);
+    }
+    void FixedUpdate()
+    {
+        Controller.Move(x_input * Time.fixedDeltaTime, crouch, jump);
+        jump = false;
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        Hitbox hitbox = col.GetComponent<Hitbox>();
+        if (hitbox != null && hitbox.IsActive)
+        {
+            // TODO apply damage from collision with active hitbox
+        }
     }
 
     public void OnLanding()
@@ -62,15 +78,10 @@ public class Player : MonoBehaviour
         // TODO Cancel some attack animations on landing
     }
 
-    private void FixedUpdate()
-    {
-        Controller.Move(x_input * Time.fixedDeltaTime, crouch, jump);
-        jump = false;
-    }
-
     public void MainWeaponAction()
     {
-        if (!isAttacking) {
+        if (!isAttacking)
+        {
             //Face aim direction before attacking
             if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
             {
@@ -81,7 +92,7 @@ public class Player : MonoBehaviour
                 Controller.Flip();
             }
             isAttacking = true;
-            Animator.SetInteger("Aim", (int) Aim.AimDirection);
+            Animator.SetInteger("Aim", (int)Aim.AimDirection);
             Animator.SetTrigger("WeaponAction");
         }
     }

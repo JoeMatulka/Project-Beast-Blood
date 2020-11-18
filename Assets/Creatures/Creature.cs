@@ -1,5 +1,7 @@
 ﻿using Gamekit2D;
+using HitboxSystem;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum CreatureType
@@ -45,7 +47,7 @@ public abstract class Creature : MonoBehaviour
 
     public Transform Target;
     protected float attackRange;
-    [SerializeField]
+    private Hitbox[] hitboxes;
     private bool isAttacking = false;
     public Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
@@ -58,6 +60,7 @@ public abstract class Creature : MonoBehaviour
         m_Rigidbody = this.GetComponent<Rigidbody2D>();
         m_Rigidbody.freezeRotation = true;
         m_Collider = this.GetComponent<CircleCollider2D>();
+        hitboxes = this.GetComponentsInChildren<Hitbox>();
         animator = this.GetComponent<Animator>();
         SceneLinkedSMB<Creature>.Initialise(animator, this);
         // TODO Recommend moving this to player object instead
@@ -73,7 +76,6 @@ public abstract class Creature : MonoBehaviour
         Speed = speed;
         JumpForce = jumpForce;
         this.attackRange = attackRange;
-        Debug.Log("Continue work on applying attack frames to creature");
     }
 
     protected void UpdateBaseAnimationKeys()
@@ -99,7 +101,6 @@ public abstract class Creature : MonoBehaviour
     {
         if (CheckGrounded() && !isAttacking)
         {
-            Debug.Log(move);
             Vector3 targetVelocity = new Vector2(move * Speed, m_Rigidbody.velocity.y);
             m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
 
@@ -120,10 +121,12 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void Attack()
     {
-        if (!isAttacking) {
+        if (!isAttacking)
+        {
             int attackId = CreatureAttackBehavior.GetAttack(Target.position, this);
             // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
-            if (attackId > 0) {
+            if (attackId > 0)
+            {
                 animator.SetInteger("Attack_ID", attackId);
                 animator.SetTrigger("Attack");
                 isAttacking = true;
@@ -136,7 +139,33 @@ public abstract class Creature : MonoBehaviour
         CreatureAttackFrame attackFrame;
         if (ActiveAttackFrames.TryGetValue(frame, out attackFrame))
         {
-            // TODO Apply attack frames to Creature
+            // Apply movement from frame
+            float movement = isFacingRight ? attackFrame.ForwardMovement : -attackFrame.ForwardMovement;
+            m_Rigidbody.AddForce(new Vector2(movement, 0), ForceMode2D.Impulse);
+            // Activate Hit boxes from frame
+            if (attackFrame.ActiveHitboxes?.Length > 0)
+            {
+                foreach (Hitbox hitbox in hitboxes)
+                {
+                    if (attackFrame.ActiveHitboxes.Contains(hitbox.name))
+                    {
+                        hitbox.IsActive = true;
+                    }
+                }
+            }
+            else
+            {
+                // Clear active hitboxes
+                ClearActiveHitBoxes();
+            }
+        }
+    }
+
+    private void ClearActiveHitBoxes()
+    {
+        foreach (Hitbox hitbox in hitboxes)
+        {
+            hitbox.IsActive = false;
         }
     }
 

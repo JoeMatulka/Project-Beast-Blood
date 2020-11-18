@@ -72,7 +72,7 @@ public class PlayerWeapon : MonoBehaviour
                 {
                     // Made contact with a hitbox
                     // TODO Grab damage from weapon
-                    hitbox.Hit(new Damage(10, DamageType.RAW));
+                    hitbox.Damage(new Damage(10, DamageType.RAW));
                 }
             }
         }

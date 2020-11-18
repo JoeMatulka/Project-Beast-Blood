@@ -23,6 +23,8 @@ namespace HitboxSystem
     {
         private BoxCollider2D collider;
 
+        public bool IsActive = false;
+
         public delegate void HitboxEventHandler(object sender, HitboxEventArgs e);
         private event HitboxEventHandler handler;
 
@@ -31,7 +33,7 @@ namespace HitboxSystem
             collider = this.GetComponent<BoxCollider2D>();
         }
 
-        public void Hit(Damage dmg)
+        public void Damage(Damage dmg)
         {
             HitboxEventArgs e = new HitboxEventArgs(dmg);
             Handler?.Invoke(this, e);
