@@ -1,9 +1,13 @@
 ﻿using Gamekit2D;
 using HitboxSystem;
+using System;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // Prevents the player from taking damage from the same source multiple times
+    private Guid lastDamageId;
+
     public CharacterController2D Controller;
     public Animator Animator;
     public PlayerAim Aim;
@@ -25,7 +29,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
         Weapon.CurrentWeaponType = WeaponType.ONE_HAND;
-        Debug.Log("Apply Damage From Hitbox to player");
+        Debug.Log("Creature parts are registering multiple hits from the same source");
     }
 
     void Update()
@@ -68,7 +72,16 @@ public class Player : MonoBehaviour
         Hitbox hitbox = col.GetComponent<Hitbox>();
         if (hitbox != null && hitbox.IsActive)
         {
-            // TODO apply damage from collision with active hitbox
+            ApplyDamage(hitbox.ActiveHitBoxDamage);
+        }
+    }
+
+    private void ApplyDamage(Damage dmg)
+    {
+        if (!dmg.ID.Equals(lastDamageId))
+        {
+            lastDamageId = dmg.ID;
+            // TODO Apply damage to Player
         }
     }
 

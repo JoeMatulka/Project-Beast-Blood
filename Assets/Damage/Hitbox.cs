@@ -21,9 +21,14 @@ namespace HitboxSystem
     [RequireComponent(typeof(BoxCollider2D))]
     public class Hitbox : MonoBehaviour
     {
+        // Prevents the hitbox from taking damage from the same source multiple times
+        private Guid lastDamageId;
+
         private BoxCollider2D collider;
 
         public bool IsActive = false;
+
+        public Damage ActiveHitBoxDamage;
 
         public delegate void HitboxEventHandler(object sender, HitboxEventArgs e);
         private event HitboxEventHandler handler;
@@ -33,10 +38,14 @@ namespace HitboxSystem
             collider = this.GetComponent<BoxCollider2D>();
         }
 
-        public void Damage(Damage dmg)
+        public void RecieveDamage(Damage dmg)
         {
-            HitboxEventArgs e = new HitboxEventArgs(dmg);
-            Handler?.Invoke(this, e);
+            if (!dmg.ID.Equals(lastDamageId))
+            {
+                lastDamageId = dmg.ID;
+                HitboxEventArgs e = new HitboxEventArgs(dmg);
+                Handler?.Invoke(this, e);
+            }
         }
 
         public HitboxEventHandler Handler

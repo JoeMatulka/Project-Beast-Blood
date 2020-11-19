@@ -48,8 +48,8 @@ public abstract class Creature : MonoBehaviour
     public Transform Target;
     protected float attackRange;
     private Hitbox[] hitboxes;
-    private bool isAttacking = false;
-    public Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
+    private CreatureAttack currentAttack;
+    private Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
     /**
      * Should be called in Awake phase of a creature object 
@@ -99,7 +99,7 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void Move(float move, bool jump)
     {
-        if (CheckGrounded() && !isAttacking)
+        if (CheckGrounded() && currentAttack == null)
         {
             Vector3 targetVelocity = new Vector2(move * Speed, m_Rigidbody.velocity.y);
             m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
@@ -121,15 +121,16 @@ public abstract class Creature : MonoBehaviour
 
     protected virtual void Attack()
     {
-        if (!isAttacking)
+        if (currentAttack == null)
         {
-            int attackId = CreatureAttackBehavior.GetAttack(Target.position, this);
+            CreatureAttack attack = CreatureAttackBehavior.CalculateAttack(Target.position, this);
             // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
-            if (attackId > 0)
+            if (attack != null)
             {
-                animator.SetInteger("Attack_ID", attackId);
+                animator.SetInteger("Attack_ID", attack.ID);
                 animator.SetTrigger("Attack");
-                isAttacking = true;
+                currentAttack = attack;
+                ActiveAttackFrames = attack.Frames;
             }
         }
     }
@@ -150,6 +151,7 @@ public abstract class Creature : MonoBehaviour
                     if (attackFrame.ActiveHitboxes.Contains(hitbox.name))
                     {
                         hitbox.IsActive = true;
+                        hitbox.ActiveHitBoxDamage = currentAttack.Damage;
                     }
                 }
             }
@@ -166,12 +168,13 @@ public abstract class Creature : MonoBehaviour
         foreach (Hitbox hitbox in hitboxes)
         {
             hitbox.IsActive = false;
+            hitbox.ActiveHitBoxDamage = null;
         }
     }
 
     public void EndAttack()
     {
-        isAttacking = false;
+        currentAttack = null;
     }
 
     protected void Flip()
