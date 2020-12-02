@@ -5,13 +5,15 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public float Health = 100;
+
     // Prevents the player from taking damage from the same source multiple times
     private Guid lastDamageId;
 
     public CharacterController2D Controller;
     public Animator Animator;
     public PlayerAim Aim;
-    public PlayerWeapon Weapon;
+    public PlayerWeaponController WeaponController;
 
     private const float RUN_SPEED = 15f;
     private float x_input;
@@ -21,15 +23,16 @@ public class Player : MonoBehaviour
     private bool isAttacking = false;
 
     // Ability to withstand damage without being staggered
-    private bool isSuperArmor = false;
     // TODO Set up Super Armor Thresholds, think of how poise works in Dark Souls 3
+    private bool isSuperArmor = false;
+    private float knockBackDmgThreshold = 10f;
 
     private void Start()
     {
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
-        Weapon.CurrentWeaponType = WeaponType.ONE_HAND;
-        Debug.Log("Creature parts are registering multiple hits from the same source");
+        WeaponController.CurrentWeaponType = WeaponType.ONE_HAND;
+        Debug.Log("Fix applying force on damage for player");
     }
 
     void Update()
@@ -72,16 +75,22 @@ public class Player : MonoBehaviour
         Hitbox hitbox = col.GetComponent<Hitbox>();
         if (hitbox != null && hitbox.IsActive)
         {
-            ApplyDamage(hitbox.ActiveHitBoxDamage);
+            ApplyDamage(hitbox.ActiveHitBoxDamage, hitbox.transform.position);
         }
     }
 
-    private void ApplyDamage(Damage dmg)
+    private void ApplyDamage(Damage dmg, Vector2 dmgPos)
     {
         if (!dmg.ID.Equals(lastDamageId))
         {
             lastDamageId = dmg.ID;
-            // TODO Apply damage to Player
+            // TODO Apply damage type mitigation to Player based on armor
+            Health -= dmg.Value;
+            if (dmg.Value >= knockBackDmgThreshold)
+            {
+                Vector2 forceDir = new Vector2(dmgPos.x > transform.position.x ? -dmgPos.x : dmgPos.x, 1).normalized;
+                Controller.ApplyImpulse(dmg.Value, forceDir);
+            }
         }
     }
 
@@ -117,6 +126,6 @@ public class Player : MonoBehaviour
     public void EndAttack()
     {
         isAttacking = false;
-        Weapon.EndAttack();
+        WeaponController.EndAttack();
     }
 }

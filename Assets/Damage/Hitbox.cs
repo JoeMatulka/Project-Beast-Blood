@@ -38,7 +38,7 @@ namespace HitboxSystem
             collider = this.GetComponent<BoxCollider2D>();
         }
 
-        public void RecieveDamage(Damage dmg)
+        public void ReceiveDamage(Damage dmg)
         {
             if (!dmg.ID.Equals(lastDamageId))
             {

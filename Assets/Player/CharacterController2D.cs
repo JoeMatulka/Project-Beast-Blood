@@ -121,6 +121,10 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
+    public void ApplyImpulse(float magnitude, Vector2 direction) {
+        m_Rigidbody2D.AddForce(direction * magnitude, ForceMode2D.Impulse);
+    }
+
 
     public void Flip()
     {

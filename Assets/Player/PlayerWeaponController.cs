@@ -8,13 +8,14 @@ public enum WeaponType
 };
 
 [RequireComponent(typeof(PlayerWeaponAnimator))]
-public class PlayerWeapon : MonoBehaviour
+public class PlayerWeaponController : MonoBehaviour
 {
     private PlayerWeaponAnimator animator;
     private Player player;
 
     // This could be derived from the current equipped weapon instead of assigning a weapon type, assign an actual weapon and get the type from that
     private WeaponType currentWeaponType;
+    private Damage currentAttackDamage;
 
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
@@ -71,11 +72,16 @@ public class PlayerWeapon : MonoBehaviour
                 if (hitbox != null)
                 {
                     // Made contact with a hitbox
-                    // TODO Grab damage from weapon
-                    hitbox.RecieveDamage(new Damage(10, DamageType.RAW));
+                    hitbox.ReceiveDamage(currentAttackDamage);
                 }
             }
         }
+    }
+
+    public void GenerateAttackDamage()
+    {
+        // TODO Grab damage from weapon
+        currentAttackDamage = new Damage(10, DamageType.RAW);
     }
 
     public void EndAttack()
