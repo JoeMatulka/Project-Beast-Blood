@@ -1453,7 +1453,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 66aaa8abe4a87ab479730b2e7fae0afc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 1000
+  Health: 100
   Controller: {fileID: 886841389}
   Animator: {fileID: 886841396}
   Aim: {fileID: 6060935471757127031}

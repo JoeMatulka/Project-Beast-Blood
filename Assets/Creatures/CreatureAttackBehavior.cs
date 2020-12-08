@@ -31,7 +31,7 @@ public static class CreatureAttackBehavior
             int attackId = (int)BipedalCreatureAttack.LOW_PUNCH;
             Dictionary<int, CreatureAttackFrame> frames = BipedalCreatureAttackLibrary.LOW_PUNCH_FRAMES;
             // TODO Place holder for now, damage should come off of creature for type of damage and how hard it hits
-            Damage dmg = new Damage(10, DamageType.RAW);
+            Damage dmg = new Damage(30, DamageType.RAW);
             attack = new CreatureAttack(attackId, frames, dmg);
         }
         return attack;

@@ -25,14 +25,14 @@ public class Player : MonoBehaviour
     // Ability to withstand damage without being staggered
     // TODO Set up Super Armor Thresholds, think of how poise works in Dark Souls 3
     private bool isSuperArmor = false;
-    private float knockBackDmgThreshold = 10f;
+    private float knockBackDmgThreshold = 30f;
 
     private void Start()
     {
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
         WeaponController.CurrentWeaponType = WeaponType.ONE_HAND;
-        Debug.Log("Fix applying force on damage for player");
+        Debug.Log("Apply Damage to monster from hitbox damage");
     }
 
     void Update()
@@ -79,7 +79,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void ApplyDamage(Damage dmg, Vector2 dmgPos)
+    private void ApplyDamage(Damage dmg, Vector3 dmgPos)
     {
         if (!dmg.ID.Equals(lastDamageId))
         {
@@ -88,7 +88,8 @@ public class Player : MonoBehaviour
             Health -= dmg.Value;
             if (dmg.Value >= knockBackDmgThreshold)
             {
-                Vector2 forceDir = new Vector2(dmgPos.x > transform.position.x ? -dmgPos.x : dmgPos.x, 1).normalized;
+                Vector2 forceDir = dmgPos - transform.position;
+                forceDir = -forceDir.normalized;
                 Controller.ApplyImpulse(dmg.Value, forceDir);
             }
         }
