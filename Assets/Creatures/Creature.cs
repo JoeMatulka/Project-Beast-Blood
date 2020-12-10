@@ -163,6 +163,12 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
+    public virtual void Damage(float dmg)
+    {
+        // Do damage mitigation based off of creature stats
+        Health -= dmg;
+    }
+
     private void ClearActiveHitBoxes()
     {
         foreach (Hitbox hitbox in hitboxes)

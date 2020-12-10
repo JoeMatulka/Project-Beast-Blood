@@ -32,7 +32,6 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
         WeaponController.CurrentWeaponType = WeaponType.ONE_HAND;
-        Debug.Log("Apply Damage to monster from hitbox damage");
     }
 
     void Update()
