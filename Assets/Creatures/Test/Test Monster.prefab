@@ -100,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270446212918494
 GameObject:
   m_ObjectHideFlags: 0
@@ -170,6 +171,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270446280532093
 GameObject:
   m_ObjectHideFlags: 0
@@ -241,6 +243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270446321181270
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 0
   hitBoxes:
@@ -537,6 +541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270446436239142
 GameObject:
   m_ObjectHideFlags: 0
@@ -608,6 +613,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270446461764387
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,6 +687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270446628399958
 GameObject:
   m_ObjectHideFlags: 0
@@ -752,6 +759,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270446688677059
 GameObject:
   m_ObjectHideFlags: 0
@@ -870,6 +878,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
   hitBoxes:
@@ -995,6 +1004,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
   hitBoxes:
@@ -1119,7 +1129,7 @@ GameObject:
   - component: {fileID: 2286270446915842218}
   - component: {fileID: 2286270446915842217}
   m_Layer: 0
-  m_Name: forearm_left
+  m_Name: forearm_right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1178,6 +1188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447071456255
 GameObject:
   m_ObjectHideFlags: 0
@@ -1249,6 +1260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447083352765
 GameObject:
   m_ObjectHideFlags: 0
@@ -1320,6 +1332,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447085914807
 GameObject:
   m_ObjectHideFlags: 0
@@ -1438,6 +1451,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
   hitBoxes:
@@ -1516,6 +1530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447274434318
 GameObject:
   m_ObjectHideFlags: 0
@@ -1589,10 +1604,12 @@ MonoBehaviour:
   Parts: []
   JumpForce: 0
   Speed: 0
+  m_Type: 0
   WhatIsGround:
     serializedVersion: 2
     m_Bits: 23
   groundCheck: {fileID: 8563515282157861236}
+  Target: {fileID: 0}
 --- !u!58 &2550880977476961872
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1680,6 +1697,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447322499325
 GameObject:
   m_ObjectHideFlags: 0
@@ -1750,6 +1768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447359492504
 GameObject:
   m_ObjectHideFlags: 0
@@ -1820,6 +1839,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447374855399
 GameObject:
   m_ObjectHideFlags: 0
@@ -1940,6 +1960,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
   hitBoxes:
@@ -2065,6 +2086,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
   hitBoxes:
@@ -2188,6 +2210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 0
   hitBoxes:
@@ -2265,6 +2288,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447746132297
 GameObject:
   m_ObjectHideFlags: 0
@@ -2336,6 +2360,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447851880738
 GameObject:
   m_ObjectHideFlags: 0
@@ -2410,6 +2435,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447922728911
 GameObject:
   m_ObjectHideFlags: 0
@@ -2481,6 +2507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270447959990611
 GameObject:
   m_ObjectHideFlags: 0
@@ -2599,6 +2626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
   hitBoxes:
@@ -2676,6 +2704,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0
 --- !u!1 &2286270448045478133
 GameObject:
   m_ObjectHideFlags: 0
@@ -2747,3 +2776,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c29b101ea2376ac46b4f4f9a9959ecb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsActive: 0

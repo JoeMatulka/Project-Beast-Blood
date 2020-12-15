@@ -42,6 +42,7 @@ namespace HitboxSystem
         {
             if (!dmg.ID.Equals(lastDamageId))
             {
+                Debug.Log(name + " damaged");
                 lastDamageId = dmg.ID;
                 HitboxEventArgs e = new HitboxEventArgs(dmg);
                 Handler?.Invoke(this, e);
