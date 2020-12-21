@@ -7,7 +7,6 @@ public class TestMonster : Creature
     private const float JUMP_FORCE = 25;
     private const float ATTACK_RANGE = 3;
 
-
     private float movement = 0;
     private bool jump = false;
 
@@ -24,16 +23,19 @@ public class TestMonster : Creature
 
     private void Update()
     {
-        UpdateBaseAnimationKeys();
-        if (Target != null && Vector2.Distance(Target.position, transform.position) > attackRange)
+        float distToTarget = Vector2.Distance(Target.position, transform.position);
+        if (Target != null && distToTarget > attackRange)
         {
             // Move towards target to get into attack range
-            movement = transform.position.x > Target.position.x ? -WALK_INPUT : WALK_INPUT;
+            float input = distToTarget >= (attackRange * 2.25) ? RUN_INPUT : WALK_INPUT;
+            movement = transform.position.x > Target.position.x ? -input : input;
         }
-        else {
+        else
+        {
             // TODO move to own method, this is for testing
             Attack();
         }
+        UpdateBaseAnimationKeys();
     }
 
     void FixedUpdate()

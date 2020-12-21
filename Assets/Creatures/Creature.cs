@@ -19,7 +19,9 @@ public abstract class Creature : MonoBehaviour
     [SerializeField]
     protected float Size;
     [SerializeField]
-    protected CreaturePart[] Parts;
+    protected CreaturePart[] MobilityParts;
+    [SerializeField]
+    protected CreaturePart[] AttackParts;
     [SerializeField]
     protected float JumpForce;
     [SerializeField]
@@ -56,7 +58,6 @@ public abstract class Creature : MonoBehaviour
      **/
     protected void InitialSetUp(float health, float speed, float jumpForce, float attackRange)
     {
-        Parts = this.GetComponentsInChildren<CreaturePart>();
         m_Rigidbody = this.GetComponent<Rigidbody2D>();
         m_Rigidbody.freezeRotation = true;
         m_Collider = this.GetComponent<CircleCollider2D>();
@@ -76,6 +77,7 @@ public abstract class Creature : MonoBehaviour
         Speed = speed;
         JumpForce = jumpForce;
         this.attackRange = attackRange;
+        Debug.Log("Fix conditionally applying movement based on broken parts and fix hitboxes on right leg");
     }
 
     protected void UpdateBaseAnimationKeys()
@@ -101,7 +103,8 @@ public abstract class Creature : MonoBehaviour
     {
         if (CheckGrounded() && currentAttack == null)
         {
-            Vector3 targetVelocity = new Vector2(move * Speed, m_Rigidbody.velocity.y);
+            float calcMove = calculateMoveFromMobilityParts(move);
+            Vector3 targetVelocity = new Vector2(calcMove * Speed, m_Rigidbody.velocity.y);
             m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
 
             if (move > 0 && !isFacingRight)
@@ -117,6 +120,22 @@ public abstract class Creature : MonoBehaviour
         {
             m_Rigidbody.AddForce(new Vector2(0f, JumpForce));
         }
+    }
+
+    private float calculateMoveFromMobilityParts(float move) {
+        int totalMobileParts = MobilityParts.Length;
+        int brokenPartCount = 0;
+        float calcMove = move;
+        foreach (CreaturePart part in MobilityParts) {
+            if (part.IsBroken) brokenPartCount++;
+        }
+        // If half parts are broken, can only walk. If all parts are broken; can't move
+        if ((totalMobileParts / 2) <= brokenPartCount) {
+            calcMove = move / 2;
+        } else if (totalMobileParts == brokenPartCount) {
+            calcMove = 0;
+        }
+        return calcMove;
     }
 
     protected virtual void Attack()
@@ -165,7 +184,7 @@ public abstract class Creature : MonoBehaviour
 
     public virtual void Damage(float dmg)
     {
-        // Do damage mitigation based off of creature stats
+        // TODO Do damage mitigation based off of creature stats
         Health -= dmg;
     }
 

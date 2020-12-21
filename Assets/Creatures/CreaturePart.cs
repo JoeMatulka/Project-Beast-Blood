@@ -9,8 +9,8 @@ public class CreaturePart : MonoBehaviour
 
     [SerializeField]
     public float PartHealth = 250;
-
-    public bool IsBreakable;
+    [SerializeField]
+    private bool IsBreakable;
 
     public Hitbox[] hitBoxes;
 
@@ -56,5 +56,10 @@ public class CreaturePart : MonoBehaviour
         }
         // TODO If it is a fresh break, multiply effects of attack (stun, knockdown, etc.) and damage
         creature.Damage(dmg.Value);
+    }
+
+    public bool IsBroken
+    {
+        get { return isBroken; }
     }
 }

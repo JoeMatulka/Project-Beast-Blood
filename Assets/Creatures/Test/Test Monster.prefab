@@ -1602,6 +1602,12 @@ MonoBehaviour:
   Health: 0
   Size: 0
   Parts: []
+  MobilityParts:
+  - {fileID: 4643315861116569062}
+  - {fileID: 2250369178168394395}
+  AttackParts:
+  - {fileID: 2286270447085914795}
+  - {fileID: 2286270447959990615}
   JumpForce: 0
   Speed: 0
   m_Type: 0
