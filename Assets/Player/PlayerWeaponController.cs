@@ -27,7 +27,7 @@ public class PlayerWeaponController : MonoBehaviour
     private void Awake()
     {
         animator = this.GetComponent<PlayerWeaponAnimator>();
-        playerLayerMask = ~LayerMask.GetMask("Player");
+        playerLayerMask = ~LayerMask.GetMask("Player", "Ignore Raycast");
         player = this.GetComponentInParent<Player>();
     }
 

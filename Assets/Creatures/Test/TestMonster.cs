@@ -3,9 +3,10 @@
 public class TestMonster : Creature
 {
     private const float HEALTH = 1000;
-    private const float SPEED = 10;
+    private const float SPEED = 8;
     private const float JUMP_FORCE = 25;
     private const float ATTACK_RANGE = 3;
+    private const float WALK_RANGE = 2.25f;
 
     private float movement = 0;
     private bool jump = false;
@@ -27,13 +28,13 @@ public class TestMonster : Creature
         if (Target != null && distToTarget > attackRange)
         {
             // Move towards target to get into attack range
-            float input = distToTarget >= (attackRange * 2.25) ? RUN_INPUT : WALK_INPUT;
+            float input = distToTarget >= (attackRange * WALK_RANGE) ? RUN_INPUT : WALK_INPUT;
             movement = transform.position.x > Target.position.x ? -input : input;
         }
         else
         {
             // TODO move to own method, this is for testing
-            Attack();
+            // Attack();
         }
         UpdateBaseAnimationKeys();
     }

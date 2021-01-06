@@ -77,7 +77,9 @@ public abstract class Creature : MonoBehaviour
         Speed = speed;
         JumpForce = jumpForce;
         this.attackRange = attackRange;
-        Debug.Log("Fix conditionally applying movement based on broken parts and fix hitboxes on right leg");
+        // This sets the main creature object to ignore raycasts, this is because hit detection for a creature should happen at the creature part > hitbox level. Not at the highest parent object, being the creature object
+        this.gameObject.layer = 2;
+        Debug.Log("Fix conditionally applying movement based on broken parts");
     }
 
     protected void UpdateBaseAnimationKeys()
