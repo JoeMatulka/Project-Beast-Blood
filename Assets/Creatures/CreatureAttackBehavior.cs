@@ -7,7 +7,7 @@ using UnityEngine;
 */
 public static class CreatureAttackBehavior
 {
-    public static CreatureAttack CalculateAttack(Vector2 targetPos, Creature creature)
+    public static CreatureAttack CalculateAttack(Vector2 targetPos, in Creature creature)
     {
         CreatureAttack attack = null;
         switch (creature.Type)
@@ -21,7 +21,7 @@ public static class CreatureAttackBehavior
         return attack;
     }
 
-    private static CreatureAttack GetBipedalCreatureAttack(Vector2 targetPos, Creature creature)
+    private static CreatureAttack GetBipedalCreatureAttack(Vector2 targetPos, in Creature creature)
     {
         CreatureAttack attack = null;
         Vector2 creaturePos = creature.transform.localPosition;

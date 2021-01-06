@@ -16,7 +16,7 @@ public class CreaturePart : MonoBehaviour
 
     // Meant to allow certain parts to act as triggers to allow the player to easily navigate around the hit box
     public bool IsHitBoxTrigger = false;
-
+    [SerializeField]
     private bool isBroken = false;
 
     private void Start()

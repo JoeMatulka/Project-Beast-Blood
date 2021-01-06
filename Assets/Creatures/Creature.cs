@@ -9,6 +9,11 @@ public enum CreatureType
     Bipedal
 }
 
+public enum CreaturePartsType
+{
+    Ground, Flight
+}
+
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(CircleCollider2D))]
 [RequireComponent(typeof(Animator))]
@@ -19,7 +24,9 @@ public abstract class Creature : MonoBehaviour
     [SerializeField]
     protected float Size;
     [SerializeField]
-    protected CreaturePart[] MobilityParts;
+    protected CreaturePart[] GroundMobilityParts;
+    [SerializeField]
+    protected CreaturePart[] FlightMobilityParts;
     [SerializeField]
     protected CreaturePart[] AttackParts;
     [SerializeField]
@@ -101,12 +108,11 @@ public abstract class Creature : MonoBehaviour
         return false;
     }
 
-    protected virtual void Move(float move, bool jump)
+    protected virtual void GroundMove(float move, bool jump)
     {
         if (CheckGrounded() && currentAttack == null)
         {
-            float calcMove = calculateMoveFromMobilityParts(move);
-            Vector3 targetVelocity = new Vector2(calcMove * Speed, m_Rigidbody.velocity.y);
+            Vector3 targetVelocity = new Vector2(move * Speed, m_Rigidbody.velocity.y);
             m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
 
             if (move > 0 && !isFacingRight)
@@ -122,22 +128,6 @@ public abstract class Creature : MonoBehaviour
         {
             m_Rigidbody.AddForce(new Vector2(0f, JumpForce));
         }
-    }
-
-    private float calculateMoveFromMobilityParts(float move) {
-        int totalMobileParts = MobilityParts.Length;
-        int brokenPartCount = 0;
-        float calcMove = move;
-        foreach (CreaturePart part in MobilityParts) {
-            if (part.IsBroken) brokenPartCount++;
-        }
-        // If half parts are broken, can only walk. If all parts are broken; can't move
-        if ((totalMobileParts / 2) <= brokenPartCount) {
-            calcMove = move / 2;
-        } else if (totalMobileParts == brokenPartCount) {
-            calcMove = 0;
-        }
-        return calcMove;
     }
 
     protected virtual void Attack()
@@ -183,11 +173,31 @@ public abstract class Creature : MonoBehaviour
             }
         }
     }
+    public void EndAttack()
+    {
+        currentAttack = null;
+    }
 
     public virtual void Damage(float dmg)
     {
         // TODO Do damage mitigation based off of creature stats
         Health -= dmg;
+    }
+
+    /**
+     * Grab the percentage the creature is crippled based off of the provided parts type
+     */
+    public float GetCripplePercent(CreaturePartsType type)
+    {
+        CreaturePart[] parts = type.Equals(CreaturePartsType.Ground) ? GroundMobilityParts : FlightMobilityParts;
+        int totalMobileParts = parts.Length;
+
+        int brokenPartCount = 0;
+        foreach (CreaturePart part in parts)
+        {
+            if (part.IsBroken) brokenPartCount++;
+        }
+        return (float) (totalMobileParts - brokenPartCount) / totalMobileParts;
     }
 
     private void ClearActiveHitBoxes()
@@ -199,10 +209,6 @@ public abstract class Creature : MonoBehaviour
         }
     }
 
-    public void EndAttack()
-    {
-        currentAttack = null;
-    }
 
     protected void Flip()
     {
@@ -212,6 +218,7 @@ public abstract class Creature : MonoBehaviour
         theScale.x *= -1;
         transform.localScale = theScale;
     }
+
 
     public bool IsFacingRight
     {

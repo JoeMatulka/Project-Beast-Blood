@@ -29,19 +29,22 @@ public class TestMonster : Creature
         {
             // Move towards target to get into attack range
             float input = distToTarget >= (attackRange * WALK_RANGE) ? RUN_INPUT : WALK_INPUT;
+            // Adjust input based off of cripple percentage
+            if (GetCripplePercent(CreaturePartsType.Ground) <= .5f) input = WALK_INPUT;
+
             movement = transform.position.x > Target.position.x ? -input : input;
         }
         else
         {
             // TODO move to own method, this is for testing
-            // Attack();
+            Attack();
         }
         UpdateBaseAnimationKeys();
     }
 
     void FixedUpdate()
     {
-        Move(movement, jump);
+        GroundMove(movement, jump);
         movement = 0;
     }
 }
