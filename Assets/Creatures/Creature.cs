@@ -46,8 +46,8 @@ public abstract class Creature : MonoBehaviour
 
     private bool isFacingRight = false;
 
-    protected const float WALK_INPUT = 0.25f;
-    protected const float RUN_INPUT = 1f;
+    protected const float WALK_INPUT = 1f;
+    protected const float RUN_INPUT = 2f;
 
     protected Rigidbody2D m_Rigidbody;
     protected CircleCollider2D m_Collider;
@@ -67,6 +67,7 @@ public abstract class Creature : MonoBehaviour
     {
         m_Rigidbody = this.GetComponent<Rigidbody2D>();
         m_Rigidbody.freezeRotation = true;
+        m_Rigidbody.mass = 25;
         m_Collider = this.GetComponent<CircleCollider2D>();
         hitboxes = this.GetComponentsInChildren<Hitbox>();
         animator = this.GetComponent<Animator>();
@@ -86,7 +87,6 @@ public abstract class Creature : MonoBehaviour
         this.attackRange = attackRange;
         // This sets the main creature object to ignore raycasts, this is because hit detection for a creature should happen at the creature part > hitbox level. Not at the highest parent object, being the creature object
         this.gameObject.layer = 2;
-        Debug.Log("Fix conditionally applying movement based on broken parts");
     }
 
     protected void UpdateBaseAnimationKeys()

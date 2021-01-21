@@ -3,7 +3,7 @@
 public class TestMonster : Creature
 {
     private const float HEALTH = 1000;
-    private const float SPEED = 8;
+    private const float SPEED = 5;
     private const float JUMP_FORCE = 25;
     private const float ATTACK_RANGE = 3;
     private const float WALK_RANGE = 2.25f;
