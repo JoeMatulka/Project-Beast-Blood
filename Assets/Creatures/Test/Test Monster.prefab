@@ -364,9 +364,11 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 0
+  DamageModifier: 0
   hitBoxes:
   - {fileID: 2286270447851880740}
   IsHitBoxTrigger: 0
+  isBroken: 0
 --- !u!1 &2286270446403152483
 GameObject:
   m_ObjectHideFlags: 0
@@ -881,10 +883,12 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
+  DamageModifier: 0
   hitBoxes:
   - {fileID: 2286270446280532095}
   - {fileID: 2286270446212918480}
   IsHitBoxTrigger: 1
+  isBroken: 0
 --- !u!1 &2286270446691318215
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,12 +1011,14 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
+  DamageModifier: 2
   hitBoxes:
   - {fileID: 2286270446436239128}
   - {fileID: 2286270447219503824}
   - {fileID: 2286270447746132299}
   - {fileID: 2286270446422145631}
   IsHitBoxTrigger: 1
+  isBroken: 0
 --- !u!1 &2286270446821396410
 GameObject:
   m_ObjectHideFlags: 0
@@ -1454,11 +1460,13 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
+  DamageModifier: 0
   hitBoxes:
   - {fileID: 2286270447083352767}
   - {fileID: 2286270447274487820}
   - {fileID: 2286270447359492506}
   IsHitBoxTrigger: 1
+  isBroken: 0
 --- !u!1 &2286270447219503838
 GameObject:
   m_ObjectHideFlags: 0
@@ -1599,18 +1607,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53716006579aa844ac1d09d29730e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 0
-  Size: 0
-  Parts: []
-  MobilityParts:
-  - {fileID: 4643315861116569062}
-  - {fileID: 2250369178168394395}
+  CurrentHealth: 0
+  CurrentTripThreshold: 0
+  CurrentKOThreshold: 0
+  GroundMobilityParts: []
+  FlightMobilityParts: []
   AttackParts:
   - {fileID: 2286270447085914795}
   - {fileID: 2286270447959990615}
-  JumpForce: 0
-  Speed: 0
-  m_Type: 0
   WhatIsGround:
     serializedVersion: 2
     m_Bits: 23
@@ -1969,12 +1973,14 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
+  DamageModifier: 2
   hitBoxes:
   - {fileID: 2286270447071456241}
   - {fileID: 2286270447922728897}
   - {fileID: 2286270448045478135}
   - {fileID: 2286270446035244000}
   IsHitBoxTrigger: 1
+  isBroken: 0
 --- !u!1 &2286270447392040309
 GameObject:
   m_ObjectHideFlags: 0
@@ -2095,9 +2101,11 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
+  DamageModifier: 1
   hitBoxes:
   - {fileID: 2286270447997718827}
   IsHitBoxTrigger: 0
+  isBroken: 0
 --- !u!1 &2286270447402872613
 GameObject:
   m_ObjectHideFlags: 0
@@ -2219,10 +2227,12 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 0
+  DamageModifier: 0
   hitBoxes:
   - {fileID: 2286270446628399944}
   - {fileID: 2286270446461764389}
   IsHitBoxTrigger: 0
+  isBroken: 0
 --- !u!1 &2286270447509676566
 GameObject:
   m_ObjectHideFlags: 0
@@ -2635,11 +2645,13 @@ MonoBehaviour:
   creature: {fileID: 0}
   PartHealth: 1000
   IsBreakable: 1
+  DamageModifier: 0
   hitBoxes:
   - {fileID: 2286270447509676552}
   - {fileID: 2286270446915842217}
   - {fileID: 2286270447322499327}
   IsHitBoxTrigger: 1
+  isBroken: 0
 --- !u!1 &2286270447997718825
 GameObject:
   m_ObjectHideFlags: 0

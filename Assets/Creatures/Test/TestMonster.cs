@@ -1,4 +1,5 @@
 ﻿using CreatureSystems;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TestMonster : Creature
@@ -11,7 +12,7 @@ public class TestMonster : Creature
         BaseSize = 10,
         SizeModifier = 1,
         CreatureType = CreatureType.Bipedal,
-        ResistedElements = new DamageType[] { DamageType.RAW }
+        ResistedElements = new Dictionary<DamageType, float> { { DamageType.RAW, 1.25f }, { DamageType.FIRE, -1.25f } }
     };
 
     private const float ATTACK_RANGE = 3;

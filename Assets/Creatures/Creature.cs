@@ -1,5 +1,6 @@
 ﻿using Gamekit2D;
 using HitboxSystem;
+using CreatuePartSystems;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -26,19 +27,26 @@ namespace CreatureSystems
         public struct CreatureStats
         {
             public float BaseHealth;
+            public float TripThreshold;
+            public float KOThreshold;
             public float Speed;
             public float JumpForce;
             // Not meant to be the actual size in game, just representative of size in the fantasy term (in feet).
             public float BaseSize;
             public float SizeModifier;
             public CreatureType CreatureType;
-            public DamageType[] ResistedElements;
+            // Resisted element and the resistance value to it
+            public Dictionary<DamageType, float> ResistedElements;
         }
 
         public Creature.CreatureStats Stats;
 
         [SerializeField]
         protected float CurrentHealth;
+        [SerializeField]
+        protected float CurrentTripThreshold = 0;
+        [SerializeField]
+        protected float CurrentKOThreshold = 0;
         [SerializeField]
         protected CreaturePart[] GroundMobilityParts;
         [SerializeField]
@@ -81,7 +89,7 @@ namespace CreatureSystems
             hitboxes = this.GetComponentsInChildren<Hitbox>();
             animator = this.GetComponent<Animator>();
             SceneLinkedSMB<Creature>.Initialise(animator, this);
-            // TODO Recommend moving this to player object instead
+            // TODO Recommend moving this to player object instead, so that the player can set what colliders it needs to ignore in the game scene
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
             {
@@ -185,10 +193,22 @@ namespace CreatureSystems
             currentAttack = null;
         }
 
-        public virtual void Damage(float dmg)
+        public virtual void Damage(in Damage dmg, in CreaturePartDamageModifier dmgMod = CreaturePartDamageModifier.NONE, in float dmgModAmount = 1)
         {
-            // TODO Do damage mitigation based off of creature stats
-            CurrentHealth -= dmg;
+            float calculatedDmg = dmg.Value * dmgModAmount;
+            // Calculate damage based off of resisted types
+            float resistMod;
+            if (Stats.ResistedElements.TryGetValue(dmg.Type, out resistMod))
+            {
+                calculatedDmg /= resistMod;
+            }
+            // Calculate affected tripping threshold
+
+            // Calculate affected knock out threshold
+
+            // Increase knockout and tripping damage modifier if relevant mobility part cripple percentage is high enough
+
+            CurrentHealth -= calculatedDmg;
         }
 
         /**
