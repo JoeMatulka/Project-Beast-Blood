@@ -1,5 +1,6 @@
 ﻿
 using CreatureAttackLibrary;
+using CreatureSystems;
 using System.Collections.Generic;
 using UnityEngine;
 /**
@@ -10,7 +11,7 @@ public static class CreatureAttackBehavior
     public static CreatureAttack CalculateAttack(Vector2 targetPos, in Creature creature)
     {
         CreatureAttack attack = null;
-        switch (creature.Type)
+        switch (creature.Stats.CreatureType)
         {
             case CreatureType.Bipedal:
                 attack = GetBipedalCreatureAttack(targetPos, creature);

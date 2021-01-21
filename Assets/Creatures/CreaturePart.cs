@@ -1,4 +1,5 @@
-﻿using HitboxSystem;
+﻿using CreatureSystems;
+using HitboxSystem;
 using UnityEngine;
 /**
 * Class meant to represent a body part on the creature that registers damage on hit, can be breakable

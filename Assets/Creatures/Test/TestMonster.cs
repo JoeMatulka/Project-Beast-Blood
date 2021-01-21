@@ -1,10 +1,19 @@
-﻿using UnityEngine;
+﻿using CreatureSystems;
+using UnityEngine;
 
 public class TestMonster : Creature
 {
-    private const float HEALTH = 1000;
-    private const float SPEED = 5;
-    private const float JUMP_FORCE = 25;
+    private readonly Creature.CreatureStats STATS = new Creature.CreatureStats
+    {
+        BaseHealth = 1000,
+        Speed = 5,
+        JumpForce = 25,
+        BaseSize = 10,
+        SizeModifier = 1,
+        CreatureType = CreatureType.Bipedal,
+        ResistedElements = new DamageType[] { DamageType.RAW }
+    };
+
     private const float ATTACK_RANGE = 3;
     private const float WALK_RANGE = 2.25f;
 
@@ -13,7 +22,7 @@ public class TestMonster : Creature
 
     void Awake()
     {
-        InitialSetUp(HEALTH, SPEED, JUMP_FORCE, ATTACK_RANGE);
+        InitialSetUp(STATS);
     }
 
     private void Start()
@@ -25,10 +34,10 @@ public class TestMonster : Creature
     private void Update()
     {
         float distToTarget = Vector2.Distance(Target.position, transform.position);
-        if (Target != null && distToTarget > attackRange)
+        if (Target != null && distToTarget > ATTACK_RANGE)
         {
             // Move towards target to get into attack range
-            float input = distToTarget >= (attackRange * WALK_RANGE) ? RUN_INPUT : WALK_INPUT;
+            float input = distToTarget >= (ATTACK_RANGE * WALK_RANGE) ? RUN_INPUT : WALK_INPUT;
             // Adjust input based off of cripple percentage
             if (GetCripplePercent(CreaturePartsType.Ground) <= .5f) input = WALK_INPUT;
 
