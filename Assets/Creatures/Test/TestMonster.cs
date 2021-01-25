@@ -7,12 +7,14 @@ public class TestMonster : Creature
     private readonly Creature.CreatureStats STATS = new Creature.CreatureStats
     {
         BaseHealth = 1000,
+        TripThreshold = 250,
+        KOThreshold = 500,
         Speed = 5,
         JumpForce = 25,
         BaseSize = 10,
         SizeModifier = 1,
         CreatureType = CreatureType.Bipedal,
-        ResistedElements = new Dictionary<DamageType, float> { { DamageType.RAW, 1.25f }, { DamageType.FIRE, -1.25f } }
+        ResistedElements = new Dictionary<DamageType, float> { { DamageType.RAW, 1.5f }, { DamageType.FIRE, -1.5f } }
     };
 
     private const float ATTACK_RANGE = 3;

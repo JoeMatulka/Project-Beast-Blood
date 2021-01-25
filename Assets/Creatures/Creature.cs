@@ -188,6 +188,7 @@ namespace CreatureSystems
                 }
             }
         }
+
         public void EndAttack()
         {
             currentAttack = null;
@@ -200,13 +201,32 @@ namespace CreatureSystems
             float resistMod;
             if (Stats.ResistedElements.TryGetValue(dmg.Type, out resistMod))
             {
-                calculatedDmg /= resistMod;
+                // Calculate the difference of the resistance mod, if it is a negative resistance mod (a weakness); add that damage to the calculated damage
+                float calculatedResistDmg = calculatedDmg - (calculatedDmg / Mathf.Abs(resistMod));
+                if (resistMod < 0) calculatedResistDmg *= -1;
+                calculatedDmg -= calculatedResistDmg;
             }
             // Calculate affected tripping threshold
-
+            if (dmgMod.Equals(CreaturePartDamageModifier.TRIP))
+            {
+                CurrentTripThreshold += calculatedDmg;
+                if (CurrentTripThreshold >= Stats.TripThreshold)
+                {
+                    CurrentTripThreshold = 0;
+                    // TODO Set Creature State to tripped here
+                }
+            }
             // Calculate affected knock out threshold
-
-            // Increase knockout and tripping damage modifier if relevant mobility part cripple percentage is high enough
+            if (dmg.Equals(CreaturePartDamageModifier.KO))
+            {
+                // Increase knockout damage modifier if mobility part cripple percentage is high enough
+                CurrentKOThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (calculatedDmg * 1.5f) : calculatedDmg;
+                if (CurrentKOThreshold >= Stats.KOThreshold)
+                {
+                    CurrentKOThreshold = 0;
+                    // TODO Set Creature State to knocked out here
+                }
+            }
 
             CurrentHealth -= calculatedDmg;
         }
