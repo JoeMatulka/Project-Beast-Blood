@@ -20,9 +20,6 @@ public class TestMonster : Creature
     private const float ATTACK_RANGE = 3;
     private const float WALK_RANGE = 2.25f;
 
-    private float movement = 0;
-    private bool jump = false;
-
     void Awake()
     {
         InitialSetUp(STATS);
@@ -39,24 +36,18 @@ public class TestMonster : Creature
         float distToTarget = Vector2.Distance(Target.position, transform.position);
         if (Target != null && distToTarget > ATTACK_RANGE)
         {
-            // Move towards target to get into attack range
-            float input = distToTarget >= (ATTACK_RANGE * WALK_RANGE) ? RUN_INPUT : WALK_INPUT;
-            // Adjust input based off of cripple percentage
-            if (GetCripplePercent(CreaturePartsType.Ground) <= .5f) input = WALK_INPUT;
-
-            movement = transform.position.x > Target.position.x ? -input : input;
+            stateMachine.ChangeState(new CreatureGroundFollow(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE));
         }
         else
         {
-            // TODO move to own method, this is for testing
-            Attack();
+            // TODO Change to attack state
         }
+
         UpdateBaseAnimationKeys();
     }
 
     void FixedUpdate()
     {
-        GroundMove(movement, jump);
-        movement = 0;
+        stateMachine.Update();
     }
 }

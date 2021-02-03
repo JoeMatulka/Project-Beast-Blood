@@ -64,9 +64,6 @@ namespace CreatureSystems
 
         private bool isFacingRight = false;
 
-        protected const float WALK_INPUT = 1f;
-        protected const float RUN_INPUT = 2f;
-
         protected Rigidbody2D m_Rigidbody;
         protected CircleCollider2D m_Collider;
 
@@ -76,6 +73,9 @@ namespace CreatureSystems
         private Hitbox[] hitboxes;
         private CreatureAttack currentAttack;
         private Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
+
+        [SerializeField]
+        protected CreatureStateMachine stateMachine;
 
         /**
          * Should be called in Awake phase of a creature object 
@@ -87,8 +87,10 @@ namespace CreatureSystems
             m_Rigidbody.mass = 25;
             m_Collider = this.GetComponent<CircleCollider2D>();
             hitboxes = this.GetComponentsInChildren<Hitbox>();
+
             animator = this.GetComponent<Animator>();
             SceneLinkedSMB<Creature>.Initialise(animator, this);
+
             // TODO Recommend moving this to player object instead, so that the player can set what colliders it needs to ignore in the game scene
             GameObject player = GameObject.FindGameObjectWithTag("Player");
             if (player != null)
@@ -102,6 +104,8 @@ namespace CreatureSystems
             Stats = stats;
             // This sets the main creature object to ignore raycasts, this is because hit detection for a creature should happen at the creature part > hitbox level. Not at the highest parent object, being the creature object
             this.gameObject.layer = 2;
+
+            this.stateMachine = new CreatureStateMachine();
         }
 
         protected void UpdateBaseAnimationKeys()
@@ -123,7 +127,7 @@ namespace CreatureSystems
             return false;
         }
 
-        protected virtual void GroundMove(float move, bool jump)
+        public virtual void GroundMove(float move, bool jump)
         {
             if (CheckGrounded() && currentAttack == null)
             {
