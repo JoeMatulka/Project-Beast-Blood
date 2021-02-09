@@ -1,7 +1,7 @@
 ﻿using CreatureSystems;
 using UnityEngine;
 
-public class CreatureGroundFollow : ICreatureState
+public class CreatureGroundPursueBehvior : ICreatureState
 {
     protected const float WALK_INPUT = 1f;
     protected const float RUN_INPUT = 2f;
@@ -13,7 +13,7 @@ public class CreatureGroundFollow : ICreatureState
     private readonly float walkRange;
     private readonly float runRange;
 
-    public CreatureGroundFollow(Creature creature, Transform target, float walkRange, float runRange)
+    public CreatureGroundPursueBehvior(Creature creature, Transform target, float walkRange, float runRange)
     {
         this.creature = creature;
         this.target = target;
@@ -21,7 +21,9 @@ public class CreatureGroundFollow : ICreatureState
         this.runRange = runRange;
     }
 
-    public void Enter() { }
+    public void Enter() {
+        creature.GroundMove(0, false);
+    }
 
     public void Execute()
     {
@@ -39,5 +41,7 @@ public class CreatureGroundFollow : ICreatureState
         creature.GroundMove(movement, jump);
     }
 
-    public void Exit() { }
+    public void Exit() {
+        creature.GroundMove(0, false);
+    }
 }

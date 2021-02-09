@@ -6,9 +6,28 @@ using UnityEngine;
 /**
 * Class responsible for determining the type of attack used by a creature
 */
-public static class CreatureAttackBehavior
+public class CreatureAttackBehavior: ICreatureState
 {
-    public static CreatureAttack CalculateAttack(Vector2 targetPos, in Creature creature)
+    private readonly Creature creature;
+
+    private readonly Transform target;
+
+    public CreatureAttackBehavior(Creature creature, Transform target)
+    {
+        this.creature = creature;
+        this.target = target;
+    }
+
+    public void Enter() { }
+
+    public void Execute()
+    {
+        creature.Attack(CalculateAttack(target.position, creature));
+    }
+
+    public void Exit() { }
+
+    private CreatureAttack CalculateAttack(Vector2 targetPos, in Creature creature)
     {
         CreatureAttack attack = null;
         switch (creature.Stats.CreatureType)
@@ -22,7 +41,7 @@ public static class CreatureAttackBehavior
         return attack;
     }
 
-    private static CreatureAttack GetBipedalCreatureAttack(Vector2 targetPos, in Creature creature)
+    private CreatureAttack GetBipedalCreatureAttack(Vector2 targetPos, in Creature creature)
     {
         CreatureAttack attack = null;
         Vector2 creaturePos = creature.transform.localPosition;

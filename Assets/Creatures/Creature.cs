@@ -74,7 +74,6 @@ namespace CreatureSystems
         private CreatureAttack currentAttack;
         private Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
-        [SerializeField]
         protected CreatureStateMachine stateMachine;
 
         /**
@@ -149,11 +148,10 @@ namespace CreatureSystems
             }
         }
 
-        protected virtual void Attack()
+        public void Attack(CreatureAttack attack)
         {
             if (currentAttack == null)
             {
-                CreatureAttack attack = CreatureAttackBehavior.CalculateAttack(Target.position, this);
                 // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
                 if (attack != null)
                 {

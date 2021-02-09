@@ -36,13 +36,13 @@ public class TestMonster : Creature
         float distToTarget = Vector2.Distance(Target.position, transform.position);
         if (Target != null && distToTarget > ATTACK_RANGE)
         {
-            stateMachine.ChangeState(new CreatureGroundFollow(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE));
+            stateMachine.ChangeState(new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE));
         }
-        else
+        
+        if(Target != null && distToTarget <= ATTACK_RANGE)
         {
-            // TODO Change to attack state
+            stateMachine.ChangeState(new CreatureAttackBehavior(this, Target));
         }
-
         UpdateBaseAnimationKeys();
     }
 

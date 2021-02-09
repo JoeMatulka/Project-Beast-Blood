@@ -6,6 +6,11 @@ public class CreatureStateMachine
 
     public void ChangeState(ICreatureState newState)
     {
+        if (this.currentState != null && this.currentState.GetType().Equals(newState.GetType()))
+        {
+            // Return because we don't change the state if it is the same
+            return;
+        }
         if (this.currentState != null)
         {
             this.currentState.Exit();
@@ -17,5 +22,10 @@ public class CreatureStateMachine
     public void Update()
     {
         if (currentState != null) currentState.Execute();
+    }
+
+    public ICreatureState CurrentState
+    {
+        get { return currentState; }
     }
 }
