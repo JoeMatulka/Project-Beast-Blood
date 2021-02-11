@@ -50,8 +50,7 @@ public class CreatureAttackBehavior: ICreatureState
             // Creature is currently facing target and target is lower than creature
             int attackId = (int)BipedalCreatureAttack.LOW_PUNCH;
             Dictionary<int, CreatureAttackFrame> frames = BipedalCreatureAttackLibrary.LOW_PUNCH_FRAMES;
-            // TODO Place holder for now, damage should come off of creature for type of damage and how hard it hits
-            Damage dmg = new Damage(30, DamageType.RAW);
+            Damage dmg = new Damage(30, creature.Stats.AttackDamageType);
             attack = new CreatureAttack(attackId, frames, dmg);
         }
         return attack;

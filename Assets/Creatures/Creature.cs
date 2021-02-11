@@ -4,7 +4,7 @@ using CreatuePartSystems;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using System.Collections;
 
 namespace CreatureSystems
 {
@@ -37,6 +37,8 @@ namespace CreatureSystems
             public CreatureType CreatureType;
             // Resisted element and the resistance value to it
             public Dictionary<DamageType, float> ResistedElements;
+            // Used for melee attacks made by the creature. I.E. Poison because they have poison claws or fangs, etc.
+            public DamageType AttackDamageType;
         }
 
         public Creature.CreatureStats Stats;
@@ -63,6 +65,12 @@ namespace CreatureSystems
         private Vector3 velocity = Vector3.zero;
 
         private bool isFacingRight = false;
+        [SerializeField]
+        private bool isTripped = false;
+        private const float TRIPPED_DOWN_TIME = 5f;
+        [SerializeField]
+        private bool isKnockedOut = false;
+        private const float KNOCK_OUT_DOWN_TIME = 8f;
 
         protected Rigidbody2D m_Rigidbody;
         protected CircleCollider2D m_Collider;
@@ -74,7 +82,7 @@ namespace CreatureSystems
         private CreatureAttack currentAttack;
         private Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
-        protected CreatureStateMachine stateMachine;
+        protected CreatureAiStateMachine aiStateMachine;
 
         /**
          * Should be called in Awake phase of a creature object 
@@ -104,13 +112,14 @@ namespace CreatureSystems
             // This sets the main creature object to ignore raycasts, this is because hit detection for a creature should happen at the creature part > hitbox level. Not at the highest parent object, being the creature object
             this.gameObject.layer = 2;
 
-            this.stateMachine = new CreatureStateMachine();
+            this.aiStateMachine = new CreatureAiStateMachine();
         }
 
         protected void UpdateBaseAnimationKeys()
         {
             animator.SetFloat("Speed", Mathf.Abs(m_Rigidbody.velocity.x));
             animator.SetBool("IsGrounded", CheckGrounded());
+            animator.SetBool("IsKnockedDown", isTripped || isKnockedOut);
         }
 
         protected bool CheckGrounded()
@@ -128,7 +137,7 @@ namespace CreatureSystems
 
         public virtual void GroundMove(float move, bool jump)
         {
-            if (CheckGrounded() && currentAttack == null)
+            if (CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped)
             {
                 Vector3 targetVelocity = new Vector2(move * Stats.Speed, m_Rigidbody.velocity.y);
                 m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
@@ -150,7 +159,7 @@ namespace CreatureSystems
 
         public void Attack(CreatureAttack attack)
         {
-            if (currentAttack == null)
+            if (currentAttack == null && !isKnockedOut && !isTripped)
             {
                 // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
                 if (attack != null)
@@ -194,6 +203,7 @@ namespace CreatureSystems
         public void EndAttack()
         {
             currentAttack = null;
+            ClearActiveHitBoxes();
         }
 
         public virtual void Damage(in Damage dmg, in CreaturePartDamageModifier dmgMod = CreaturePartDamageModifier.NONE, in float dmgModAmount = 1)
@@ -209,28 +219,48 @@ namespace CreatureSystems
                 calculatedDmg -= calculatedResistDmg;
             }
             // Calculate affected tripping threshold
-            if (dmgMod.Equals(CreaturePartDamageModifier.TRIP))
+            if (dmgMod.Equals(CreaturePartDamageModifier.TRIP) && !isTripped)
             {
-                CurrentTripThreshold += calculatedDmg;
+                CurrentTripThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (calculatedDmg * 1.5f) : calculatedDmg;
                 if (CurrentTripThreshold >= Stats.TripThreshold)
                 {
                     CurrentTripThreshold = 0;
-                    // TODO Set Creature State to tripped here
+                    isTripped = true;
+                    EndAttack();
+                    // Don't restart down count if already knocked out
+                    if (!isKnockedOut)
+                    {
+                        StartCoroutine(StartGetUpTimer(TRIPPED_DOWN_TIME));
+                    }
                 }
             }
             // Calculate affected knock out threshold
-            if (dmg.Equals(CreaturePartDamageModifier.KO))
+            if (dmgMod.Equals(CreaturePartDamageModifier.KO) && !isKnockedOut)
             {
                 // Increase knockout damage modifier if mobility part cripple percentage is high enough
                 CurrentKOThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (calculatedDmg * 1.5f) : calculatedDmg;
                 if (CurrentKOThreshold >= Stats.KOThreshold)
                 {
                     CurrentKOThreshold = 0;
-                    // TODO Set Creature State to knocked out here
+                    isKnockedOut = true;
+                    EndAttack();
+                    // Don't restart down count if already tripped
+                    if (!isTripped)
+                    {
+                        StartCoroutine(StartGetUpTimer(KNOCK_OUT_DOWN_TIME));
+                    }
                 }
             }
 
             CurrentHealth -= calculatedDmg;
+        }
+
+        private IEnumerator StartGetUpTimer(float getUpTime)
+        {
+            yield return new WaitForSeconds(getUpTime);
+            // TODO: Replace with get up trigger for get up animation and set boolean at the end of animation
+            isKnockedOut = false;
+            isTripped = false;
         }
 
         /**
