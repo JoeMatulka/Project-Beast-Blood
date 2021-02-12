@@ -80,6 +80,7 @@ namespace CreatureSystems
 
         public Transform Target;
         private Hitbox[] hitboxes;
+        private CreatureAttack[] attackSet;
         private CreatureAttack currentAttack;
         private Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
@@ -88,7 +89,7 @@ namespace CreatureSystems
         /**
          * Should be called in Awake phase of a creature object 
          **/
-        protected void InitialSetUp(Creature.CreatureStats stats)
+        protected void InitialSetUp(Creature.CreatureStats stats, CreatureAttack[] attackSet)
         {
             m_Rigidbody = this.GetComponent<Rigidbody2D>();
             m_Rigidbody.freezeRotation = true;
@@ -110,6 +111,7 @@ namespace CreatureSystems
             }
             CurrentHealth = stats.BaseHealth;
             Stats = stats;
+            this.attackSet = attackSet;
             // This sets the main creature object to ignore raycasts, this is because hit detection for a creature should happen at the creature part > hitbox level. Not at the highest parent object, being the creature object
             this.gameObject.layer = 2;
 
@@ -303,6 +305,11 @@ namespace CreatureSystems
         public bool IsFacingRight
         {
             get { return isFacingRight; }
+        }
+
+        public CreatureAttack[] AttackSet
+        {
+            get { return attackSet; }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using CreatureSystems;
+﻿using CreatureAttackLibrary;
+using CreatureSystems;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,12 +19,14 @@ public class TestMonster : Creature
         AttackDamageType = DamageType.RAW
     };
 
+    private readonly CreatureAttack[] ATTACK_SET = BaseBipedalCreatureAttackLibrary.BaseAttacks;
+
     private const float ATTACK_RANGE = 3;
     private const float WALK_RANGE = 2.25f;
 
     void Awake()
     {
-        InitialSetUp(STATS);
+        InitialSetUp(STATS, ATTACK_SET);
     }
 
     private void Start()
