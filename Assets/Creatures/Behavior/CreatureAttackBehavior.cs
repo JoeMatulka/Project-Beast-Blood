@@ -31,7 +31,10 @@ public class CreatureAttackBehavior : ICreatureState
         CreatureAttack attack = null;
         foreach (CreatureAttack atk in creature.AttackSet)
         {
-            attack = atk.AttackCondition(targetPos, creature);
+            if (atk.AttackCondition(targetPos, creature, atk.AttackPart))
+            {
+                attack = atk;
+            }
         }
         return attack;
     }

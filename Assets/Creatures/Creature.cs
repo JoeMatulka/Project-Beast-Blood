@@ -38,8 +38,6 @@ namespace CreatureSystems
             public CreatureType CreatureType;
             // Resisted element and the resistance value to it
             public Dictionary<DamageType, float> ResistedElements;
-            // Used for melee attacks made by the creature. I.E. Poison because they have poison claws or fangs, etc.
-            public DamageType AttackDamageType;
         }
 
         public Creature.CreatureStats Stats;
@@ -109,13 +107,16 @@ namespace CreatureSystems
                 Physics2D.IgnoreCollision(playerBoxCollider, m_Collider);
                 Physics2D.IgnoreCollision(playerCircleCollider, m_Collider);
             }
+
             CurrentHealth = stats.BaseHealth;
             Stats = stats;
-            this.attackSet = attackSet;
+
             // This sets the main creature object to ignore raycasts, this is because hit detection for a creature should happen at the creature part > hitbox level. Not at the highest parent object, being the creature object
             this.gameObject.layer = 2;
 
             this.aiStateMachine = new CreatureAiStateMachine();
+
+            this.attackSet = attackSet;
         }
 
         protected void UpdateBaseAnimationKeys()
@@ -191,7 +192,7 @@ namespace CreatureSystems
                         if (attackFrame.ActiveHitboxes.Contains(hitbox.name))
                         {
                             hitbox.IsActive = true;
-                            hitbox.ActiveHitBoxDamage = currentAttack.Damage;
+                            hitbox.ActiveHitBoxDamage = currentAttack.GetDamage();
                         }
                     }
                 }

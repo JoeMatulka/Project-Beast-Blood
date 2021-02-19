@@ -1179,6 +1179,18 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!114 &382120270 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2286270447085914795, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
+    type: 3}
+  m_PrefabInstance: {fileID: 1756924039}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 57da22f95b11afb47a32f809d83e882f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2344,6 +2356,11 @@ PrefabInstance:
       propertyPath: GroundMobilityParts.Array.data[1]
       value: 
       objectReference: {fileID: 835860367}
+    - target: {fileID: 2740567281922903610, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
+        type: 3}
+      propertyPath: AttackArmPart
+      value: 
+      objectReference: {fileID: 382120270}
     - target: {fileID: 4643315861116569062, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
       propertyPath: PartHealth

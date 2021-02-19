@@ -1619,7 +1619,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 23
   groundCheck: {fileID: 8563515282157861236}
+  isTripped: 0
+  isKnockedOut: 0
   Target: {fileID: 0}
+  ArmAttackPart: {fileID: 2286270447085914795}
 --- !u!58 &2550880977476961872
 CircleCollider2D:
   m_ObjectHideFlags: 0
