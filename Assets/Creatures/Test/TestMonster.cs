@@ -30,15 +30,10 @@ public class TestMonster : Creature
         CreatureAttack[] attackSet = new CreatureAttack[] {
             BipedalCreatureBaseAttackLibrary.LowPunch
                 .SetAttackPart(ArmAttackPart)
-                .SetDamage(new Damage(30, DamageType.RAW))
-                .SetAttackDamageCalculation(
-                    (in Damage damage, in CreaturePart attackPart) => {
-                        Damage dmg = damage;
-                        // Reduce damage when attack part is broken
-                        if (attackPart.IsBroken) { dmg = new Damage(damage.Value / 1.5f, damage.Type); }
-                        return dmg;
-                    }
-                )
+                .SetDamage(new Damage(30, DamageType.RAW)),
+            BipedalCreatureBaseAttackLibrary.DownwardSlam
+                .SetAttackPart(ArmAttackPart)
+                .SetDamage(new Damage(50, DamageType.RAW))
         };
         InitialSetUp(STATS, attackSet);
     }

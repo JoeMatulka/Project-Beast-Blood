@@ -1,6 +1,5 @@
 ﻿using CreatuePartSystems;
 using CreatureSystems;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,10 +10,21 @@ namespace CreatureAttackLibrary
     {
         // Base Bipedal Attacks
         BIPEDAL_LOW_PUNCH = 1,
+        BIPEDAL_DOWNWARD_SLAM = 2,
     }
 
     public static class BipedalCreatureBaseAttackLibrary
     {
+        private const float DOWNWARD_ATK_DISTANCE = 1.5f;
+
+        private static CreatureAttackDamageCalculation DEF_ATK_DMG_CALC = (in Damage damage, in CreaturePart attackPart) =>
+        {
+            Damage dmg = damage;
+            // Reduce damage when attack part is broken
+            if (attackPart.IsBroken) { dmg = new Damage(damage.Value / 1.5f, damage.Type); }
+            return dmg;
+        };
+
         public static CreatureAttack LowPunch
         {
             get
@@ -23,14 +33,40 @@ namespace CreatureAttackLibrary
                     (int)CreatureAttackID.BIPEDAL_LOW_PUNCH,
                     new Dictionary<int, CreatureAttackFrame>
                     {
-                        { 12, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left"}, 10f) },
-                        { 15, new CreatureAttackFrame(new string[] { }, 0f) }
+                        { 13, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left"}, 10f) },
+                        { 16, new CreatureAttackFrame(new string[] { }) }
                     },
                     (in Vector2 targetPos, in Creature creature, in CreaturePart attackPart) =>
                     {
                         Vector2 creaturePos = creature.transform.localPosition;
+                        // Creature is facing target and it is on the lower y axis
                         return (creature.IsFacingRight && targetPos.x > creaturePos.x || (!creature.IsFacingRight && targetPos.x < creaturePos.x) && targetPos.y <= creaturePos.y);
-                    }
+                    },
+                    DEF_ATK_DMG_CALC
+                );
+            }
+        }
+
+        public static CreatureAttack DownwardSlam
+        {
+            get
+            {
+                return new CreatureAttack(
+                    (int)CreatureAttackID.BIPEDAL_DOWNWARD_SLAM,
+                    new Dictionary<int, CreatureAttackFrame>
+                    {
+                        { 13, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left", "bicep_right", "forearm_right", "hand_right"}) },
+                        { 16, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left"}) },
+                        { 20, new CreatureAttackFrame(new string[] { }) }
+                    },
+                    (in Vector2 targetPos, in Creature creature, in CreaturePart attackPart) =>
+                    {
+                        Vector2 creaturePos = creature.transform.localPosition;
+                        float distToTarget = Vector2.Distance(creaturePos, targetPos);
+                        // Target is beneath and close to creature
+                        return (distToTarget <= DOWNWARD_ATK_DISTANCE && targetPos.y <= creaturePos.y);
+                    },
+                    DEF_ATK_DMG_CALC
                 );
             }
         }
@@ -52,11 +88,12 @@ namespace CreatureAttackLibrary
 
         private Damage damage;
 
-        public CreatureAttack(int id, Dictionary<int, CreatureAttackFrame> frames, CreatureAttackCondition attackCondition)
+        public CreatureAttack(int id, Dictionary<int, CreatureAttackFrame> frames, CreatureAttackCondition attackCondition, CreatureAttackDamageCalculation attackDmgCalc)
         {
             this.id = id;
             this.frames = frames;
             this.attackCondition = attackCondition;
+            this.attackDmgCalc = attackDmgCalc;
         }
 
         public CreatureAttack(int id, Dictionary<int, CreatureAttackFrame> frames, CreatureAttackCondition attackCondition, CreatureAttackDamageCalculation attackDmgCalc, CreaturePart attackPart, Damage damage)

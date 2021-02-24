@@ -6,7 +6,7 @@ public class CreatureAttackFrame
     private string[] activeHitboxes;
     private float forwardMovement;
 
-    public CreatureAttackFrame(string[] activeHitboxes, float forwardMovement)
+    public CreatureAttackFrame(string[] activeHitboxes, float forwardMovement = 0f)
     {
         this.activeHitboxes = activeHitboxes;
         this.forwardMovement = forwardMovement;
