@@ -79,7 +79,7 @@ namespace CreatureSystems
         public Transform Target;
         private Hitbox[] hitboxes;
         private CreatureAttack[] attackSet;
-        private CreatureAttack currentAttack;
+        protected CreatureAttack currentAttack;
         private Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
         protected CreatureAiStateMachine aiStateMachine;
@@ -171,6 +171,8 @@ namespace CreatureSystems
                     animator.SetInteger("Attack_ID", attack.ID);
                     animator.SetTrigger("Attack");
                     currentAttack = attack;
+                    // Done because the damage is only created once for attacks
+                    currentAttack.GenerateNewDamageGuid();
                     ActiveAttackFrames = attack.Frames;
                 }
             }

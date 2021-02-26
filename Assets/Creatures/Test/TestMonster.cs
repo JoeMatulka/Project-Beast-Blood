@@ -26,6 +26,7 @@ public class TestMonster : Creature
 
     void Awake()
     {
+        Debug.Log("The issue is the new Damage object assignments in the Awake not ever getting new guids");
         // Set up creature attack set
         CreatureAttack[] attackSet = new CreatureAttack[] {
             BipedalCreatureBaseAttackLibrary.LowPunch

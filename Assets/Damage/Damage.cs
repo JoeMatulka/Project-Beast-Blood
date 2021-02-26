@@ -7,7 +7,7 @@ public enum DamageType
 
 public class Damage
 {
-    private readonly Guid id;
+    private Guid id;
 
     private readonly float value;
 
@@ -20,6 +20,10 @@ public class Damage
         this.type = type;
     }
 
+    // Not the best thing, but used to reassign IDs to static damage objects (like on creature attacks)
+    public void GenerateNewIGuid() {
+        this.id = Guid.NewGuid();
+    }
     public Guid ID {
         get { return this.id; }
     }
