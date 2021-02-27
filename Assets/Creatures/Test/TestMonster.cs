@@ -19,14 +19,13 @@ public class TestMonster : Creature
         ResistedElements = new Dictionary<DamageType, float> { { DamageType.RAW, 1.5f }, { DamageType.FIRE, -1.5f } },
     };
 
-    private const float ATTACK_RANGE = 3;
-    private const float WALK_RANGE = 2.25f;
+    private const float ATTACK_RANGE = 2f;
+    private const float WALK_RANGE = 3f;
 
     public CreaturePart ArmAttackPart;
 
     void Awake()
     {
-        Debug.Log("The issue is the new Damage object assignments in the Awake not ever getting new guids");
         // Set up creature attack set
         CreatureAttack[] attackSet = new CreatureAttack[] {
             BipedalCreatureBaseAttackLibrary.LowPunch

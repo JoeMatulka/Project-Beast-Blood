@@ -70,6 +70,9 @@ namespace CreatureSystems
         [SerializeField]
         private bool isKnockedOut = false;
         private const float KNOCK_OUT_DOWN_TIME = 8f;
+        [SerializeField]
+        private bool isStaggered = false;
+        private const float STAGGER_TIME = 6.5f;
 
         protected Rigidbody2D m_Rigidbody;
         protected CircleCollider2D m_Collider;
@@ -124,6 +127,7 @@ namespace CreatureSystems
             animator.SetFloat("Speed", Mathf.Abs(m_Rigidbody.velocity.x));
             animator.SetBool("IsGrounded", CheckGrounded());
             animator.SetBool("IsKnockedDown", isTripped || isKnockedOut);
+            animator.SetBool("IsStaggered", isStaggered);
         }
 
         protected bool CheckGrounded()
@@ -141,7 +145,7 @@ namespace CreatureSystems
 
         public virtual void GroundMove(float move, bool jump)
         {
-            if (CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped)
+            if (CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
             {
                 Vector3 targetVelocity = new Vector2(move * Stats.Speed, m_Rigidbody.velocity.y);
                 m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
@@ -163,7 +167,7 @@ namespace CreatureSystems
 
         public void Attack(CreatureAttack attack)
         {
-            if (currentAttack == null && !isKnockedOut && !isTripped)
+            if (currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
             {
                 // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
                 if (attack != null)
@@ -258,7 +262,19 @@ namespace CreatureSystems
                 }
             }
 
+            if (CurrentKOThreshold >= (CurrentKOThreshold / 2) && CurrentTripThreshold >= (CurrentTripThreshold / 2) && !isKnockedOut && !isTripped)
+            {
+                isStaggered = true;
+                StartCoroutine(StartStaggerTimer());
+            }
+
             CurrentHealth -= calculatedDmg;
+        }
+
+        private IEnumerator StartStaggerTimer()
+        {
+            yield return new WaitForSeconds(STAGGER_TIME);
+            isStaggered = false;
         }
 
         private IEnumerator StartGetUpTimer(float getUpTime)
@@ -308,6 +324,11 @@ namespace CreatureSystems
         public bool IsFacingRight
         {
             get { return isFacingRight; }
+        }
+
+        public bool IsStaggered
+        {
+            get { return isStaggered; }
         }
 
         public CreatureAttack[] AttackSet
