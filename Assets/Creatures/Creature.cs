@@ -259,7 +259,7 @@ namespace CreatureSystems
                 }
             }
 
-            if (CurrentKOThreshold >= (CurrentKOThreshold / 2) && CurrentTripThreshold >= (CurrentTripThreshold / 2) && !isKnockedOut && !isTripped)
+            if (CurrentKOThreshold >= (Stats.KOThreshold / 2) && CurrentTripThreshold >= (Stats.TripThreshold / 2) && !isKnockedOut && !isTripped)
             {
                 isStaggered = true;
                 StartCoroutine(StartStaggerTimer());
