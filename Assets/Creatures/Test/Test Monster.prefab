@@ -1551,7 +1551,7 @@ GameObject:
   - component: {fileID: 6464941936065504135}
   - component: {fileID: 2740567281922903610}
   - component: {fileID: 2550880977476961872}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Test Monster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1621,6 +1621,7 @@ MonoBehaviour:
   groundCheck: {fileID: 8563515282157861236}
   isTripped: 0
   isKnockedOut: 0
+  isStaggered: 0
   Target: {fileID: 0}
   ArmAttackPart: {fileID: 2286270447085914795}
 --- !u!58 &2550880977476961872

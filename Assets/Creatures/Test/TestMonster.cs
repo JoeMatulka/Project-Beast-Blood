@@ -24,8 +24,13 @@ public class TestMonster : Creature
 
     public CreaturePart ArmAttackPart;
 
+    private const float SIGHT_RANGE = 15f;
+    private LayerMask sightLayerMask;
+
     void Awake()
     {
+        // Set up sight layer mask
+        sightLayerMask = LayerMask.GetMask("Player", "Creature");
         // Set up creature attack set
         CreatureAttack[] attackSet = new CreatureAttack[] {
             BipedalCreatureBaseAttackLibrary.LowPunch
@@ -40,23 +45,33 @@ public class TestMonster : Creature
 
     private void Start()
     {
-        // TODO This is for testing, remove later for better way to get creature target
-        Target = GameObject.FindGameObjectWithTag("Player").transform;
+
     }
 
     private void Update()
     {
-        float distToTarget = Vector2.Distance(Target.position, transform.position);
-        if (Target != null && distToTarget > ATTACK_RANGE)
-        {
-            aiStateMachine.ChangeState(new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE));
-        }
-
-        if (Target != null && distToTarget <= ATTACK_RANGE)
-        {
-            aiStateMachine.ChangeState(new CreatureAttackBehavior(this, Target));
-        }
+        aiStateMachine.ChangeState(DetermineBehavoir());
         UpdateBaseAnimationKeys();
+    }
+
+    private ICreatureState DetermineBehavoir()
+    {
+        if (Target != null)
+        {
+            float distToTarget = Vector2.Distance(Target.position, transform.position);
+            if (distToTarget > ATTACK_RANGE)
+            {
+                return new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE);
+            }
+            else
+            {
+                return new CreatureAttackBehavior(this, Target);
+            }
+        }
+        else
+        {
+            return new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, sightLayerMask);
+        }
     }
 
     void FixedUpdate()

@@ -114,9 +114,6 @@ namespace CreatureSystems
             CurrentHealth = stats.BaseHealth;
             Stats = stats;
 
-            // This sets the main creature object to ignore raycasts, this is because hit detection for a creature should happen at the creature part > hitbox level. Not at the highest parent object, being the creature object
-            this.gameObject.layer = 2;
-
             this.aiStateMachine = new CreatureAiStateMachine();
 
             this.attackSet = attackSet;
