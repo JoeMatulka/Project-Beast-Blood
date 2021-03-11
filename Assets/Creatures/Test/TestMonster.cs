@@ -19,13 +19,15 @@ public class TestMonster : Creature
         ResistedElements = new Dictionary<DamageType, float> { { DamageType.RAW, 1.5f }, { DamageType.FIRE, -1.5f } },
     };
 
-    private const float ATTACK_RANGE = 2f;
+    private const float ATTACK_RANGE = 2.5f;
     private const float WALK_RANGE = 3f;
 
     public CreaturePart ArmAttackPart;
 
     private const float SIGHT_RANGE = 15f;
     private LayerMask sightLayerMask;
+
+    private const float COLLISION_PATHING_RANGE = 2.25f;
 
     void Awake()
     {
@@ -56,7 +58,7 @@ public class TestMonster : Creature
             float distToTarget = Vector2.Distance(Target.position, transform.position);
             if (distToTarget > ATTACK_RANGE)
             {
-                return new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE);
+                return new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE, COLLISION_PATHING_RANGE);
             }
             else
             {
@@ -65,7 +67,7 @@ public class TestMonster : Creature
         }
         else
         {
-            return new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, sightLayerMask);
+            return new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask);
         }
     }
 

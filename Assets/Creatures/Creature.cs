@@ -158,7 +158,7 @@ namespace CreatureSystems
             }
             if (CheckGrounded() && jump)
             {
-                m_Rigidbody.AddForce(new Vector2(0f, Stats.JumpForce));
+                m_Rigidbody.AddForce(new Vector2(0f, Stats.JumpForce), ForceMode2D.Impulse);
             }
         }
 
