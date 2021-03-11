@@ -43,11 +43,6 @@ public class TestMonster : Creature
         InitialSetUp(STATS, attackSet);
     }
 
-    private void Start()
-    {
-
-    }
-
     private void Update()
     {
         aiStateMachine.ChangeState(DetermineBehavoir());

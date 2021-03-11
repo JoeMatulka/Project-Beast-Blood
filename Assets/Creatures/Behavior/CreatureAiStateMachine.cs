@@ -8,7 +8,7 @@ public class CreatureAiStateMachine
     {
         if (this.currentAiState != null && this.currentAiState.GetType().Equals(newState.GetType()))
         {
-            // Return because we don't change the state if it is the same
+            // Return because we don't change the state if it is the same or if its's null
             return;
         }
         if (this.currentAiState != null)
