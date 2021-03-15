@@ -87,6 +87,10 @@ namespace CreatureSystems
 
         protected CreatureAiStateMachine aiStateMachine;
 
+        // Used for animations for landing, preparing to jump, getting up, etc. Anything that is a transition animation
+        private bool isWaitForTransition = false;
+        protected string[] transitionAnimations = new string[] { "Land", "Jump" };
+
         /**
          * Should be called in Awake phase of a creature object 
          **/
@@ -122,12 +126,13 @@ namespace CreatureSystems
         protected void UpdateBaseAnimationKeys()
         {
             animator.SetFloat("Speed", Mathf.Abs(m_Rigidbody.velocity.x));
+            animator.SetFloat("AirVelocity", m_Rigidbody.velocity.y);
             animator.SetBool("IsGrounded", CheckGrounded());
             animator.SetBool("IsKnockedDown", isTripped || isKnockedOut);
             animator.SetBool("IsStaggered", isStaggered);
         }
 
-        protected bool CheckGrounded()
+        public bool CheckGrounded()
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, GROUND_RADIUS, WhatIsGround);
             for (int i = 0; i < colliders.Length; i++)
@@ -140,9 +145,18 @@ namespace CreatureSystems
             return false;
         }
 
+        private void CheckIfInTransition()
+        {
+            foreach (string animName in transitionAnimations)
+            {
+                isWaitForTransition = animator.GetCurrentAnimatorStateInfo(0).IsName(animName);
+            }
+        }
+
         public virtual void GroundMove(float move, bool jump)
         {
-            if (CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
+            CheckIfInTransition();
+            if (!isWaitForTransition && CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
             {
                 Vector3 targetVelocity = new Vector2(move * Stats.Speed, m_Rigidbody.velocity.y);
                 m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
@@ -158,13 +172,23 @@ namespace CreatureSystems
             }
             if (CheckGrounded() && jump)
             {
+                animator.SetTrigger("Jump");
+
+            }
+        }
+
+        public virtual void Jump()
+        {
+            if (CheckGrounded())
+            {
                 m_Rigidbody.AddForce(new Vector2(0f, Stats.JumpForce), ForceMode2D.Impulse);
             }
         }
 
         public void Attack(CreatureAttack attack)
         {
-            if (currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
+            CheckIfInTransition();
+            if (!isWaitForTransition && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
             {
                 // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
                 if (attack != null)
@@ -277,7 +301,6 @@ namespace CreatureSystems
         private IEnumerator StartGetUpTimer(float getUpTime)
         {
             yield return new WaitForSeconds(getUpTime);
-            // TODO: Replace with get up trigger for get up animation and set boolean at the end of animation
             isKnockedOut = false;
             isTripped = false;
         }

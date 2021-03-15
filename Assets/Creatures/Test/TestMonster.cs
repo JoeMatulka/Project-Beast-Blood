@@ -12,7 +12,7 @@ public class TestMonster : Creature
         TripThreshold = 200,
         KOThreshold = 400,
         Speed = 5,
-        JumpForce = 25,
+        JumpForce = 200,
         BaseSize = 10,
         SizeModifier = 1,
         CreatureType = CreatureType.Bipedal,
@@ -27,7 +27,7 @@ public class TestMonster : Creature
     private const float SIGHT_RANGE = 15f;
     private LayerMask sightLayerMask;
 
-    private const float COLLISION_PATHING_RANGE = 2.25f;
+    private const float COLLISION_PATHING_RANGE = 2f;
 
     void Awake()
     {

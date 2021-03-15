@@ -40,7 +40,7 @@ namespace CreatureAttackLibrary
                     {
                         Vector2 creaturePos = creature.transform.localPosition;
                         // Creature is facing target and it is on the lower y axis
-                        return (creature.IsFacingRight && targetPos.x > creaturePos.x || (!creature.IsFacingRight && targetPos.x < creaturePos.x) && targetPos.y <= creaturePos.y);
+                        return (creature.CheckGrounded() && creature.IsFacingRight && targetPos.x > creaturePos.x || (!creature.IsFacingRight && targetPos.x < creaturePos.x) && targetPos.y <= creaturePos.y);
                     },
                     DEF_ATK_DMG_CALC
                 );
@@ -64,7 +64,7 @@ namespace CreatureAttackLibrary
                         Vector2 creaturePos = creature.transform.localPosition;
                         float distToTarget = Vector2.Distance(creaturePos, targetPos);
                         // Target is beneath and close to creature
-                        return (distToTarget <= DOWNWARD_ATK_DISTANCE && targetPos.y <= creaturePos.y);
+                        return (creature.CheckGrounded() && distToTarget <= DOWNWARD_ATK_DISTANCE && targetPos.y <= creaturePos.y);
                     },
                     DEF_ATK_DMG_CALC
                 );
