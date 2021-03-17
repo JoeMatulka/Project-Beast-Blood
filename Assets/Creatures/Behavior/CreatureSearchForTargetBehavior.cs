@@ -12,6 +12,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
     private readonly float collisionRange;
     private readonly LayerMask sightLayerMask;
     private readonly LayerMask jumpLayerMask;
+    private readonly LayerMask groundLayerMask;
 
     public CreatureSearchForTargetBehavior(Creature creature, float sightRange, float collisionRange, LayerMask sightLayerMask)
     {
@@ -20,6 +21,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
         this.jumpLayerMask = LayerMask.GetMask("Creature Jump Trigger");
+        this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     public CreatureSearchForTargetBehavior(Creature creature, Vector2 lastPositionOfTarget, float sightRange, float collisionRange, LayerMask sightLayerMask)
@@ -30,6 +32,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
         this.jumpLayerMask = LayerMask.GetMask("Creature Jump Trigger");
+        this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     public void Enter()
@@ -51,26 +54,29 @@ public class CreatureSearchForTargetBehavior : ICreatureState
     private Transform FindTarget(in Vector2 creaturePos)
     {
         Transform target = null;
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(creaturePos, sightRange, sightLayerMask);
-        foreach (Collider2D col in hitColliders)
+        Collider2D[] colliders = Physics2D.OverlapCircleAll(creaturePos, sightRange, sightLayerMask);
+        for (int i = 0; i < colliders.Length; i++)
         {
             // Ignore collision with source creature
-            if (!col.gameObject.Equals(creature.gameObject))
+            if (!colliders[i].gameObject.Equals(creature.gameObject))
             {
                 // Check to see if target is in line of sight
-                Vector2 targetPos = col.gameObject.transform.localPosition;
-                RaycastHit2D hit = Physics2D.Raycast(creaturePos, targetPos - creaturePos, sightRange, sightLayerMask);
-                // TODO Prefer player for now, need to account for creature aggressiveness towards other things
-                if (hit.collider != null && hit.collider.transform.tag.Equals("Player"))
+                Vector2 targetPos = colliders[i].gameObject.transform.localPosition;
+                RaycastHit2D[] hits = Physics2D.RaycastAll(creaturePos, targetPos - creaturePos, sightRange, sightLayerMask);
+                for (int ii = 0; ii < hits.Length; ii++)
                 {
-                    Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.green);
-                    creature.Target = col.transform;
-                    target = creature.Target;
-                    break;
-                }
-                else
-                {
-                    Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.red);
+                    // TODO Prefer player for now, need to account for creature aggressiveness towards other things
+                    if (hits[ii].collider != null && hits[ii].collider.transform.tag.Equals("Player"))
+                    {
+                        Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.green);
+                        creature.Target = hits[ii].collider.transform;
+                        target = creature.Target;
+                        break;
+                    }
+                    else
+                    {
+                        Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.red);
+                    }
                 }
             }
         }
@@ -89,7 +95,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
             bool isFacingRight = creature.IsFacingRight;
             movement = isFacingRight ? WALK_INPUT : -WALK_INPUT;
             Vector2 dir = isFacingRight ? Vector2.right : Vector2.left;
-            RaycastHit2D hit = Physics2D.Raycast(creaturePos, dir, collisionRange, LayerMask.GetMask("Level"));
+            RaycastHit2D hit = Physics2D.Raycast(creaturePos, dir, collisionRange, groundLayerMask);
             if (hit.collider != null)
             {
                 Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
@@ -114,6 +120,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
                 Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
                 // Jump if collisions are in the way
                 jump = true;
+                movement = 0;
             }
             else
             {

@@ -51,12 +51,12 @@ public class CreatureGroundPursueBehvior : ICreatureState
             Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
             // Jump if collisions are in the way
             jump = true;
+            movement = 0;
         }
         else
         {
             Debug.DrawRay(creaturePos, dir * collisionRange, Color.red);
         }
-
         creature.GroundMove(movement, jump);
     }
 

@@ -55,11 +55,11 @@ namespace CreatureSystems
         [SerializeField]
         protected CreaturePart[] AttackParts;
         [SerializeField]
-        private LayerMask WhatIsGround;
+        private LayerMask GroundLayerMask;
         [SerializeField]
         private Transform groundCheck;
 
-        private readonly float GROUND_RADIUS = 1f;
+        private readonly float GROUND_RADIUS = .5f;
 
         private Vector3 velocity = Vector3.zero;
 
@@ -134,11 +134,12 @@ namespace CreatureSystems
 
         public bool CheckGrounded()
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, GROUND_RADIUS, WhatIsGround);
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, GROUND_RADIUS, GroundLayerMask);
             for (int i = 0; i < colliders.Length; i++)
             {
-                if (colliders[i].gameObject != gameObject)
+                if (!colliders[i].gameObject.Equals(this.gameObject))
                 {
+                    Debug.Log(colliders[i].name);
                     return true;
                 }
             }

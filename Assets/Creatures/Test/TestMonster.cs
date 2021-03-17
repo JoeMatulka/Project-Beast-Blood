@@ -45,9 +45,14 @@ public class TestMonster : Creature
         InitialSetUp(STATS, attackSet);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         aiStateMachine.ChangeState(DetermineBehavoir());
+        aiStateMachine.Update();
+    }
+
+    private void Update()
+    {
         UpdateBaseAnimationKeys();
     }
 
@@ -69,10 +74,5 @@ public class TestMonster : Creature
         {
             return new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask);
         }
-    }
-
-    void FixedUpdate()
-    {
-        aiStateMachine.Update();
     }
 }

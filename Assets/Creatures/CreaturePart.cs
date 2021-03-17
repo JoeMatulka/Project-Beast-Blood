@@ -57,6 +57,20 @@ namespace CreatuePartSystems
                 Debug.LogError(gameObject.name + " creature part was set without a hit box");
             }
             creature = GetComponentInParent<Creature>();
+            // Ignore Collisions between ground in level and hitboxes
+            GameObject[] ground = GameObject.FindGameObjectsWithTag("Ground");
+            for (int i = 0; i < ground.Length; i++)
+            {
+                Collider2D collider = ground[i].GetComponent<Collider2D>();
+                if (collider != null)
+                {
+                    // Iterate through attached hitboxes to ignore collisions with the ground collider
+                    for (int ii = 0; ii < hitBoxes.Length; ii++)
+                    {
+                        Physics2D.IgnoreCollision(collider, hitBoxes[ii].Collider);
+                    }
+                }
+            }
         }
 
         private void OnHit(object sender, HitboxEventArgs e)
