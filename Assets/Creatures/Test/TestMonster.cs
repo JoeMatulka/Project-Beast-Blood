@@ -12,7 +12,6 @@ public class TestMonster : Creature
         TripThreshold = 200,
         KOThreshold = 400,
         Speed = 5,
-        JumpForce = 200,
         BaseSize = 10,
         SizeModifier = 1,
         CreatureType = CreatureType.Bipedal,

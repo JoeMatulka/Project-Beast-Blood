@@ -31,7 +31,6 @@ namespace CreatureSystems
             public float TripThreshold;
             public float KOThreshold;
             public float Speed;
-            public float JumpForce;
             // Not meant to be the actual size in game, just representative of size in the fantasy term (in feet).
             public float BaseSize;
             public float SizeModifier;
@@ -88,8 +87,12 @@ namespace CreatureSystems
         protected CreatureAiStateMachine aiStateMachine;
 
         // Used for animations for landing, preparing to jump, getting up, etc. Anything that is a transition animation
+        [SerializeField]
         private bool isWaitForTransition = false;
         protected string[] transitionAnimations = new string[] { "Land", "Jump" };
+
+        private CreatureJumpEvent jumpEvent;
+        private const float JUMP_SPEED = 0.2f;
 
         /**
          * Should be called in Awake phase of a creature object 
@@ -126,7 +129,6 @@ namespace CreatureSystems
         protected void UpdateBaseAnimationKeys()
         {
             animator.SetFloat("Speed", Mathf.Abs(m_Rigidbody.velocity.x));
-            animator.SetFloat("AirVelocity", m_Rigidbody.velocity.y);
             animator.SetBool("IsGrounded", CheckGrounded());
             animator.SetBool("IsKnockedDown", isTripped || isKnockedOut);
             animator.SetBool("IsStaggered", isStaggered);
@@ -139,7 +141,6 @@ namespace CreatureSystems
             {
                 if (!colliders[i].gameObject.Equals(this.gameObject))
                 {
-                    Debug.Log(colliders[i].name);
                     return true;
                 }
             }
@@ -154,7 +155,7 @@ namespace CreatureSystems
             }
         }
 
-        public virtual void GroundMove(float move, bool jump)
+        public virtual void GroundMove(in float move, in CreatureJumpEvent jumpEvent = null)
         {
             CheckIfInTransition();
             if (!isWaitForTransition && CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
@@ -171,10 +172,10 @@ namespace CreatureSystems
                     Flip();
                 }
             }
-            if (CheckGrounded() && jump)
+            if (CheckGrounded() && jumpEvent)
             {
                 animator.SetTrigger("Jump");
-
+                this.jumpEvent = jumpEvent;
             }
         }
 
@@ -182,11 +183,26 @@ namespace CreatureSystems
         {
             if (CheckGrounded())
             {
-                m_Rigidbody.AddForce(new Vector2(0f, Stats.JumpForce), ForceMode2D.Impulse);
+                StartCoroutine(MoveToJumpDestination());
             }
         }
 
-        public void Attack(CreatureAttack attack)
+        private IEnumerator MoveToJumpDestination()
+        {
+            isWaitForTransition = true;
+            while (Vector2.Distance(groundCheck.position, this.jumpEvent.JumpDestination) > 1)
+            {
+                float step = JUMP_SPEED * Time.deltaTime;
+                // Move creature ground check to the height of the jump destination
+                transform.position = Vector2.MoveTowards(transform.position, this.jumpEvent.JumpDestination, step);
+                // Move the creature towards the jump destination after its height has been met
+                yield return null;
+            }
+            isWaitForTransition = false;
+            this.jumpEvent = null;
+        }
+
+        public void Attack(in CreatureAttack attack)
         {
             CheckIfInTransition();
             if (!isWaitForTransition && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
@@ -204,7 +220,7 @@ namespace CreatureSystems
             }
         }
 
-        public virtual void ActivateAttackFrame(int frame)
+        public virtual void ActivateAttackFrame(in int frame)
         {
             CreatureAttackFrame attackFrame;
             if (ActiveAttackFrames.TryGetValue(frame, out attackFrame))
@@ -309,7 +325,7 @@ namespace CreatureSystems
         /**
          * Grab the percentage the creature is crippled based off of the provided parts type
          */
-        public float GetCripplePercent(CreaturePartsType type)
+        public float GetCripplePercent(in CreaturePartsType type)
         {
             CreaturePart[] parts = type.Equals(CreaturePartsType.Ground) ? GroundMobilityParts : FlightMobilityParts;
             int totalMobileParts = parts.Length;

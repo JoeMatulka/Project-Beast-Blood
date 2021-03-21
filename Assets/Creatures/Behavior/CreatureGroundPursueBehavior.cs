@@ -23,17 +23,14 @@ public class CreatureGroundPursueBehvior : ICreatureState
         this.walkRange = walkRange;
         this.runRange = runRange;
         this.collisionRange = collisionRange;
-        this.jumpLayerMask = LayerMask.GetMask("Creature Jump Trigger");
+        this.jumpLayerMask = LayerMask.GetMask(CreatureJumpEvent.CREATURE_JUMP_TRIGGER_LAYER_NAME);
     }
 
-    public void Enter()
-    {
-        creature.GroundMove(0, false);
-    }
+    public void Enter() { }
 
     public void Execute()
     {
-        bool jump = false;
+        CreatureJumpEvent jump = null;
 
         Vector2 creaturePos = creature.transform.localPosition;
         float distToTarget = Vector2.Distance(target.position, creaturePos);
@@ -50,7 +47,7 @@ public class CreatureGroundPursueBehvior : ICreatureState
         {
             Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
             // Jump if collisions are in the way
-            jump = true;
+            jump = hit.collider.GetComponent<CreatureJumpEvent>();
             movement = 0;
         }
         else
@@ -60,8 +57,5 @@ public class CreatureGroundPursueBehvior : ICreatureState
         creature.GroundMove(movement, jump);
     }
 
-    public void Exit()
-    {
-        creature.GroundMove(0, false);
-    }
+    public void Exit() { }
 }

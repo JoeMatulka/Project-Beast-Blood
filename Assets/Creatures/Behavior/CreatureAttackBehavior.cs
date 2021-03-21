@@ -17,10 +17,7 @@ public class CreatureAttackBehavior : ICreatureState
         this.target = target;
     }
 
-    public void Enter() {
-        // Halt movements
-        creature.GroundMove(0, false);
-    }
+    public void Enter() { }
 
     public void Execute()
     {

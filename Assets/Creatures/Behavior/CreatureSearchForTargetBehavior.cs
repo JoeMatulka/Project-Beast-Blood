@@ -20,7 +20,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         this.sightRange = sightRange;
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
-        this.jumpLayerMask = LayerMask.GetMask("Creature Jump Trigger");
+        this.jumpLayerMask = LayerMask.GetMask(CreatureJumpEvent.CREATURE_JUMP_TRIGGER_LAYER_NAME);
         this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
@@ -31,14 +31,11 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         this.sightRange = sightRange;
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
-        this.jumpLayerMask = LayerMask.GetMask("Creature Jump Trigger");
+        this.jumpLayerMask = LayerMask.GetMask(CreatureJumpEvent.CREATURE_JUMP_TRIGGER_LAYER_NAME);
         this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
-    public void Enter()
-    {
-
-    }
+    public void Enter() { }
 
     public void Execute()
     {
@@ -86,7 +83,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
     private void SeekTarget(in Vector2 creaturePos)
     {
         float movement = 0f;
-        bool jump = false;
+        CreatureJumpEvent jump = null;
 
         if (lastPositionOfTarget == Vector2.zero || Vector2.Distance(lastPositionOfTarget, creaturePos) <= collisionRange)
         {
@@ -119,7 +116,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
             {
                 Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
                 // Jump if collisions are in the way
-                jump = true;
+                jump = hit.collider.GetComponent<CreatureJumpEvent>();
                 movement = 0;
             }
             else
@@ -131,8 +128,5 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         creature.GroundMove(movement, jump);
     }
 
-    public void Exit()
-    {
-
-    }
+    public void Exit() { }
 }
