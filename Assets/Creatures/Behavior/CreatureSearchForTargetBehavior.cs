@@ -20,7 +20,6 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         this.sightRange = sightRange;
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
-        this.jumpLayerMask = LayerMask.GetMask(CreatureJumpEvent.CREATURE_JUMP_TRIGGER_LAYER_NAME);
         this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
@@ -31,7 +30,6 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         this.sightRange = sightRange;
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
-        this.jumpLayerMask = LayerMask.GetMask(CreatureJumpEvent.CREATURE_JUMP_TRIGGER_LAYER_NAME);
         this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
@@ -83,8 +81,6 @@ public class CreatureSearchForTargetBehavior : ICreatureState
     private void SeekTarget(in Vector2 creaturePos)
     {
         float movement = 0f;
-        CreatureJumpEvent jump = null;
-
         if (lastPositionOfTarget == Vector2.zero || Vector2.Distance(lastPositionOfTarget, creaturePos) <= collisionRange)
         {
             lastPositionOfTarget = Vector2.zero;
@@ -110,22 +106,9 @@ public class CreatureSearchForTargetBehavior : ICreatureState
             // Calculate which direction to go
             bool isTargetToRight = creaturePos.x >= lastPositionOfTarget.x;
             movement = isTargetToRight ? -RUN_INPUT : RUN_INPUT;
-            Vector2 dir = isTargetToRight ? Vector2.left : Vector2.right;
-            RaycastHit2D hit = Physics2D.Raycast(creaturePos, dir, collisionRange, jumpLayerMask);
-            if (hit.collider != null)
-            {
-                Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
-                // Jump if collisions are in the way
-                jump = hit.collider.GetComponent<CreatureJumpEvent>();
-                movement = 0;
-            }
-            else
-            {
-                Debug.DrawRay(creaturePos, dir * collisionRange, Color.red);
-            }
         }
 
-        creature.GroundMove(movement, jump);
+        creature.GroundMove(movement);
     }
 
     public void Exit() { }

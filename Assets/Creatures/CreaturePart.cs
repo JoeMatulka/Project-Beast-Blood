@@ -91,5 +91,10 @@ namespace CreatuePartSystems
         {
             get { return isBroken; }
         }
+
+        public Creature Creature
+        {
+            get { return creature; }
+        }
     }
 }

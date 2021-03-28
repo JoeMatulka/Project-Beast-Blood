@@ -14,8 +14,6 @@ public class CreatureGroundPursueBehvior : ICreatureState
     private readonly float runRange;
     private readonly float collisionRange;
 
-    private readonly LayerMask jumpLayerMask;
-
     public CreatureGroundPursueBehvior(Creature creature, Transform target, float walkRange, float runRange, float collisionRange)
     {
         this.creature = creature;
@@ -23,15 +21,12 @@ public class CreatureGroundPursueBehvior : ICreatureState
         this.walkRange = walkRange;
         this.runRange = runRange;
         this.collisionRange = collisionRange;
-        this.jumpLayerMask = LayerMask.GetMask(CreatureJumpEvent.CREATURE_JUMP_TRIGGER_LAYER_NAME);
     }
 
     public void Enter() { }
 
     public void Execute()
     {
-        CreatureJumpEvent jump = null;
-
         Vector2 creaturePos = creature.transform.localPosition;
         float distToTarget = Vector2.Distance(target.position, creaturePos);
         // Move towards target to get into attack range
@@ -41,20 +36,7 @@ public class CreatureGroundPursueBehvior : ICreatureState
 
         float movement = creaturePos.x > target.position.x ? -input : input;
 
-        Vector2 dir = creature.IsFacingRight ? Vector2.right : Vector2.left;
-        RaycastHit2D hit = Physics2D.Raycast(creaturePos, dir, collisionRange, jumpLayerMask);
-        if (hit.collider != null)
-        {
-            Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
-            // Jump if collisions are in the way
-            jump = hit.collider.GetComponent<CreatureJumpEvent>();
-            movement = 0;
-        }
-        else
-        {
-            Debug.DrawRay(creaturePos, dir * collisionRange, Color.red);
-        }
-        creature.GroundMove(movement, jump);
+        creature.GroundMove(movement);
     }
 
     public void Exit() { }

@@ -6,6 +6,7 @@ using System.Linq;
 using UnityEngine;
 using System.Collections;
 using CreatureAttackLibrary;
+using System;
 
 namespace CreatureSystems
 {
@@ -87,12 +88,12 @@ namespace CreatureSystems
         protected CreatureAiStateMachine aiStateMachine;
 
         // Used for animations for landing, preparing to jump, getting up, etc. Anything that is a transition animation
-        [SerializeField]
-        private bool isWaitForTransition = false;
         protected string[] transitionAnimations = new string[] { "Land", "Jump" };
-
-        private CreatureJumpEvent jumpEvent;
-        private const float JUMP_SPEED = 0.2f;
+        public bool isInAnimationTransition = false;
+        
+        public CreatureJumpEvent jumpEvent;
+        private const float JUMP_DURATION = 0.5f;
+        private bool isJumping = false;
 
         /**
          * Should be called in Awake phase of a creature object 
@@ -136,6 +137,8 @@ namespace CreatureSystems
 
         public bool CheckGrounded()
         {
+            if (isJumping) return false;
+
             Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, GROUND_RADIUS, GroundLayerMask);
             for (int i = 0; i < colliders.Length; i++)
             {
@@ -147,18 +150,9 @@ namespace CreatureSystems
             return false;
         }
 
-        private void CheckIfInTransition()
+        public virtual void GroundMove(in float move)
         {
-            foreach (string animName in transitionAnimations)
-            {
-                isWaitForTransition = animator.GetCurrentAnimatorStateInfo(0).IsName(animName);
-            }
-        }
-
-        public virtual void GroundMove(in float move, in CreatureJumpEvent jumpEvent = null)
-        {
-            CheckIfInTransition();
-            if (!isWaitForTransition && CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
+            if (!isInAnimationTransition && CheckGrounded() && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
             {
                 Vector3 targetVelocity = new Vector2(move * Stats.Speed, m_Rigidbody.velocity.y);
                 m_Rigidbody.velocity = Vector3.SmoothDamp(m_Rigidbody.velocity, targetVelocity, ref velocity, 0.5f);
@@ -171,41 +165,58 @@ namespace CreatureSystems
                 {
                     Flip();
                 }
-            }
-            if (CheckGrounded() && jumpEvent)
-            {
-                animator.SetTrigger("Jump");
-                this.jumpEvent = jumpEvent;
+                if (this.jumpEvent != null)
+                {
+                    animator.SetTrigger("Jump");
+                }
             }
         }
 
         public virtual void Jump()
         {
-            if (CheckGrounded())
+            if (CheckGrounded() && !isJumping)
             {
-                StartCoroutine(MoveToJumpDestination());
+                StartCoroutine(JumpToDestination());
             }
         }
 
-        private IEnumerator MoveToJumpDestination()
+        private IEnumerator JumpToDestination()
         {
-            isWaitForTransition = true;
-            while (Vector2.Distance(groundCheck.position, this.jumpEvent.JumpDestination) > 1)
+            isJumping = true;
+            m_Rigidbody.isKinematic = true;
+            // Calculate destination based off of difference between ground check and creature center
+            float jumpYHeight = this.jumpEvent.Destination.y + Mathf.Abs(transform.position.y - groundCheck.position.y);
+            Vector2 end = new Vector2(this.jumpEvent.Destination.x, jumpYHeight);
+            Vector2 start = transform.position;
+
+            float progress = 0f;
+            do
             {
-                float step = JUMP_SPEED * Time.deltaTime;
-                // Move creature ground check to the height of the jump destination
-                transform.position = Vector2.MoveTowards(transform.position, this.jumpEvent.JumpDestination, step);
-                // Move the creature towards the jump destination after its height has been met
-                yield return null;
-            }
-            isWaitForTransition = false;
+                transform.position = CalculateJumpStep(start, end, jumpYHeight, progress);
+                progress += Time.deltaTime / JUMP_DURATION;
+                yield return new WaitForEndOfFrame();
+            } while (progress < 1f);
+
+            m_Rigidbody.isKinematic = false;
+            isJumping = false;
             this.jumpEvent = null;
+        }
+
+        /**
+         * Used to move creature along a parabola to the jump destion (from start to end based off of provided time and provided peak height of jump)
+         */
+        private Vector2 CalculateJumpStep(Vector2 start, Vector2 end, float height, float t)
+        {
+            Func<float, float> f = x => -4 * height * x * x + 4 * height * x;
+
+            var mid = Vector2.Lerp(start, end, t);
+
+            return new Vector2(mid.x, f(t) + Mathf.Lerp(start.y, end.y, t));
         }
 
         public void Attack(in CreatureAttack attack)
         {
-            CheckIfInTransition();
-            if (!isWaitForTransition && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
+            if (!isInAnimationTransition && currentAttack == null && !isKnockedOut && !isTripped && !isStaggered)
             {
                 // Attack ID of zero is a null catch for creature attacks, no attack IDs should be zero
                 if (attack != null)
