@@ -2527,7 +2527,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.22971106, y: -0.25149107}
+  m_Offset: {x: 0.14160013, y: -0.34265137}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2538,7 +2538,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.4594221, y: 0.4432993}
+  m_Size: {x: 1.2832003, y: 0.2609787}
   m_EdgeRadius: 0
 --- !u!1 &519420028
 GameObject:
@@ -2681,7 +2681,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.2890799, y: -0.23218036}
+  m_Offset: {x: 0.2890799, y: -0.3363638}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -2692,7 +2692,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.5781598, y: 0.48192072}
+  m_Size: {x: 1.5781598, y: 0.27355385}
   m_EdgeRadius: 0
 --- !u!1 &886841388
 GameObject:
@@ -3606,7 +3606,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.24201393, y: -1.3059492}
+  m_Offset: {x: -0.24201393, y: -1.403621}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -3617,7 +3617,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.4840279, y: 0.5318413}
+  m_Size: {x: 1.4840279, y: 0.33649778}
   m_EdgeRadius: 0
 --- !u!114 &1633595454
 MonoBehaviour:
@@ -3677,7 +3677,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.22971106, y: -0.25149107}
+  m_Offset: {x: 0.22971106, y: -0.32491255}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -3688,7 +3688,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.4594221, y: 0.4432993}
+  m_Size: {x: 1.4594221, y: 0.29645634}
   m_EdgeRadius: 0
 --- !u!114 &1839620723
 MonoBehaviour:

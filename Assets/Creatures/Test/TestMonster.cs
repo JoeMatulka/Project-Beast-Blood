@@ -19,7 +19,7 @@ public class TestMonster : Creature
     };
 
     private const float ATTACK_RANGE = 2.5f;
-    private const float WALK_RANGE = 3f;
+    private const float WALK_RANGE = 2.75f;
 
     public CreaturePart ArmAttackPart;
 

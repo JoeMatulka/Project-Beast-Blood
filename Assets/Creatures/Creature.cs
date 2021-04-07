@@ -90,10 +90,12 @@ namespace CreatureSystems
         // Used for animations for landing, preparing to jump, getting up, etc. Anything that is a transition animation
         protected string[] transitionAnimations = new string[] { "Land", "Jump" };
         public bool isInAnimationTransition = false;
-        
+
         public CreatureJumpEvent jumpEvent;
         private const float JUMP_DURATION = 0.5f;
         private bool isJumping = false;
+        private bool hasInitiatedJump = false;
+        private readonly Damage JUMPING_DOWN_DMG = new Damage(30, DamageType.RAW);
 
         /**
          * Should be called in Awake phase of a creature object 
@@ -165,8 +167,9 @@ namespace CreatureSystems
                 {
                     Flip();
                 }
-                if (this.jumpEvent != null)
+                if (!hasInitiatedJump && this.jumpEvent != null)
                 {
+                    hasInitiatedJump = true;
                     animator.SetTrigger("Jump");
                 }
             }
@@ -174,19 +177,23 @@ namespace CreatureSystems
 
         public virtual void Jump()
         {
-            if (CheckGrounded() && !isJumping)
+            if (CheckGrounded() && !isJumping && this.jumpEvent != null)
             {
-                StartCoroutine(JumpToDestination());
+                StartCoroutine(JumpToDestination(this.jumpEvent.Destination));
+                hasInitiatedJump = false;
             }
         }
 
-        private IEnumerator JumpToDestination()
+        private IEnumerator JumpToDestination(Vector2 destination)
         {
             isJumping = true;
             m_Rigidbody.isKinematic = true;
+            // Generate new damage ID for downward velocity damage and activate hitboxes
+            JUMPING_DOWN_DMG.GenerateNewGuid();
+            ActivateHitBoxes(JUMPING_DOWN_DMG);
             // Calculate destination based off of difference between ground check and creature center
-            float jumpYHeight = this.jumpEvent.Destination.y + Mathf.Abs(transform.position.y - groundCheck.position.y);
-            Vector2 end = new Vector2(this.jumpEvent.Destination.x, jumpYHeight);
+            float jumpYHeight = destination.y + Mathf.Abs(transform.position.y - groundCheck.position.y);
+            Vector2 end = new Vector2(destination.x, jumpYHeight);
             Vector2 start = transform.position;
 
             float progress = 0f;
@@ -200,6 +207,7 @@ namespace CreatureSystems
             m_Rigidbody.isKinematic = false;
             isJumping = false;
             this.jumpEvent = null;
+            ClearActiveHitBoxes();
         }
 
         /**
@@ -256,6 +264,18 @@ namespace CreatureSystems
                     // Clear active hitboxes
                     ClearActiveHitBoxes();
                 }
+            }
+        }
+
+        /*
+        * Activates all the hitboxes with the provided damage, typically used for a creature jumping or swooping
+        */
+        private void ActivateHitBoxes(in Damage damage)
+        {
+            for (int i = 0; i < hitboxes.Length; i++)
+            {
+                hitboxes[i].IsActive = true;
+                hitboxes[i].ActiveHitBoxDamage = damage;
             }
         }
 
@@ -382,6 +402,11 @@ namespace CreatureSystems
         public CreatureAttack[] AttackSet
         {
             get { return attackSet; }
+        }
+
+        public CreatureAiStateMachine AiStateMachine
+        {
+            get { return aiStateMachine; }
         }
     }
 }

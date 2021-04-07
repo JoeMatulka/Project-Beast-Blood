@@ -107,7 +107,7 @@ namespace CreatureAttackLibrary
         }
 
         public void GenerateNewDamageGuid() {
-            this.damage.GenerateNewIGuid();
+            this.damage.GenerateNewGuid();
         }
 
         public CreatureAttack SetAttackDamageCalculation(CreatureAttackDamageCalculation attackDmgCalc)

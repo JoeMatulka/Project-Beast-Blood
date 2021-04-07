@@ -21,7 +21,7 @@ public class Damage
     }
 
     // Not the best thing, but used to reassign IDs to static damage objects (like on creature attacks)
-    public void GenerateNewIGuid() {
+    public void GenerateNewGuid() {
         this.id = Guid.NewGuid();
     }
     public Guid ID {
