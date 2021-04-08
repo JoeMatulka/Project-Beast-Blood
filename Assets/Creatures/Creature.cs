@@ -408,5 +408,10 @@ namespace CreatureSystems
         {
             get { return aiStateMachine; }
         }
+
+        public Transform GroundCheck
+        {
+            get { return groundCheck; }
+        }
     }
 }

@@ -28,18 +28,13 @@ public class CreatureJumpEvent : MonoBehaviour
         {
             if (
                 // Only set the event if the creature is facing towards the event trigger
-                 (creature.IsFacingRight && this.transform.position.x > creature.transform.position.x) ||
-                 (!creature.IsFacingRight && this.transform.position.x < creature.transform.position.x)
+                 ((creature.IsFacingRight && this.transform.position.x > creature.transform.position.x) ||
+                 (!creature.IsFacingRight && this.transform.position.x < creature.transform.position.x))
                 // Do not set event if the creature already has one set
                  && creature.jumpEvent == null
-                // Do not set event if creature is pursuing a target and the target is behind them (give creature a chance to turn instead of jumping)
-                // TODO there is definitely a better way to do this
+                // Do not set event if creature is pursuing a target and the target is above the creature
                  && (creature.AiStateMachine.CurrentAiState.GetType().Equals(typeof(CreatureGroundPursueBehvior)) && 
-                     (
-                      (creature.Target != null && creature.IsFacingRight && creature.Target.transform.position.x > creature.transform.position.x) ||
-                      (creature.Target != null && !creature.IsFacingRight && creature.Target.transform.position.x < creature.transform.position.x)
-                     )
-                    )
+                    (creature.Target != null && (creature.Target.position.y - creature.GroundCheck.transform.position.y) >= 0.5))
                 // Do not set event if creature is currently in attack behavior
                 && !creature.AiStateMachine.CurrentAiState.GetType().Equals(typeof(CreatureAttackBehavior))
                 )
