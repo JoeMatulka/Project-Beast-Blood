@@ -1,5 +1,6 @@
 ﻿using CreatureSystems;
 using HitboxSystem;
+using ResourceManager;
 using UnityEngine;
 
 namespace CreatuePartSystems
@@ -34,6 +35,13 @@ namespace CreatuePartSystems
         private const float DAMAGE_MOD_BASE = 1;
         private const float DAMAGE_MOD_BROKEN = 1.25f;
         private const float DAMAGE_MOD_FRESH_BREAK = 2;
+
+        private Renderer renderer;
+
+        private void Awake()
+        {
+            renderer = GetComponent<Renderer>();
+        }
 
         private void Start()
         {
@@ -81,10 +89,20 @@ namespace CreatuePartSystems
             {
                 PartHealth -= dmg.Value;
                 isBroken = PartHealth <= 0;
-                dmgModAmount = DAMAGE_MOD_FRESH_BREAK;
+                if (isBroken) {
+                    dmgModAmount = DAMAGE_MOD_FRESH_BREAK;
+                    ApplyBrokenEffectsToPart();
+                }
             }
+
             if (isBroken) dmgModAmount = DAMAGE_MOD_BROKEN;
+
             creature.Damage(dmg, DamageModifier, dmgModAmount);
+        }
+
+        private void ApplyBrokenEffectsToPart()
+        {
+            renderer.material = EffectsManager.Instance.BloodiedMaterial;
         }
 
         public bool IsBroken

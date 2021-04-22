@@ -1,5 +1,6 @@
 ﻿using Gamekit2D;
 using HitboxSystem;
+using ResourceManager;
 using System;
 using UnityEngine;
 
@@ -26,6 +27,12 @@ public class Player : MonoBehaviour
     // TODO Set up Super Armor Thresholds, think of how poise works in Dark Souls 3
     private bool isSuperArmor = false;
     private float knockBackDmgThreshold = 30f;
+
+    private void Awake()
+    {
+        // TODO Definitely not where this should be, put here for now since no scene code is done yet
+        EffectsManager.Instance.LoadEffectsBundle();
+    }
 
     private void Start()
     {
