@@ -89,9 +89,10 @@ namespace CreatuePartSystems
             {
                 PartHealth -= dmg.Value;
                 isBroken = PartHealth <= 0;
-                if (isBroken) {
+                if (isBroken)
+                {
                     dmgModAmount = DAMAGE_MOD_FRESH_BREAK;
-                    ApplyBrokenEffectsToPart();
+                    ApplyBrokenEffectsToPart();  
                 }
             }
 
@@ -102,7 +103,21 @@ namespace CreatuePartSystems
 
         private void ApplyBrokenEffectsToPart()
         {
+            Vector2 effectPos = this.transform.position;
+            Quaternion effectRot = this.transform.rotation;
+            Transform effectParent = this.transform;
+            Color bloodColor = creature.BloodColor;
+            // Create Blood Splash
+            GameObject splash = EffectsManager.Instance.BloodSplash;
+            splash.GetComponent<ParticleSystem>().startColor = bloodColor;
+            Instantiate(splash, effectPos, effectRot, effectParent);
+            // Create Bleeding Effect
+            GameObject bleeding = EffectsManager.Instance.Bleeding;
+            bleeding.GetComponent<ParticleSystem>().startColor = bloodColor;
+            Instantiate(bleeding, effectPos, effectRot, effectParent);
+            // Apply bloodied material
             renderer.material = EffectsManager.Instance.BloodiedMaterial;
+            renderer.material.SetColor("_Color", bloodColor);
         }
 
         public bool IsBroken

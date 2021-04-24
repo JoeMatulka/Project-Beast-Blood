@@ -29,9 +29,14 @@ namespace ResourceManager
             get { return effectsBundle.LoadAsset<Material>("Bloodied"); }
         }
 
-        public Material DissolveMaterial
+        public GameObject BloodSplash
         {
-            get { return effectsBundle.LoadAsset<Material>("Dissolve"); }
+            get { return effectsBundle.LoadAsset<GameObject>("Blood Splash"); }
+        }
+
+        public GameObject Bleeding
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Bleeding"); }
         }
     }
 }

@@ -881,7 +881,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
-  PartHealth: 1000
+  PartHealth: 50
   IsBreakable: 1
   DamageModifier: 0
   hitBoxes:
@@ -1009,7 +1009,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
-  PartHealth: 1000
+  PartHealth: 100
   IsBreakable: 1
   DamageModifier: 2
   hitBoxes:
@@ -1458,7 +1458,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
-  PartHealth: 1000
+  PartHealth: 100
   IsBreakable: 1
   DamageModifier: 0
   hitBoxes:
@@ -1627,6 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53716006579aa844ac1d09d29730e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  BloodColor: {r: 0.53333336, g: 0.039215688, b: 0.23529412, a: 1}
   CurrentHealth: 0
   CurrentTripThreshold: 0
   CurrentKOThreshold: 0
@@ -1635,14 +1636,16 @@ MonoBehaviour:
   AttackParts:
   - {fileID: 2286270447085914795}
   - {fileID: 2286270447959990615}
-  WhatIsGround:
+  GroundLayerMask:
     serializedVersion: 2
-    m_Bits: 23
+    m_Bits: 2048
   groundCheck: {fileID: 8563515282157861236}
   isTripped: 0
   isKnockedOut: 0
   isStaggered: 0
   Target: {fileID: 0}
+  isInAnimationTransition: 0
+  jumpEvent: {fileID: 0}
   ArmAttackPart: {fileID: 2286270447085914795}
 --- !u!58 &2550880977476961872
 CircleCollider2D:
@@ -1995,7 +1998,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
-  PartHealth: 1000
+  PartHealth: 100
   IsBreakable: 1
   DamageModifier: 2
   hitBoxes:
@@ -2123,7 +2126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
-  PartHealth: 1000
+  PartHealth: 75
   IsBreakable: 1
   DamageModifier: 1
   hitBoxes:
@@ -2249,7 +2252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
-  PartHealth: 1000
+  PartHealth: 100
   IsBreakable: 0
   DamageModifier: 0
   hitBoxes:
@@ -2667,7 +2670,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   creature: {fileID: 0}
-  PartHealth: 1000
+  PartHealth: 100
   IsBreakable: 1
   DamageModifier: 0
   hitBoxes:

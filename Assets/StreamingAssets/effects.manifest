@@ -1,21 +1,34 @@
 ManifestFileVersion: 0
-CRC: 3665773858
+CRC: 1711126746
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: dd997cb06c3b121643168541b85d124a
+    Hash: 282e96f5057f973e6ed5c42a5b53d3a8
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 21c99c86a43ad817b2cb7f65458ae090
+    Hash: f0919d9e882246cce89a5d92886a5cfd
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
 - Class: 21
   Script: {instanceID: 0}
 - Class: 28
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7596b049d44702c47b9c8657f798b9c3, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
+  Script: {instanceID: 0}
 Assets:
-- Assets/Shaders/Dissolve/Dissolve.mat
 - Assets/Shaders/Bloodied/Bloodied.mat
+- Assets/Effects/Gore/Bleeding.prefab
+- Assets/Effects/Gore/Blood Splash.prefab
 Dependencies: []

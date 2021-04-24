@@ -20,8 +20,28 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Texture2DArray_B3EC95F:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BlendTex:
+        m_Texture: {fileID: 2800000, guid: 6df239e2c5f9ca84083b15dcec5dd184, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BloodTex:
+        m_Texture: {fileID: 2800000, guid: 6df239e2c5f9ca84083b15dcec5dd184, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex2:
+        m_Texture: {fileID: 2800000, guid: 6df239e2c5f9ca84083b15dcec5dd184, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2DAsset_DF728775_Out_0:
@@ -31,3 +51,5 @@ Material:
     m_Floats: []
     m_Colors:
     - _Color: {r: 0.53333336, g: 0.03137255, b: 0.03137255, a: 1}
+    - _Offset: {r: 0.08, g: -0.8, b: -1.46, a: 0}
+    - _Tiling: {r: -0.17, g: 1.4, b: -1.08, a: 0}

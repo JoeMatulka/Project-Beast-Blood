@@ -42,6 +42,8 @@ namespace CreatureSystems
 
         public Creature.CreatureStats Stats;
 
+        public Color BloodColor;
+
         [SerializeField]
         protected float CurrentHealth;
         [SerializeField]
