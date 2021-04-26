@@ -1627,7 +1627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e53716006579aa844ac1d09d29730e6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BloodColor: {r: 0.53333336, g: 0.039215688, b: 0.23529412, a: 1}
+  BloodColor: {r: 0.53333336, g: 0.03137255, b: 0.03137255, a: 1}
   CurrentHealth: 0
   CurrentTripThreshold: 0
   CurrentKOThreshold: 0

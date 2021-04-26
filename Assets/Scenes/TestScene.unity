@@ -2814,7 +2814,7 @@ MonoBehaviour:
   m_AirControl: 1
   m_WhatIsGround:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 2561
   m_GroundCheck: {fileID: 1974231731}
   m_CrouchDisableCollider: {fileID: 886841394}
   FacingRight: 1
@@ -3503,7 +3503,7 @@ PrefabInstance:
     - target: {fileID: 2740567281922903610, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
       propertyPath: BloodColor.b
-      value: 0.29411766
+      value: 0.03137255
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6, type: 3}
