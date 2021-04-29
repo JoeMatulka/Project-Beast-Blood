@@ -36,11 +36,11 @@ namespace CreatuePartSystems
         private const float DAMAGE_MOD_BROKEN = 1.25f;
         private const float DAMAGE_MOD_FRESH_BREAK = 2;
 
-        private Renderer renderer;
+        private Renderer m_renderer;
 
         private void Awake()
         {
-            renderer = GetComponent<Renderer>();
+            m_renderer = GetComponent<Renderer>();
         }
 
         private void Start()
@@ -116,8 +116,8 @@ namespace CreatuePartSystems
             bleeding.GetComponent<ParticleSystem>().startColor = bloodColor;
             Instantiate(bleeding, effectPos, effectRot, effectParent);
             // Apply bloodied material
-            renderer.material = EffectsManager.Instance.BloodiedMaterial;
-            renderer.material.SetColor("_Color", bloodColor);
+            m_renderer.material = EffectsManager.Instance.BloodiedMaterial;
+            m_renderer.material.SetColor("_Color", bloodColor);
         }
 
         public bool IsBroken

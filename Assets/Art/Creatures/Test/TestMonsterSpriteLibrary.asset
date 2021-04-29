@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bf7c34a0dc4e6348bea04faa70406ee, type: 3}
+  m_Name: TestMonsterSpriteLibrary
+  m_EditorClassIdentifier: 
+  m_Labels:
+  - m_Name: Right Hand
+    m_Hash: 1002107042
+    m_CategoryList:
+    - m_Name: open
+      m_Hash: -1536130140
+      m_Sprite: {fileID: 2132695905444253028, guid: 9ac96cd4702aa3d469c013c81dfb66f1,
+        type: 3}
+    - m_Name: closed
+      m_Hash: 80170468
+      m_Sprite: {fileID: 3390584745963822746, guid: 9ac96cd4702aa3d469c013c81dfb66f1,
+        type: 3}
+  - m_Name: Left Hand
+    m_Hash: 1503945155
+    m_CategoryList:
+    - m_Name: open
+      m_Hash: -1536130140
+      m_Sprite: {fileID: 7244972519501883042, guid: 9ac96cd4702aa3d469c013c81dfb66f1,
+        type: 3}
+    - m_Name: closed
+      m_Hash: 80170468
+      m_Sprite: {fileID: -7783223685356747706, guid: 9ac96cd4702aa3d469c013c81dfb66f1,
+        type: 3}
