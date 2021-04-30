@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections;
 using CreatureAttackLibrary;
 using System;
+using UnityEngine.Experimental.U2D.Animation;
 
 namespace CreatureSystems
 {
@@ -244,6 +245,7 @@ namespace CreatureSystems
         public virtual void ActivateAttackFrame(in int frame)
         {
             CreatureAttackFrame attackFrame;
+            // Check if frame is within current active attack frames
             if (ActiveAttackFrames.TryGetValue(frame, out attackFrame))
             {
                 // Apply movement from frame
@@ -263,8 +265,20 @@ namespace CreatureSystems
                 }
                 else
                 {
-                    // Clear active hitboxes
+                    // Clear active hitboxes if no active hitboxes are provided
                     ClearActiveHitBoxes();
+                }
+                // Swap sprites from frame
+                if (attackFrame.SpriteSwaps?.Length > 0)
+                {
+                    foreach (CreatureAttackSpriteSwap swap in attackFrame.SpriteSwaps)
+                    {
+                        // Target child bone for swap of creature transform
+                        Transform bone = transform.GetComponentsInChildren<Transform>().FirstOrDefault(c => c.gameObject.name == swap.Key);
+                        // Get parent of bone because that is where the sprites end up on a skeletal rig
+                        SpriteResolver resolver = bone.GetComponentInParent<SpriteResolver>();
+                        resolver.SetCategoryAndLabel(swap.Category, swap.Label);
+                    }
                 }
             }
         }

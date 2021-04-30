@@ -4,16 +4,16 @@ TextureImporter:
   internalIDToNameTable:
   - first:
       213: 2254191720448263968
-    second: head
+    second: test_monster_head
   - first:
       213: -7128875982310618718
-    second: torso
+    second: test_monster_torso
   - first:
       213: 7244972519501883042
-    second: left_hand
+    second: test_monster_left_hand
   - first:
       213: 2132695905444253028
-    second: right_hand
+    second: test_monster_right_hand
   - first:
       213: -1678285432470128638
     second: test_monster_pelvis
@@ -22,22 +22,22 @@ TextureImporter:
     second: test_monster_tail
   - first:
       213: -7783223685356747706
-    second: left_hand_closed
+    second: test_monster_left_hand_closed
   - first:
       213: 3390584745963822746
-    second: right_hand_closed
+    second: test_monster_right_hand_closed
   - first:
       213: 4001120834229205236
-    second: left_leg
+    second: test_monster_left_leg
   - first:
       213: 648892527907392566
-    second: right_leg
+    second: test_monster_right_leg
   - first:
       213: 2765115652082219951
-    second: left_arm
+    second: test_monster_left_arm
   - first:
       213: -5627766781094573005
-    second: right_arm
+    second: test_monster_right_arm
   - first:
       213: -658976902516022290
     second: test_monster_12
@@ -138,7 +138,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: head
+      name: test_monster_head
       rect:
         serializedVersion: 2
         x: 3
@@ -665,7 +665,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: torso
+      name: test_monster_torso
       rect:
         serializedVersion: 2
         x: 99
@@ -1181,7 +1181,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: left_hand
+      name: test_monster_left_hand
       rect:
         serializedVersion: 2
         x: 213
@@ -1723,7 +1723,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: right_hand
+      name: test_monster_right_hand
       rect:
         serializedVersion: 2
         x: 269
@@ -2851,7 +2851,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: left_hand_closed
+      name: test_monster_left_hand_closed
       rect:
         serializedVersion: 2
         x: 213
@@ -3204,7 +3204,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: right_hand_closed
+      name: test_monster_right_hand_closed
       rect:
         serializedVersion: 2
         x: 278
@@ -3557,7 +3557,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: left_leg
+      name: test_monster_left_leg
       rect:
         serializedVersion: 2
         x: 0
@@ -4257,7 +4257,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: right_leg
+      name: test_monster_right_leg
       rect:
         serializedVersion: 2
         x: 94
@@ -4849,7 +4849,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: left_arm
+      name: test_monster_left_arm
       rect:
         serializedVersion: 2
         x: 190
@@ -5488,7 +5488,7 @@ TextureImporter:
         boneIndex[2]: 0
         boneIndex[3]: 0
     - serializedVersion: 2
-      name: right_arm
+      name: test_monster_right_arm
       rect:
         serializedVersion: 2
         x: 292

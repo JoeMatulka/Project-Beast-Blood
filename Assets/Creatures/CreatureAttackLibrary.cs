@@ -33,8 +33,10 @@ namespace CreatureAttackLibrary
                     (int)CreatureAttackID.BIPEDAL_LOW_PUNCH,
                     new Dictionary<int, CreatureAttackFrame>
                     {
-                        { 13, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left"}, 10f) },
-                        { 16, new CreatureAttackFrame(new string[] { }) }
+                        { 10, new CreatureAttackFrame(new string[] { }, new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("hand_left", "Left Hand", "closed") }) },
+                        { 13, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left"}, null, 10f) },
+                        { 16, new CreatureAttackFrame(new string[] { }) },
+                        { 23, new CreatureAttackFrame(new string[] { }, new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("hand_left", "Left Hand", "open") }) }
                     },
                     (in Vector2 targetPos, in Creature creature, in CreaturePart attackPart) =>
                     {
@@ -55,9 +57,10 @@ namespace CreatureAttackLibrary
                     (int)CreatureAttackID.BIPEDAL_DOWNWARD_SLAM,
                     new Dictionary<int, CreatureAttackFrame>
                     {
+                        { 8, new CreatureAttackFrame(new string[] { },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("hand_left", "Left Hand", "closed"), new CreatureAttackSpriteSwap("hand_right", "Right Hand", "closed") }) },
                         { 13, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left", "bicep_right", "forearm_right", "hand_right"}) },
                         { 16, new CreatureAttackFrame(new string[] { "bicep_left", "forearm_left", "hand_left"}) },
-                        { 20, new CreatureAttackFrame(new string[] { }) }
+                        { 20, new CreatureAttackFrame(new string[] { }, new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("hand_left", "Left Hand", "open"), new CreatureAttackSpriteSwap("hand_right", "Right Hand", "open") }) }
                     },
                     (in Vector2 targetPos, in Creature creature, in CreaturePart attackPart) =>
                     {
@@ -76,6 +79,18 @@ namespace CreatureAttackLibrary
     public delegate bool CreatureAttackCondition(in Vector2 targetPos, in Creature creature, in CreaturePart attackPart);
     // Used to calculate the damage of the creature attack, useful for setting affects from broken attack parts
     public delegate Damage CreatureAttackDamageCalculation(in Damage damage, in CreaturePart attackPart);
+
+    public class CreatureAttackSpriteSwap {
+        public readonly string Key;
+        // Used for swapping the sprite resolver from the sprite library
+        public readonly string Category;
+        public readonly string Label;
+        public CreatureAttackSpriteSwap(string key, string category, string label) {
+            Key = key;
+            Category = category;
+            Label = label;
+        }
+    }
 
     public class CreatureAttack
     {
