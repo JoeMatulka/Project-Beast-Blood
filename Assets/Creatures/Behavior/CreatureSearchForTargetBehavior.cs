@@ -60,7 +60,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
                 RaycastHit2D[] hits = Physics2D.RaycastAll(creaturePos, targetPos - creaturePos, sightRange, sightLayerMask);
                 for (int ii = 0; ii < hits.Length; ii++)
                 {
-                    // TODO Prefer player for now, need to account for creature aggressiveness towards other things
+                    // TODO Prefer player for now, need to account for creature aggressiveness towards other things (creatures, sounds, traps, etc.)
                     if (hits[ii].collider != null && hits[ii].collider.transform.tag.Equals("Player"))
                     {
                         Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.green);

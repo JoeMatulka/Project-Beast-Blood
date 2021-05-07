@@ -100,6 +100,8 @@ namespace CreatureSystems
         private bool hasInitiatedJump = false;
         private readonly Damage JUMPING_DOWN_DMG = new Damage(30, DamageType.RAW);
 
+        public bool isFleeing = false;
+
         /**
          * Should be called in Awake phase of a creature object 
          **/

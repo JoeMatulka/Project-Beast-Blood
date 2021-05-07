@@ -1,6 +1,7 @@
 ﻿using CreatuePartSystems;
 using CreatureAttackLibrary;
 using CreatureSystems;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -27,6 +28,10 @@ public class TestMonster : Creature
     private LayerMask sightLayerMask;
 
     private const float COLLISION_PATHING_RANGE = 2f;
+
+    private const float FLEE_HEALTH_MOD = 5f;
+    private const float FLEE_REFRESH_TIME = 15f;
+    private float timeSinceLastFlee = 0f;
 
     void Awake()
     {
@@ -57,12 +62,18 @@ public class TestMonster : Creature
 
     private ICreatureState DetermineBehavoir()
     {
-        if (Target != null)
+        if (ShouldFlee())
+        {
+            timeSinceLastFlee = Time.time;
+            Vector2 fleeFrom = Target != null ? Target.position : transform.position;
+            return new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom);
+        }
+        if (Target != null && !isFleeing)
         {
             float distToTarget = Vector2.Distance(Target.position, transform.position);
             if (distToTarget > ATTACK_RANGE)
             {
-                return new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE, COLLISION_PATHING_RANGE);
+                return new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE);
             }
             else
             {
@@ -73,5 +84,10 @@ public class TestMonster : Creature
         {
             return new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask);
         }
+    }
+
+    private bool ShouldFlee()
+    {
+        return !isFleeing && CurrentHealth <= (Stats.BaseHealth / FLEE_HEALTH_MOD) && (Time.time - timeSinceLastFlee) >= FLEE_REFRESH_TIME;
     }
 }

@@ -12,15 +12,13 @@ public class CreatureGroundPursueBehvior : ICreatureState
 
     private readonly float walkRange;
     private readonly float runRange;
-    private readonly float collisionRange;
 
-    public CreatureGroundPursueBehvior(Creature creature, Transform target, float walkRange, float runRange, float collisionRange)
+    public CreatureGroundPursueBehvior(Creature creature, Transform target, float walkRange, float runRange)
     {
         this.creature = creature;
         this.target = target;
         this.walkRange = walkRange;
         this.runRange = runRange;
-        this.collisionRange = collisionRange;
     }
 
     public void Enter() { }
