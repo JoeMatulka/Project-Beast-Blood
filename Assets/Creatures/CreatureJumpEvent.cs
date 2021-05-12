@@ -26,17 +26,17 @@ public class CreatureJumpEvent : MonoBehaviour
         Creature creature = col.GetComponentInParent<Creature>();
         if (creature != null)
         {
+            // Do not set event if creature is currently in attack behavior
+            if (creature.AiStateMachine.CurrentAiState.GetType().Equals(typeof(CreatureAttackBehavior))) return;
+            // Do not set event if creature is pursuing a target and the target is about on the same plane as the creature
+            if (creature.AiStateMachine.CurrentAiState.GetType().Equals(typeof(CreatureGroundPursueBehvior)) &&
+               (creature.Target != null && (creature.Target.position.y - creature.GroundCheck.transform.position.y) <= 0.5)) return;
             if (
                 // Only set the event if the creature is facing towards the event trigger
                  ((creature.IsFacingRight && this.transform.position.x > creature.transform.position.x) ||
                  (!creature.IsFacingRight && this.transform.position.x < creature.transform.position.x))
                 // Do not set event if the creature already has one set
                  && creature.jumpEvent == null
-                // Do not set event if creature is pursuing a target and the target is above the creature
-                 && (creature.AiStateMachine.CurrentAiState.GetType().Equals(typeof(CreatureGroundPursueBehvior)) && 
-                    (creature.Target != null && (creature.Target.position.y - creature.GroundCheck.transform.position.y) >= 0.5))
-                // Do not set event if creature is currently in attack behavior
-                && !creature.AiStateMachine.CurrentAiState.GetType().Equals(typeof(CreatureAttackBehavior))
                 )
             {
                 creature.jumpEvent = this;

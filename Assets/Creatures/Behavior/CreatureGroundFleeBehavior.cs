@@ -21,7 +21,7 @@ public class CreatureGroundFleeBehavior : ICreatureState
 
     public void Enter()
     {
-        creature.isFleeing = true;
+        creature.IsFleeing = true;
         // Forgot target since the creature is fleeing
         creature.Target = null;
     }
@@ -30,7 +30,6 @@ public class CreatureGroundFleeBehavior : ICreatureState
     {
         if (CheckCanFlee(creature))
         {
-            Debug.Log("Fleeing");
             float input = RUN_INPUT;
             Vector2 creaturePos = creature.transform.localPosition;
             // Adjust input based off of cripple percentage
@@ -41,7 +40,7 @@ public class CreatureGroundFleeBehavior : ICreatureState
         }
         else
         {
-            creature.isFleeing = false;
+            creature.IsFleeing = false;
         }
     }
 
@@ -50,5 +49,7 @@ public class CreatureGroundFleeBehavior : ICreatureState
         return true;
     }
 
-    public void Exit() { }
+    public void Exit() {
+        creature.TimeSinceLastFlee = Time.time;
+    }
 }

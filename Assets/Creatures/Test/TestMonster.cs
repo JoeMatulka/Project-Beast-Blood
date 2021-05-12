@@ -31,7 +31,6 @@ public class TestMonster : Creature
 
     private const float FLEE_HEALTH_MOD = 5f;
     private const float FLEE_REFRESH_TIME = 15f;
-    private float timeSinceLastFlee = 0f;
 
     void Awake()
     {
@@ -64,11 +63,10 @@ public class TestMonster : Creature
     {
         if (ShouldFlee())
         {
-            timeSinceLastFlee = Time.time;
             Vector2 fleeFrom = Target != null ? Target.position : transform.position;
             return new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom);
         }
-        if (Target != null && !isFleeing)
+        if (Target != null && !IsFleeing)
         {
             float distToTarget = Vector2.Distance(Target.position, transform.position);
             if (distToTarget > ATTACK_RANGE)
@@ -88,6 +86,6 @@ public class TestMonster : Creature
 
     private bool ShouldFlee()
     {
-        return !isFleeing && CurrentHealth <= (Stats.BaseHealth / FLEE_HEALTH_MOD) && (Time.time - timeSinceLastFlee) >= FLEE_REFRESH_TIME;
+        return CurrentHealth <= (Stats.BaseHealth / FLEE_HEALTH_MOD) && (Time.time - TimeSinceLastFlee) >= FLEE_REFRESH_TIME;
     }
 }
