@@ -83,7 +83,6 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         float movement = 0f;
         if (lastPositionOfTarget == Vector2.zero || Vector2.Distance(lastPositionOfTarget, creaturePos) <= collisionRange)
         {
-            lastPositionOfTarget = Vector2.zero;
             // Seek aimlessly if no previous position of target has been set
             bool isFacingRight = creature.IsFacingRight;
             movement = isFacingRight ? WALK_INPUT : -WALK_INPUT;

@@ -30,7 +30,7 @@ public class TestMonster : Creature
     private const float COLLISION_PATHING_RANGE = 2f;
 
     private const float FLEE_HEALTH_MOD = 5f;
-    private const float FLEE_REFRESH_TIME = 15f;
+    private const float FLEE_REFRESH_TIME = 200f;
 
     void Awake()
     {
@@ -63,6 +63,7 @@ public class TestMonster : Creature
     {
         if (ShouldFlee())
         {
+            Debug.Log("Calling");
             Vector2 fleeFrom = Target != null ? Target.position : transform.position;
             return new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom);
         }

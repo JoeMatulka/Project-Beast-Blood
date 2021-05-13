@@ -11,6 +11,7 @@ namespace CreatureAttackLibrary
         // Base Bipedal Attacks
         BIPEDAL_LOW_PUNCH = 1,
         BIPEDAL_DOWNWARD_SLAM = 2,
+        BIPEDAL_ROAR = 3,
     }
 
     public static class BipedalCreatureBaseAttackLibrary

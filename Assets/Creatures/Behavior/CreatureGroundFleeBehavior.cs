@@ -12,17 +12,20 @@ public class CreatureGroundFleeBehavior : ICreatureState
 
     private readonly Vector2 fleeFrom;
 
+    private readonly LayerMask groundLayerMask;
+
     public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom)
     {
         this.creature = creature;
         this.collisionRange = collisionRange;
         this.fleeFrom = fleeFrom;
+        this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     public void Enter()
     {
         creature.IsFleeing = true;
-        // Forgot target since the creature is fleeing
+        // Forget target since the creature is fleeing
         creature.Target = null;
     }
 
@@ -41,15 +44,27 @@ public class CreatureGroundFleeBehavior : ICreatureState
         else
         {
             creature.IsFleeing = false;
+            creature.TimeSinceLastFlee = Time.time;
         }
     }
 
     private bool CheckCanFlee(Creature creature)
     {
-        return true;
+        Vector2 creaturePos = creature.transform.localPosition;
+        bool isFacingRight = creature.IsFacingRight;
+        Vector2 dir = isFacingRight ? Vector2.right : Vector2.left;
+        RaycastHit2D hit = Physics2D.Raycast(creaturePos, dir, collisionRange, groundLayerMask);
+        if (hit.collider != null)
+        {
+            Debug.DrawRay(creaturePos, dir * collisionRange, Color.green);
+            return false;
+        }
+        else
+        {
+            Debug.DrawRay(creaturePos, dir * collisionRange, Color.red);
+            return true;
+        }
     }
 
-    public void Exit() {
-        creature.TimeSinceLastFlee = Time.time;
-    }
+    public void Exit() { }
 }

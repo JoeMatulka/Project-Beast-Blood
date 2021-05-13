@@ -11,7 +11,7 @@ public class CreatureAiStateMachine
             // Return because we don't change the state if it is the same or if its's null
             return;
         }
-        if (this.currentAiState != null)
+        if (this.currentAiState != null && !this.currentAiState.GetType().Equals(newState.GetType()))
         {
             this.currentAiState.Exit();
         }
