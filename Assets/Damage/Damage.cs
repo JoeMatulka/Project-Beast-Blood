@@ -1,4 +1,5 @@
 ﻿using System;
+using UnityEngine;
 
 public enum DamageType
 {
@@ -13,6 +14,8 @@ public class Damage
 
     private readonly DamageType type;
 
+    private readonly Vector2 force;
+
     public Damage(float value, DamageType type)
     {
         this.id = Guid.NewGuid();
@@ -20,11 +23,21 @@ public class Damage
         this.type = type;
     }
 
+    public Damage(float value, DamageType type, Vector2 force)
+    {
+        this.id = Guid.NewGuid();
+        this.value = value;
+        this.type = type;
+        this.force = force;
+    }
+
     // Not the best thing, but used to reassign IDs to static damage objects (like on creature attacks)
-    public void GenerateNewGuid() {
+    public void GenerateNewGuid()
+    {
         this.id = Guid.NewGuid();
     }
-    public Guid ID {
+    public Guid ID
+    {
         get { return this.id; }
     }
 
@@ -36,5 +49,10 @@ public class Damage
     public DamageType Type
     {
         get { return this.type; }
+    }
+
+    public Vector2 Force
+    {
+        get { return this.force; }
     }
 }

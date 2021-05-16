@@ -1,4 +1,5 @@
-﻿using CreatureSystems;
+﻿using CreatureAttackLibrary;
+using CreatureSystems;
 using UnityEngine;
 
 public class CreatureGroundFleeBehavior : ICreatureState
@@ -12,6 +13,8 @@ public class CreatureGroundFleeBehavior : ICreatureState
 
     private readonly Vector2 fleeFrom;
 
+    private readonly CreatureAttack roar;
+
     private readonly LayerMask groundLayerMask;
 
     public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom)
@@ -22,11 +25,24 @@ public class CreatureGroundFleeBehavior : ICreatureState
         this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
+    public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom, CreatureAttack roar)
+    {
+        this.creature = creature;
+        this.collisionRange = collisionRange;
+        this.fleeFrom = fleeFrom;
+        this.roar = roar;
+        this.groundLayerMask = LayerMask.GetMask("Ground");
+    }
+
     public void Enter()
     {
         creature.IsFleeing = true;
         // Forget target since the creature is fleeing
         creature.Target = null;
+        if (roar != null)
+        {
+            creature.Attack(roar);
+        }
     }
 
     public void Execute()

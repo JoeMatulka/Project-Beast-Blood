@@ -35,3 +35,14 @@ MonoBehaviour:
       m_Hash: 80170468
       m_Sprite: {fileID: -7783223685356747706, guid: 9ac96cd4702aa3d469c013c81dfb66f1,
         type: 3}
+  - m_Name: Head
+    m_Hash: 130111906
+    m_CategoryList:
+    - m_Name: default
+      m_Hash: -480378657
+      m_Sprite: {fileID: 2254191720448263968, guid: 9ac96cd4702aa3d469c013c81dfb66f1,
+        type: 3}
+    - m_Name: roar
+      m_Hash: 1628729824
+      m_Sprite: {fileID: -5569418042219170490, guid: 9ac96cd4702aa3d469c013c81dfb66f1,
+        type: 3}

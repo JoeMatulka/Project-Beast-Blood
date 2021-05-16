@@ -74,6 +74,32 @@ namespace CreatureAttackLibrary
                 );
             }
         }
+
+        public static CreatureAttack Roar
+        {
+            get
+            {
+                return new CreatureAttack(
+                    (int)CreatureAttackID.BIPEDAL_ROAR,
+                    new Dictionary<int, CreatureAttackFrame>
+                    {
+                        { 9, new CreatureAttackFrame(new string[] { "head" },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "roar") }) },
+                        { 11, new CreatureAttackFrame(new string[] { } ) },
+                        { 18, new CreatureAttackFrame(new string[] { },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "default") }) },
+                    },
+                    (in Vector2 targetPos, in Creature creature, in CreaturePart attackPart) =>
+                    {
+                        // TODO expand on this condition in the future if necessary
+                        return false;
+                    },
+                    (in Damage damage, in CreaturePart attackPart) =>
+                    {
+                        return damage;
+                    },
+                    new Damage(0, DamageType.RAW)
+                );
+            }
+        }
     }
 
     // Used to determine if the conditions are met for a creature to use a specific attack
@@ -81,12 +107,14 @@ namespace CreatureAttackLibrary
     // Used to calculate the damage of the creature attack, useful for setting affects from broken attack parts
     public delegate Damage CreatureAttackDamageCalculation(in Damage damage, in CreaturePart attackPart);
 
-    public class CreatureAttackSpriteSwap {
+    public class CreatureAttackSpriteSwap
+    {
         public readonly string Key;
         // Used for swapping the sprite resolver from the sprite library
         public readonly string Category;
         public readonly string Label;
-        public CreatureAttackSpriteSwap(string key, string category, string label) {
+        public CreatureAttackSpriteSwap(string key, string category, string label)
+        {
             Key = key;
             Category = category;
             Label = label;
@@ -112,6 +140,15 @@ namespace CreatureAttackLibrary
             this.attackDmgCalc = attackDmgCalc;
         }
 
+        public CreatureAttack(int id, Dictionary<int, CreatureAttackFrame> frames, CreatureAttackCondition attackCondition, CreatureAttackDamageCalculation attackDmgCalc, Damage damage)
+        {
+            this.id = id;
+            this.frames = frames;
+            this.attackCondition = attackCondition;
+            this.attackDmgCalc = attackDmgCalc;
+            this.damage = damage;
+        }
+
         public CreatureAttack(int id, Dictionary<int, CreatureAttackFrame> frames, CreatureAttackCondition attackCondition, CreatureAttackDamageCalculation attackDmgCalc, CreaturePart attackPart, Damage damage)
         {
             this.id = id;
@@ -122,7 +159,8 @@ namespace CreatureAttackLibrary
             this.damage = damage;
         }
 
-        public void GenerateNewDamageGuid() {
+        public void GenerateNewDamageGuid()
+        {
             this.damage.GenerateNewGuid();
         }
 

@@ -5,13 +5,23 @@ public class CreatureAttackFrame
 {
     private CreatureAttackSpriteSwap[] spriteSwaps;
     private string[] activeHitboxes;
-    private float forwardMovement;
+    private float forwardMovement = 0f;
 
-    public CreatureAttackFrame(string[] activeHitboxes, CreatureAttackSpriteSwap[] spriteSwaps = null, float forwardMovement = 0f)
+    public CreatureAttackFrame(string[] activeHitboxes, CreatureAttackSpriteSwap[] spriteSwaps, float forwardMovement)
     {
         this.activeHitboxes = activeHitboxes;
         this.spriteSwaps = spriteSwaps;
         this.forwardMovement = forwardMovement;
+    }
+
+    public CreatureAttackFrame(string[] activeHitboxes) {
+        this.activeHitboxes = activeHitboxes;
+    }
+
+    public CreatureAttackFrame(string[] activeHitboxes, CreatureAttackSpriteSwap[] spriteSwaps)
+    {
+        this.activeHitboxes = activeHitboxes;
+        this.spriteSwaps = spriteSwaps;
     }
 
     public string[] ActiveHitboxes
