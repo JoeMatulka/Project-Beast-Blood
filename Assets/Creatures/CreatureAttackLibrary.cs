@@ -1,5 +1,6 @@
 ﻿using CreatuePartSystems;
 using CreatureSystems;
+using ResourceManager;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,6 +13,25 @@ namespace CreatureAttackLibrary
         BIPEDAL_LOW_PUNCH = 1,
         BIPEDAL_DOWNWARD_SLAM = 2,
         BIPEDAL_ROAR = 3,
+    }
+
+    public enum CreatureEffectID
+    {
+        NONE,
+        ROAR,
+    }
+
+    public static class CreatureAttackEffectLoader
+    {
+        public static GameObject LoadEffect(CreatureEffectID id) {
+            switch (id) {
+                case CreatureEffectID.ROAR:
+                    return EffectsManager.Instance.Roar;
+                case CreatureEffectID.NONE:
+                default:
+                    return null;
+            }
+        }
     }
 
     public static class BipedalCreatureBaseAttackLibrary
@@ -84,6 +104,7 @@ namespace CreatureAttackLibrary
                     new Dictionary<int, CreatureAttackFrame>
                     {
                         { 9, new CreatureAttackFrame(new string[] { "head" },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "roar") }) },
+                        { 10, new CreatureAttackFrame(new string[] { }, CreatureEffectID.ROAR ) },
                         { 11, new CreatureAttackFrame(new string[] { } ) },
                         { 18, new CreatureAttackFrame(new string[] { },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "default") }) },
                     },

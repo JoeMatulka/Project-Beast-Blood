@@ -13,7 +13,7 @@ namespace ResourceManager
         {
             if (effectsBundle != null)
             {
-                Debug.LogWarning("Tried to load effects asset bundle is already loaded!");
+                Debug.LogWarning("Tried to load effects asset bundle but it is already loaded!");
                 return;
             }
             effectsBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "effects"));
@@ -37,6 +37,11 @@ namespace ResourceManager
         public GameObject Bleeding
         {
             get { return effectsBundle.LoadAsset<GameObject>("Bleeding"); }
+        }
+
+        public GameObject Roar
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Roar");  }
         }
     }
 }

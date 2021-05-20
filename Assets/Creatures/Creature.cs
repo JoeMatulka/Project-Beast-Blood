@@ -283,6 +283,11 @@ namespace CreatureSystems
                         resolver.SetCategoryAndLabel(swap.Category, swap.Label);
                     }
                 }
+                // Create effects from frame
+                if (!attackFrame.EffectId.Equals(CreatureEffectID.NONE))
+                {
+                    Instantiate(CreatureAttackEffectLoader.LoadEffect(attackFrame.EffectId), this.transform);
+                }
             }
         }
 
