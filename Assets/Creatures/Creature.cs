@@ -253,7 +253,7 @@ namespace CreatureSystems
             {
                 // Apply movement from frame
                 float movement = isFacingRight ? attackFrame.ForwardMovement : -attackFrame.ForwardMovement;
-                m_Rigidbody.AddForce(new Vector2(movement, 0), ForceMode2D.Impulse);
+                m_Rigidbody.AddForce(new Vector2(movement * Stats.Speed, 0), ForceMode2D.Impulse);
                 // Activate Hit boxes from frame
                 if (attackFrame.ActiveHitboxes?.Length > 0)
                 {

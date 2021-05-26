@@ -106,7 +106,7 @@ namespace CreatureAttackLibrary
                         { 9, new CreatureAttackFrame(new string[] { "head" },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "roar") }) },
                         { 10, new CreatureAttackFrame(new string[] { }, CreatureEffectID.ROAR ) },
                         { 11, new CreatureAttackFrame(new string[] { } ) },
-                        { 18, new CreatureAttackFrame(new string[] { },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "default") }) },
+                        { 17, new CreatureAttackFrame(new string[] { },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "default") }) },
                     },
                     (in Vector2 targetPos, in Creature creature, in CreaturePart attackPart) =>
                     {
