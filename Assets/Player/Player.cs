@@ -8,6 +8,8 @@ public class Player : MonoBehaviour
 {
     public float Health = 100;
 
+    private Hitbox hitbox;
+
     // Prevents the player from taking damage from the same source multiple times
     private Guid lastDamageId;
 
@@ -39,6 +41,9 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
         WeaponController.CurrentWeaponType = WeaponType.ONE_HAND;
+
+        hitbox = GetComponent<Hitbox>();
+        hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
     }
 
     void Update()
@@ -81,23 +86,25 @@ public class Player : MonoBehaviour
         Hitbox hitbox = col.GetComponent<Hitbox>();
         if (hitbox != null && hitbox.IsActive)
         {
-            ApplyDamage(hitbox.ActiveHitBoxDamage, hitbox.transform.position);
+            ApplyDamage(hitbox.ActiveHitBoxDamage);
         }
     }
 
-    private void ApplyDamage(Damage dmg, Vector3 dmgPos)
+    private void OnHit(object sender, HitboxEventArgs e)
+    {
+        ApplyDamage(e.Damage);
+    }
+
+    private void ApplyDamage(Damage dmg)
     {
         if (!dmg.ID.Equals(lastDamageId))
         {
             lastDamageId = dmg.ID;
             // TODO Apply damage type mitigation to Player based on armor
             Health -= dmg.Value;
-            if (dmg.Value >= knockBackDmgThreshold)
-            {
-                Vector2 forceDir = dmgPos - transform.position;
-                forceDir = -forceDir.normalized;
-                Controller.ApplyImpulse(dmg.Value, forceDir);
-            }
+            Vector2 forceDir = dmg.Position - transform.position;
+            forceDir = -forceDir.normalized;
+            Controller.ApplyImpulse(dmg.Value, dmg.Force);
         }
     }
 

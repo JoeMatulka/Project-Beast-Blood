@@ -38,10 +38,11 @@ namespace HitboxSystem
             collider = this.GetComponent<BoxCollider2D>();
         }
 
-        public void ReceiveDamage(Damage dmg)
+        public void ReceiveDamage(Damage dmg, Vector3 pos)
         {
             if (!dmg.ID.Equals(lastDamageId))
             {
+                dmg.Position = pos;
                 lastDamageId = dmg.ID;
                 HitboxEventArgs e = new HitboxEventArgs(dmg);
                 Handler?.Invoke(this, e);

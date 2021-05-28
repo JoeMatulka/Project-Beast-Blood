@@ -73,7 +73,7 @@ public class PlayerWeaponController : MonoBehaviour
                 if (hitbox != null)
                 {
                     // Made contact with a hitbox
-                    hitbox.ReceiveDamage(currentAttackDamage);
+                    hitbox.ReceiveDamage(currentAttackDamage, player.transform.position);
                 }
             }
         }

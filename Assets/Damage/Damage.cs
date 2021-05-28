@@ -16,6 +16,8 @@ public class Damage
 
     private readonly Vector2 force;
 
+    public Vector3 Position;
+
     public Damage(float value, DamageType type)
     {
         this.id = Guid.NewGuid();
