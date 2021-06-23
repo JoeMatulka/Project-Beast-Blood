@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Roar : MonoBehaviour
 {
-    private Creature creature;
+    private Transform source;
 
     private const float ROAR_RADIUS = 7.5f;
 
@@ -16,13 +16,13 @@ public class Roar : MonoBehaviour
 
     void Awake()
     {
-        creature = GetComponentInParent<Creature>();
-        roarMask = LayerMask.GetMask("Creature", "Ground", "Ignore Raycast", "Creature Jump Trigger");
+        roarMask = LayerMask.GetMask("Ground", "Ignore Raycast", "Creature Jump Trigger");
+        source = this.transform.parent;
     }
 
     void Start()
     {
-        Destroy(this, ROAR_LIFE);
+        Destroy(this.gameObject, ROAR_LIFE);
     }
 
     void Update()
@@ -30,8 +30,8 @@ public class Roar : MonoBehaviour
         Collider2D[] colliders = Physics2D.OverlapCircleAll(this.transform.position, ROAR_RADIUS, ~roarMask);
         for (int i = 0; i < colliders.Length; i++)
         {
-            // Ignore collisions with child game objects of creature object
-            if (!colliders[i].transform.IsChildOf(creature.transform))
+            // Ignore collisions with child game objects of source object, mainly for creatures
+            if (source != null && !colliders[i].transform.IsChildOf(source))
             {
                 // Only apply damage to things that have hit boxes
                 Hitbox hitbox = colliders[i].GetComponent<Hitbox>();
@@ -41,11 +41,12 @@ public class Roar : MonoBehaviour
                 }
             }
         }
+
     }
 
     void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(this.transform.localPosition, ROAR_RADIUS);
+        Gizmos.DrawWireSphere(this.transform.position, ROAR_RADIUS);
     }
 }

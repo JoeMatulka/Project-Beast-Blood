@@ -104,7 +104,7 @@ namespace CreatureAttackLibrary
                     new Dictionary<int, CreatureAttackFrame>
                     {
                         { 9, new CreatureAttackFrame(new string[] { "head" },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "roar") }) },
-                        { 10, new CreatureAttackFrame(new string[] { }, CreatureEffectID.ROAR ) },
+                        { 10, new CreatureAttackFrame(new string[] { }, CreatureEffectID.ROAR , "head") },
                         { 11, new CreatureAttackFrame(new string[] { } ) },
                         { 17, new CreatureAttackFrame(new string[] { },  new CreatureAttackSpriteSwap[] { new CreatureAttackSpriteSwap("head", "Head", "default") }) },
                     },

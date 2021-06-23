@@ -29,6 +29,7 @@ namespace CreatureSystems
     {
         public struct CreatureStats
         {
+            public string Name;
             public float BaseHealth;
             public float TripThreshold;
             public float KOThreshold;
@@ -286,7 +287,11 @@ namespace CreatureSystems
                 // Create effects from frame
                 if (!attackFrame.EffectId.Equals(CreatureEffectID.NONE))
                 {
-                    Instantiate(CreatureAttackEffectLoader.LoadEffect(attackFrame.EffectId), this.transform);
+                    // Get transform of source of effect from frame
+                    Transform source = transform.GetComponentsInChildren<Transform>().FirstOrDefault(c => c.gameObject.name == attackFrame.EffectSourceId);
+                    // Spawn effect at source transform position and child it to this creature object
+                    GameObject effect = Instantiate(CreatureAttackEffectLoader.LoadEffect(attackFrame.EffectId), source.position, Quaternion.identity);
+                    effect.transform.parent = this.transform;
                 }
             }
         }
