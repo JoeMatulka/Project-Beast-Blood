@@ -31,7 +31,7 @@ public class TestMonster : Creature
     private const float COLLISION_PATHING_RANGE = 2f;
 
     private const float FLEE_HEALTH_MOD = 5f;
-    private const float FLEE_REFRESH_TIME = 360f;
+    private const float FLEE_REFRESH_TIME = 3f;
 
     private readonly CreatureAttack roar = BipedalCreatureBaseAttackLibrary.Roar;
 

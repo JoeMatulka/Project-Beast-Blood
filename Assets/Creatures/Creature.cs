@@ -290,8 +290,8 @@ namespace CreatureSystems
                     // Get transform of source of effect from frame
                     Transform source = transform.GetComponentsInChildren<Transform>().FirstOrDefault(c => c.gameObject.name == attackFrame.EffectSourceId);
                     // Spawn effect at source transform position and child it to this creature object
-                    GameObject effect = Instantiate(CreatureAttackEffectLoader.LoadEffect(attackFrame.EffectId), source.position, Quaternion.identity);
-                    effect.transform.parent = this.transform;
+                    GameObject effect = Instantiate(CreatureAttackEffectLoader.LoadEffect(attackFrame.EffectId), this.transform);
+                    effect.transform.position = source.position;
                 }
             }
         }

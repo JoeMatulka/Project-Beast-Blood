@@ -25,13 +25,13 @@ public class Roar : MonoBehaviour
         Destroy(this.gameObject, ROAR_LIFE);
     }
 
-    void Update()
+    void LateUpdate()
     {
         Collider2D[] colliders = Physics2D.OverlapCircleAll(this.transform.position, ROAR_RADIUS, ~roarMask);
         for (int i = 0; i < colliders.Length; i++)
         {
             // Ignore collisions with child game objects of source object, mainly for creatures
-            if (source != null && !colliders[i].transform.IsChildOf(source))
+            if (!colliders[i].transform.IsChildOf(source))
             {
                 // Only apply damage to things that have hit boxes
                 Hitbox hitbox = colliders[i].GetComponent<Hitbox>();
