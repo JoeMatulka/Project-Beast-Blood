@@ -9,7 +9,7 @@ public class TestMonster : Creature
 {
     private readonly Creature.CreatureStats STATS = new Creature.CreatureStats
     {
-        Name = "Testmo",
+        Name = "Test Monster",
         BaseHealth = 1000,
         TripThreshold = 200,
         KOThreshold = 400,
@@ -31,7 +31,7 @@ public class TestMonster : Creature
     private const float COLLISION_PATHING_RANGE = 2f;
 
     private const float FLEE_HEALTH_MOD = 5f;
-    private const float FLEE_REFRESH_TIME = 3f;
+    private const float FLEE_REFRESH_TIME = 360f;
 
     private readonly CreatureAttack roar = BipedalCreatureBaseAttackLibrary.Roar;
 

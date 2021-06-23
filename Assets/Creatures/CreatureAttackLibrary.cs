@@ -128,7 +128,7 @@ namespace CreatureAttackLibrary
     // Used to calculate the damage of the creature attack, useful for setting affects from broken attack parts
     public delegate Damage CreatureAttackDamageCalculation(in Damage damage, in CreaturePart attackPart);
 
-    public class CreatureAttackSpriteSwap
+    public struct CreatureAttackSpriteSwap
     {
         public readonly string Key;
         // Used for swapping the sprite resolver from the sprite library

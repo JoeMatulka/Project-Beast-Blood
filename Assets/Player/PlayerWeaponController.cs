@@ -114,7 +114,7 @@ public class PlayerWeaponController : MonoBehaviour
 /**
  * Class meant to represent a single frame of attack within an attack animation frame
  */
-public class WeaponAttackFrame
+public struct WeaponAttackFrame
 {
     // Does frame have armor to protect from interupt? Example: 2H weapons should be able to withstand some damage without attacks being interuptted
     public readonly bool IsFrameArmor;
@@ -131,13 +131,8 @@ public class WeaponAttackFrame
 /**
  * Class meant to hold the weapon type data by archtype, not intended for specific weapons, but for specific weapon types
  */
-public class WeaponClassLibrary
+public static class WeaponClassLibrary
 {
-    private WeaponClassLibrary()
-    {
-        //Private constructor because class is not meant to be created
-    }
-
     // One handed weapon
     public static Dictionary<int, WeaponAttackFrame> ONE_HAND_ATK_FRAMES = new Dictionary<int, WeaponAttackFrame> {
         { 2, new WeaponAttackFrame(false, true) },
