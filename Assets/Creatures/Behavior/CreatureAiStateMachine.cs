@@ -1,6 +1,6 @@
 ﻿using CreatureSystems;
 
-public class CreatureAiStateMachine
+public struct CreatureAiStateMachine
 {
     private ICreatureState currentAiState;
 

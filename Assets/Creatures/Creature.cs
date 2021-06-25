@@ -49,6 +49,8 @@ namespace CreatureSystems
         [SerializeField]
         protected float CurrentHealth;
         [SerializeField]
+        private bool isDead = false;
+        [SerializeField]
         protected float CurrentTripThreshold = 0;
         [SerializeField]
         protected float CurrentKOThreshold = 0;
@@ -89,7 +91,7 @@ namespace CreatureSystems
         protected CreatureAttack currentAttack;
         private Dictionary<int, CreatureAttackFrame> ActiveAttackFrames = new Dictionary<int, CreatureAttackFrame>();
 
-        protected CreatureAiStateMachine aiStateMachine;
+        protected CreatureAiStateMachine aiStateMachine = new CreatureAiStateMachine();
 
         // Used for animations for landing, preparing to jump, getting up, etc. Anything that is a transition animation
         protected string[] transitionAnimations = new string[] { "Land", "Jump" };
@@ -131,8 +133,6 @@ namespace CreatureSystems
             CurrentHealth = stats.BaseHealth;
             Stats = stats;
 
-            this.aiStateMachine = new CreatureAiStateMachine();
-
             this.attackSet = attackSet;
         }
 
@@ -142,6 +142,7 @@ namespace CreatureSystems
             animator.SetBool("IsGrounded", CheckGrounded());
             animator.SetBool("IsKnockedDown", isTripped || isKnockedOut);
             animator.SetBool("IsStaggered", isStaggered);
+            animator.SetBool("IsDead", isDead);
         }
 
         public bool CheckGrounded()
@@ -367,6 +368,14 @@ namespace CreatureSystems
             }
 
             CurrentHealth -= calculatedDmg;
+
+            if (CurrentHealth <= 0)
+            {
+                isStaggered = false;
+                isKnockedOut = false;
+                isTripped = false;
+                isDead = true;
+            }
         }
 
         private IEnumerator StartStaggerTimer()
@@ -426,6 +435,11 @@ namespace CreatureSystems
         public bool IsStaggered
         {
             get { return isStaggered; }
+        }
+
+        public bool IsDead
+        {
+            get { return isDead; }
         }
 
         public CreatureAttack[] AttackSet

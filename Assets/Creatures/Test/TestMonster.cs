@@ -64,6 +64,9 @@ public class TestMonster : Creature
 
     private ICreatureState DetermineBehavoir()
     {
+        if (IsDead) {
+            return new CreatureDeadBehavior(this);
+        }
         if (ShouldFlee())
         {
             Vector2 fleeFrom = Target != null ? Target.position : transform.position;
