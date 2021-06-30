@@ -992,8 +992,8 @@ MonoBehaviour:
   - {fileID: 2286270447746132298}
   - {fileID: 2286270446422145630}
   m_Bounds:
-    m_Center: {x: 0.04353857, y: 0.049347162, z: 0}
-    m_Extent: {x: 0.6678036, y: 0.6953917, z: 0}
+    m_Center: {x: 0.04353881, y: 0.049347162, z: 0}
+    m_Extent: {x: 0.66780335, y: 0.6953918, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1
 --- !u!114 &2250369178168394395
@@ -1630,9 +1630,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   BloodColor: {r: 0.53333336, g: 0.03137255, b: 0.03137255, a: 1}
   CurrentHealth: 0
+  isDead: 0
   CurrentTripThreshold: 0
   CurrentKOThreshold: 0
-  GroundMobilityParts: []
+  GroundMobilityParts:
+  - {fileID: 4643315861116569062}
+  - {fileID: 2250369178168394395}
   FlightMobilityParts: []
   AttackParts:
   - {fileID: 2286270447085914795}
@@ -1998,7 +2001,7 @@ MonoBehaviour:
   - {fileID: 2286270448045478134}
   - {fileID: 2286270446035244015}
   m_Bounds:
-    m_Center: {x: -0.010593653, y: 0.1840812, z: 0}
+    m_Center: {x: -0.010593772, y: 0.18408126, z: 0}
     m_Extent: {x: 0.6709453, y: 0.5750905, z: 0}
   m_UseBatching: 1
   m_AlwaysUpdate: 1

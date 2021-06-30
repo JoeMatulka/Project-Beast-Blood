@@ -210,7 +210,7 @@ namespace CreatureSystems
                 transform.position = CalculateJumpStep(start, end, jumpYHeight, progress);
                 progress += Time.deltaTime / JUMP_DURATION;
                 yield return new WaitForEndOfFrame();
-            } while (progress < 1f);
+            } while (progress < 1f && !IsDead);
 
             m_Rigidbody.isKinematic = false;
             isJumping = false;
@@ -374,6 +374,7 @@ namespace CreatureSystems
                 isStaggered = false;
                 isKnockedOut = false;
                 isTripped = false;
+                EndAttack();
                 isDead = true;
             }
         }
