@@ -25,6 +25,7 @@ namespace CreatureSystems
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(CircleCollider2D))]
     [RequireComponent(typeof(Animator))]
+    [RequireComponent(typeof(SpriteLibrary))]
     public abstract class Creature : MonoBehaviour
     {
         public struct CreatureStats
@@ -34,6 +35,8 @@ namespace CreatureSystems
             public float TripThreshold;
             public float KOThreshold;
             public float Speed;
+            // How often a creature is going to attack while in attack behavior
+            public float BaseAggression;
             // Not meant to be the actual size in game, just representative of size in the fantasy term (in feet).
             public float BaseSize;
             public float SizeModifier;
@@ -54,6 +57,8 @@ namespace CreatureSystems
         protected float CurrentTripThreshold = 0;
         [SerializeField]
         protected float CurrentKOThreshold = 0;
+        [SerializeField]
+        protected float CurrentAgression = 0;
         [SerializeField]
         protected CreaturePart[] GroundMobilityParts;
         [SerializeField]
@@ -131,6 +136,7 @@ namespace CreatureSystems
             }
 
             CurrentHealth = stats.BaseHealth;
+            CurrentAgression = stats.BaseAggression;
             Stats = stats;
 
             this.attackSet = attackSet;
@@ -261,7 +267,7 @@ namespace CreatureSystems
                 {
                     foreach (Hitbox hitbox in hitboxes)
                     {
-                        if (attackFrame.ActiveHitboxes.Contains(hitbox.name))
+                        if (attackFrame.ActiveHitboxes.Contains(hitbox.name) && currentAttack != null)
                         {
                             hitbox.IsActive = true;
                             hitbox.ActiveHitBoxDamage = currentAttack.GetDamage();

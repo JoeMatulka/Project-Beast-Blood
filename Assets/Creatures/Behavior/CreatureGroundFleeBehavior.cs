@@ -2,7 +2,7 @@
 using CreatureSystems;
 using UnityEngine;
 
-public class CreatureGroundFleeBehavior : ICreatureState
+public struct CreatureGroundFleeBehavior : ICreatureState
 {
     private const float WALK_INPUT = .5f;
     private const float RUN_INPUT = 1.5f;
@@ -23,6 +23,7 @@ public class CreatureGroundFleeBehavior : ICreatureState
         this.collisionRange = collisionRange;
         this.fleeFrom = fleeFrom;
         this.groundLayerMask = LayerMask.GetMask("Ground");
+        this.roar = null;
     }
 
     public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom, CreatureAttack roar)

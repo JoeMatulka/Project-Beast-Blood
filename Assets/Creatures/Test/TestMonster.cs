@@ -14,6 +14,7 @@ public class TestMonster : Creature
         TripThreshold = 200,
         KOThreshold = 400,
         Speed = 5,
+        BaseAggression = 1,
         BaseSize = 10,
         SizeModifier = 1,
         CreatureType = CreatureType.Bipedal,
@@ -67,8 +68,13 @@ public class TestMonster : Creature
         if (IsDead) {
             return new CreatureDeadBehavior(this);
         }
+        if (CurrentHealth <= (Stats.BaseHealth * .5f)) {
+            // If below half health, increase aggresssion
+            CurrentAgression = 5f;
+        }
         if (ShouldFlee())
         {
+            // Should flee if health criteria is met and hasn't fled since flee timer refresh
             Vector2 fleeFrom = Target != null ? Target.position : transform.position;
             return new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom, roar);
         }
@@ -81,7 +87,7 @@ public class TestMonster : Creature
             }
             else
             {
-                return new CreatureAttackBehavior(this, Target);
+                return new CreatureAttackBehavior(this, Target, CurrentAgression);
             }
         }
         else

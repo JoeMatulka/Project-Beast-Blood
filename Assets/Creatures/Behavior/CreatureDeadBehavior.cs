@@ -1,6 +1,6 @@
 ﻿using CreatureSystems;
 
-public class CreatureDeadBehavior : ICreatureState
+public struct CreatureDeadBehavior : ICreatureState
 {
     private readonly Creature creature;
     public CreatureDeadBehavior(Creature creature)

@@ -1,7 +1,7 @@
 ﻿using CreatureSystems;
 using UnityEngine;
 
-public class CreatureSearchForTargetBehavior : ICreatureState
+public struct CreatureSearchForTargetBehavior : ICreatureState
 {
     private const float WALK_INPUT = .5f;
     private const float RUN_INPUT = 1.5f;
@@ -11,7 +11,6 @@ public class CreatureSearchForTargetBehavior : ICreatureState
     private readonly float sightRange;
     private readonly float collisionRange;
     private readonly LayerMask sightLayerMask;
-    private readonly LayerMask jumpLayerMask;
     private readonly LayerMask groundLayerMask;
 
     public CreatureSearchForTargetBehavior(Creature creature, float sightRange, float collisionRange, LayerMask sightLayerMask)
@@ -21,6 +20,7 @@ public class CreatureSearchForTargetBehavior : ICreatureState
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
         this.groundLayerMask = LayerMask.GetMask("Ground");
+        this.lastPositionOfTarget = Vector2.zero;
     }
 
     public CreatureSearchForTargetBehavior(Creature creature, Vector2 lastPositionOfTarget, float sightRange, float collisionRange, LayerMask sightLayerMask)

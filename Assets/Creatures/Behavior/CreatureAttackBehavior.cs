@@ -11,10 +11,15 @@ public class CreatureAttackBehavior : ICreatureState
 
     private readonly Transform target;
 
-    public CreatureAttackBehavior(Creature creature, Transform target)
+    private readonly float aggression;
+
+    private const float MAX_AGGRESSION = 10;
+
+    public CreatureAttackBehavior(Creature creature, Transform target, float aggression)
     {
         this.creature = creature;
         this.target = target;
+        this.aggression = aggression;
     }
 
     public void Enter() { }
@@ -31,11 +36,18 @@ public class CreatureAttackBehavior : ICreatureState
         CreatureAttack attack = null;
         foreach (CreatureAttack atk in creature.AttackSet)
         {
-            if (atk.AttackCondition(targetPos, creature, atk.AttackPart))
+            if (CalculateAttackProbability(aggression) && atk.AttackCondition(targetPos, creature, atk.AttackPart))
             {
                 attack = atk;
             }
         }
         return attack;
+    }
+
+    private bool CalculateAttackProbability(float aggression)
+    {
+        // Ensure no agressions passed to calculation are greater than the maximum agression level
+        float a = aggression > MAX_AGGRESSION ? MAX_AGGRESSION : aggression;
+        return Random.Range(a, MAX_AGGRESSION) <= a;
     }
 }

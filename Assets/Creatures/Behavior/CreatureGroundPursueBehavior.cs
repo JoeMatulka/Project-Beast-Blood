@@ -1,7 +1,7 @@
 ﻿using CreatureSystems;
 using UnityEngine;
 
-public class CreatureGroundPursueBehvior : ICreatureState
+public struct CreatureGroundPursueBehvior : ICreatureState
 {
     private const float WALK_INPUT = .5f;
     private const float RUN_INPUT = 1.5f;
