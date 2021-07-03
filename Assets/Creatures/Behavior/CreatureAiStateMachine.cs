@@ -4,9 +4,9 @@ public struct CreatureAiStateMachine
 {
     private ICreatureState currentAiState;
 
-    public void ChangeState(ICreatureState newState)
+    public void ChangeState(ICreatureState newState, bool forceChange)
     {
-        if (this.currentAiState != null && this.currentAiState.GetType().Equals(newState.GetType()))
+        if (this.currentAiState != null && this.currentAiState.GetType().Equals(newState.GetType()) && !forceChange)
         {
             // Return because we don't change the state if it is the same or if its's null
             return;

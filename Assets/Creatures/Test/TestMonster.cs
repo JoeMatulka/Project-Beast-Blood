@@ -14,7 +14,7 @@ public class TestMonster : Creature
         TripThreshold = 200,
         KOThreshold = 400,
         Speed = 5,
-        BaseAggression = 1,
+        BaseAggression = 2f,
         BaseSize = 10,
         SizeModifier = 1,
         CreatureType = CreatureType.Bipedal,
@@ -33,6 +33,8 @@ public class TestMonster : Creature
 
     private const float FLEE_HEALTH_MOD = 5f;
     private const float FLEE_REFRESH_TIME = 360f;
+
+    private const float ENRAGED_AGGRESSION = 10f;
 
     private readonly CreatureAttack roar = BipedalCreatureBaseAttackLibrary.Roar;
 
@@ -54,7 +56,8 @@ public class TestMonster : Creature
 
     private void FixedUpdate()
     {
-        aiStateMachine.ChangeState(DetermineBehavoir());
+        Tuple<ICreatureState, bool> state = DetermineBehavoir();
+        aiStateMachine.ChangeState(state.Item1, state.Item2);
         aiStateMachine.Update();
     }
 
@@ -63,36 +66,40 @@ public class TestMonster : Creature
         UpdateBaseAnimationKeys();
     }
 
-    private ICreatureState DetermineBehavoir()
+    protected override Tuple<ICreatureState, bool> DetermineBehavoir()
     {
-        if (IsDead) {
-            return new CreatureDeadBehavior(this);
-        }
-        if (CurrentHealth <= (Stats.BaseHealth * .5f)) {
-            // If below half health, increase aggresssion
-            CurrentAgression = 5f;
+        if (IsDead)
+        {
+            return new Tuple<ICreatureState, bool>(new CreatureDeadBehavior(this), false);
         }
         if (ShouldFlee())
         {
             // Should flee if health criteria is met and hasn't fled since flee timer refresh
             Vector2 fleeFrom = Target != null ? Target.position : transform.position;
-            return new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom, roar);
+            return new Tuple<ICreatureState, bool>(new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom, roar), false);
         }
         if (Target != null && !IsFleeing)
         {
             float distToTarget = Vector2.Distance(Target.position, transform.position);
             if (distToTarget > ATTACK_RANGE)
             {
-                return new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE);
+                return new Tuple<ICreatureState, bool>(new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE), false);
             }
             else
             {
-                return new CreatureAttackBehavior(this, Target, CurrentAgression);
+                bool forceChange = false;
+                if (CurrentHealth <= (Stats.BaseHealth * .5f))
+                {
+                    // If below half health, increase aggresssion
+                    CurrentAgression = ENRAGED_AGGRESSION;
+                    forceChange = true;
+                }
+                return new Tuple<ICreatureState, bool>(new CreatureAttackBehavior(this, Target, CurrentAgression), forceChange);
             }
         }
         else
         {
-            return new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask);
+            return new Tuple<ICreatureState, bool>(new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask), false);
         }
     }
 

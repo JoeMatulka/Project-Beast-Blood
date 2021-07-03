@@ -151,6 +151,8 @@ namespace CreatureSystems
             animator.SetBool("IsDead", isDead);
         }
 
+        protected abstract Tuple<ICreatureState, bool> DetermineBehavoir();
+
         public bool CheckGrounded()
         {
             if (isJumping) return false;
