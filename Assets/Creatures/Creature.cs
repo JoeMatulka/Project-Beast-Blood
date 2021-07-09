@@ -111,6 +111,9 @@ namespace CreatureSystems
         public bool IsFleeing = false;
         public float TimeSinceLastFlee = 0f;
 
+        public readonly static float WALK_INPUT = .6f;
+        public readonly static float RUN_INPUT = 1.5f;
+
         /**
          * Should be called in Awake phase of a creature object 
          **/

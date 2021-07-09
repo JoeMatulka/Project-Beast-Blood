@@ -3,9 +3,6 @@ using UnityEngine;
 
 public struct CreatureGroundPursueBehvior : ICreatureState
 {
-    private const float WALK_INPUT = .5f;
-    private const float RUN_INPUT = 1.5f;
-
     private readonly Creature creature;
 
     private readonly Transform target;
@@ -28,9 +25,9 @@ public struct CreatureGroundPursueBehvior : ICreatureState
         Vector2 creaturePos = creature.transform.localPosition;
         float distToTarget = Vector2.Distance(target.position, creaturePos);
         // Move towards target to get into attack range
-        float input = distToTarget >= runRange ? RUN_INPUT : WALK_INPUT;
+        float input = distToTarget >= runRange ? Creature.RUN_INPUT : Creature.WALK_INPUT;
         // Adjust input based off of cripple percentage
-        if (creature.GetCripplePercent(CreaturePartsType.Ground) <= .5f) input = WALK_INPUT;
+        if (creature.GetCripplePercent(CreaturePartsType.Ground) <= .5f) input = Creature.WALK_INPUT;
 
         float movement = creaturePos.x > target.position.x ? -input : input;
 

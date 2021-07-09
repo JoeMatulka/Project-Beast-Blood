@@ -3,9 +3,6 @@ using UnityEngine;
 
 public struct CreatureSearchForTargetBehavior : ICreatureState
 {
-    private const float WALK_INPUT = .5f;
-    private const float RUN_INPUT = 1.5f;
-
     private readonly Creature creature;
     private Vector2 lastPositionOfTarget;
     private readonly float sightRange;
@@ -85,7 +82,7 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
         {
             // Seek aimlessly if no previous position of target has been set
             bool isFacingRight = creature.IsFacingRight;
-            movement = isFacingRight ? WALK_INPUT : -WALK_INPUT;
+            movement = isFacingRight ? Creature.WALK_INPUT : -Creature.WALK_INPUT;
             Vector2 dir = isFacingRight ? Vector2.right : Vector2.left;
             RaycastHit2D hit = Physics2D.Raycast(creaturePos, dir, collisionRange, groundLayerMask);
             if (hit.collider != null)
@@ -104,9 +101,8 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
             // Go to last position of target
             // Calculate which direction to go
             bool isTargetToRight = creaturePos.x >= lastPositionOfTarget.x;
-            movement = isTargetToRight ? -RUN_INPUT : RUN_INPUT;
+            movement = isTargetToRight ? -Creature.RUN_INPUT : Creature.RUN_INPUT;
         }
-
         creature.GroundMove(movement);
     }
 
