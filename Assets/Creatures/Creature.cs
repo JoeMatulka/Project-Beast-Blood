@@ -1,13 +1,13 @@
 ﻿using Gamekit2D;
 using HitboxSystem;
 using CreatuePartSystems;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using System.Collections;
 using CreatureAttackLibrary;
-using System;
 using UnityEngine.Experimental.U2D.Animation;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace CreatureSystems
 {
@@ -83,7 +83,8 @@ namespace CreatureSystems
         private const float KNOCK_OUT_DOWN_TIME = 8f;
         [SerializeField]
         private bool isStaggered = false;
-        private const float STAGGER_TIME = 6.5f;
+        private const float STAGGER_TIME = 3.5f;
+        private const float STAGGER_CHANCE = 4.5f;
 
         protected Rigidbody2D m_Rigidbody;
         protected CircleCollider2D m_Collider;
@@ -372,9 +373,12 @@ namespace CreatureSystems
                 }
             }
 
-            if (CurrentKOThreshold >= (Stats.KOThreshold / 2) && CurrentTripThreshold >= (Stats.TripThreshold / 2) && !isKnockedOut && !isTripped)
+            if (CurrentKOThreshold >= (Stats.KOThreshold / 2) && CurrentTripThreshold >= (Stats.TripThreshold / 2) && !IsStaggered && !isKnockedOut && !isTripped && UnityEngine.Random.Range(0, 100) <= STAGGER_CHANCE)
             {
                 isStaggered = true;
+                // Recover some KO and Trip Threshold to prevent stagger locking patterns
+                CurrentKOThreshold -= (CurrentKOThreshold / 1.5f);
+                CurrentTripThreshold -= (CurrentTripThreshold / 1.5f);
                 StartCoroutine(StartStaggerTimer());
             }
 
