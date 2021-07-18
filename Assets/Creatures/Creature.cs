@@ -34,6 +34,7 @@ namespace CreatureSystems
             public float BaseHealth;
             public float TripThreshold;
             public float KOThreshold;
+            public float BurnThreshold;
             public float Speed;
             // How often a creature is going to attack while in attack behavior
             public float BaseAggression;
@@ -85,6 +86,7 @@ namespace CreatureSystems
         private bool isStaggered = false;
         private const float STAGGER_TIME = 3.5f;
         private const float STAGGER_CHANCE = 4.5f;
+        public bool isBurning = false;
 
         protected Rigidbody2D m_Rigidbody;
         protected CircleCollider2D m_Collider;

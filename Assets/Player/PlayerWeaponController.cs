@@ -82,7 +82,7 @@ public class PlayerWeaponController : MonoBehaviour
     public void GenerateAttackDamage()
     {
         // TODO Grab damage from weapon
-        currentAttackDamage = new Damage(10, DamageType.RAW);
+        currentAttackDamage = new Damage(10, DamageType.FIRE);
     }
 
     public void EndAttack()

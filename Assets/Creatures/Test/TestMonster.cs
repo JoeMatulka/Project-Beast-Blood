@@ -13,6 +13,7 @@ public class TestMonster : Creature
         BaseHealth = 1000,
         TripThreshold = 200,
         KOThreshold = 400,
+        BurnThreshold = 100,
         Speed = 5,
         BaseAggression = 2f,
         BaseSize = 10,
@@ -88,7 +89,7 @@ public class TestMonster : Creature
             else
             {
                 bool forceChange = false;
-                if (CurrentHealth <= (Stats.BaseHealth * .5f))
+                if (CurrentHealth <= (Stats.BaseHealth * .5f) || isBurning)
                 {
                     // If below half health, increase aggresssion
                     CurrentAgression = ENRAGED_AGGRESSION;
