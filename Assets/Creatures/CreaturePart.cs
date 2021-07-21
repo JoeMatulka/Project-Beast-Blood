@@ -23,6 +23,7 @@ namespace CreatuePartSystems
         [SerializeField]
         public float BurnBuildUp;
         private const float BURN_TIME = 5f;
+        private const float BURN_RECOVER_RATE = 5f;
         private readonly Damage BURN_DMG = new Damage(10, DamageType.FIRE);
         [SerializeField]
         private bool IsBreakable;
@@ -51,6 +52,7 @@ namespace CreatuePartSystems
 
         private void Start()
         {
+            // Set up delegates on hitboxes for part
             if (hitBoxes != null && hitBoxes.Length > 0)
             {
                 foreach (Hitbox hitbox in hitBoxes)
@@ -85,6 +87,8 @@ namespace CreatuePartSystems
                     }
                 }
             }
+            // Start status build up reduce timers
+            InvokeRepeating("ReduceBurnBuildUp", 1, 1);
         }
 
         private void OnHit(object sender, HitboxEventArgs e)
@@ -139,14 +143,28 @@ namespace CreatuePartSystems
             StartCoroutine(Burn());
         }
 
-        private IEnumerator Burn() {
+        private IEnumerator Burn()
+        {
             float startBurnTime = Time.time;
             creature.isBurning = true;
-            while ((Time.time - startBurnTime) <= BURN_TIME) {
+            while ((Time.time - startBurnTime) <= BURN_TIME)
+            {
                 yield return new WaitForSeconds(1);
                 creature.Damage(BURN_DMG, DamageModifier);
             }
             creature.isBurning = false;
+        }
+
+        private void ReduceBurnBuildUp()
+        {
+            if (BurnBuildUp >= 0)
+            {
+                BurnBuildUp -= BURN_RECOVER_RATE;
+            }
+            else
+            {
+                BurnBuildUp = 0;
+            }
         }
 
         public bool IsBroken
