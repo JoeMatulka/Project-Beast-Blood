@@ -23,8 +23,12 @@ namespace CreatuePartSystems
         [SerializeField]
         public float BurnBuildUp;
         private const float BURN_TIME = 5f;
-        private const float BURN_RECOVER_RATE = 5f;
         private readonly Damage BURN_DMG = new Damage(10, DamageType.FIRE);
+        [SerializeField]
+        public float PoisonBuildUp;
+        private const float POISON_TIME = 20f;
+        private readonly Damage POISON_DMG = new Damage(2.5f, DamageType.POISON);
+        private const float STATUS_RECOVER_RATE = 5f;
         [SerializeField]
         private bool IsBreakable;
 
@@ -90,7 +94,7 @@ namespace CreatuePartSystems
                 }
             }
             // Start status build up reduce timers
-            InvokeRepeating("ReduceBurnBuildUp", 1, 1);
+            InvokeRepeating("ReduceStatusBuildUp", 1, 1);
         }
 
         private void OnHit(object sender, HitboxEventArgs e)
@@ -111,10 +115,16 @@ namespace CreatuePartSystems
             // Apply Damage modifier if part is broken, used to deter the player from attacking the same part the whole fight
             if (isBroken) dmgModAmount = DAMAGE_MOD_BROKEN;
             // If incoming damage is FIRE, apply buring build up and burn status if threshold is met
-            if (dmg.Type.Equals(DamageType.FIRE))
+            if (dmg.Type.Equals(DamageType.FIRE) && !creature.isBurning)
             {
                 BurnBuildUp += dmg.Value;
                 if (BurnBuildUp >= creature.Stats.BurnThreshold) ApplyBurningEffectsToPart();
+            }
+            // If incoming damage is Poison, apply poisoned build up and poison status if threshold is met
+            if (dmg.Type.Equals(DamageType.POISON))
+            {
+                PoisonBuildUp += dmg.Value;
+                if (PoisonBuildUp >= creature.Stats.PoisonThreshold) ApplyPoisonedEffectsToPart();
             }
 
             creature.Damage(dmg, DamageModifier, dmgModAmount);
@@ -146,33 +156,57 @@ namespace CreatuePartSystems
             Transform effectParent = this.transform;
             // Create fire burning effect
             GameObject burning = Instantiate(EffectsManager.Instance.FireBurning, effectPos, effectRot, effectParent);
-            StartCoroutine(Burn(burning));
             m_renderer.material = EffectsManager.Instance.BurningMaterial;
+            StartCoroutine(TakeStatusDamage(BURN_DMG, BURN_TIME, burning));
         }
 
-        private IEnumerator Burn(GameObject burningEffect)
+        private void ApplyPoisonedEffectsToPart()
         {
-            float startBurnTime = Time.time;
-            creature.isBurning = true;
-            while ((Time.time - startBurnTime) <= BURN_TIME)
+            // TODO Add poisoned effects here
+            StartCoroutine(TakeStatusDamage(POISON_DMG, POISON_TIME));
+        }
+
+        private IEnumerator TakeStatusDamage(Damage dmg, float statusTime, GameObject effect = null)
+        {
+            float startTime = Time.time;
+            if (dmg.Type.Equals(DamageType.FIRE)) creature.isBurning = true;
+            if (dmg.Type.Equals(DamageType.POISON)) creature.isPoisoned = true;
+            while ((Time.time - startTime) <= statusTime)
             {
                 yield return new WaitForSeconds(1);
-                creature.Damage(BURN_DMG, DamageModifier);
+                creature.Damage(dmg, DamageModifier);
             }
-            creature.isBurning = false;
-            GameObject.Destroy(burningEffect);
+            if (dmg.Type.Equals(DamageType.FIRE))
+            {
+                creature.isBurning = false;
+                BurnBuildUp = 0;
+            }
+            if (dmg.Type.Equals(DamageType.POISON))
+            {
+                creature.isPoisoned = false;
+                PoisonBuildUp = 0;
+            }
+            if (effect != null) GameObject.Destroy(effect);
             m_renderer.material = defMaterial;
         }
 
-        private void ReduceBurnBuildUp()
+        private void ReduceStatusBuildUp()
         {
             if (BurnBuildUp >= 0)
             {
-                BurnBuildUp -= BURN_RECOVER_RATE;
+                BurnBuildUp -= STATUS_RECOVER_RATE;
             }
             else
             {
                 BurnBuildUp = 0;
+            }
+            if (PoisonBuildUp >= 0)
+            {
+                PoisonBuildUp -= STATUS_RECOVER_RATE;
+            }
+            else
+            {
+                PoisonBuildUp = 0;
             }
         }
 

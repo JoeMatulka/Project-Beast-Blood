@@ -9,8 +9,9 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
     private readonly float collisionRange;
     private readonly LayerMask sightLayerMask;
     private readonly LayerMask groundLayerMask;
+    private readonly bool slowed;
 
-    public CreatureSearchForTargetBehavior(Creature creature, float sightRange, float collisionRange, LayerMask sightLayerMask)
+    public CreatureSearchForTargetBehavior(Creature creature, float sightRange, float collisionRange, LayerMask sightLayerMask, bool slowed = false)
     {
         this.creature = creature;
         this.sightRange = sightRange;
@@ -18,9 +19,10 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
         this.sightLayerMask = sightLayerMask;
         this.groundLayerMask = LayerMask.GetMask("Ground");
         this.lastPositionOfTarget = Vector2.zero;
+        this.slowed = slowed;
     }
 
-    public CreatureSearchForTargetBehavior(Creature creature, Vector2 lastPositionOfTarget, float sightRange, float collisionRange, LayerMask sightLayerMask)
+    public CreatureSearchForTargetBehavior(Creature creature, Vector2 lastPositionOfTarget, float sightRange, float collisionRange, LayerMask sightLayerMask, bool slowed = false)
     {
         this.creature = creature;
         this.lastPositionOfTarget = lastPositionOfTarget;
@@ -28,6 +30,7 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
         this.collisionRange = collisionRange;
         this.sightLayerMask = sightLayerMask;
         this.groundLayerMask = LayerMask.GetMask("Ground");
+        this.slowed = slowed;
     }
 
     public void Enter() { }
@@ -101,7 +104,15 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
             // Go to last position of target
             // Calculate which direction to go
             bool isTargetToRight = creaturePos.x >= lastPositionOfTarget.x;
-            movement = isTargetToRight ? -Creature.RUN_INPUT : Creature.RUN_INPUT;
+            // Adjust input based off of cripple percentage and if slowed
+            if (creature.GetCripplePercent(CreaturePartsType.Ground) <= .5f || slowed)
+            {
+                movement = isTargetToRight ? -Creature.WALK_INPUT : Creature.WALK_INPUT;
+            }
+            else
+            {
+                movement = isTargetToRight ? -Creature.RUN_INPUT : Creature.RUN_INPUT;
+            }
         }
         creature.GroundMove(movement);
     }

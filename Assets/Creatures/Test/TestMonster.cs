@@ -67,6 +67,7 @@ public class TestMonster : Creature
         UpdateBaseAnimationKeys();
     }
 
+    // Returns a behavior and if the state should change
     protected override Tuple<ICreatureState, bool> DetermineBehavoir()
     {
         if (IsDead)
@@ -77,14 +78,14 @@ public class TestMonster : Creature
         {
             // Should flee if health criteria is met and hasn't fled since flee timer refresh
             Vector2 fleeFrom = Target != null ? Target.position : transform.position;
-            return new Tuple<ICreatureState, bool>(new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom, roar), false);
+            return new Tuple<ICreatureState, bool>(new CreatureGroundFleeBehavior(this, COLLISION_PATHING_RANGE, fleeFrom, roar, isPoisoned), isPoisoned);
         }
         if (Target != null && !IsFleeing)
         {
             float distToTarget = Vector2.Distance(Target.position, transform.position);
             if (distToTarget > ATTACK_RANGE)
             {
-                return new Tuple<ICreatureState, bool>(new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE), false);
+                return new Tuple<ICreatureState, bool>(new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE, isPoisoned), isPoisoned);
             }
             else
             {
@@ -100,7 +101,7 @@ public class TestMonster : Creature
         }
         else
         {
-            return new Tuple<ICreatureState, bool>(new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask), false);
+            return new Tuple<ICreatureState, bool>(new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask, isPoisoned), isPoisoned);
         }
     }
 

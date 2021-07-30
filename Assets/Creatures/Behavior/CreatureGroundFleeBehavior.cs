@@ -17,22 +17,26 @@ public struct CreatureGroundFleeBehavior : ICreatureState
 
     private readonly LayerMask groundLayerMask;
 
-    public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom)
+    private readonly bool slowed;
+
+    public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom, bool slowed = false)
     {
         this.creature = creature;
         this.collisionRange = collisionRange;
         this.fleeFrom = fleeFrom;
         this.groundLayerMask = LayerMask.GetMask("Ground");
+        this.slowed = slowed;
         this.roar = null;
     }
 
-    public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom, CreatureAttack roar)
+    public CreatureGroundFleeBehavior(Creature creature, float collisionRange, Vector2 fleeFrom, CreatureAttack roar, bool slowed = false)
     {
         this.creature = creature;
         this.collisionRange = collisionRange;
         this.fleeFrom = fleeFrom;
         this.roar = roar;
         this.groundLayerMask = LayerMask.GetMask("Ground");
+        this.slowed = slowed;
     }
 
     public void Enter()
@@ -52,8 +56,8 @@ public struct CreatureGroundFleeBehavior : ICreatureState
         {
             float input = RUN_INPUT;
             Vector2 creaturePos = creature.transform.localPosition;
-            // Adjust input based off of cripple percentage
-            if (creature.GetCripplePercent(CreaturePartsType.Ground) <= .5f) input = WALK_INPUT;
+            // Adjust input based off of cripple percentage and if slowed
+            if (creature.GetCripplePercent(CreaturePartsType.Ground) <= .5f || slowed) input = Creature.WALK_INPUT;
             float movement = creaturePos.x > fleeFrom.x ? input : -input;
 
             creature.GroundMove(movement);
