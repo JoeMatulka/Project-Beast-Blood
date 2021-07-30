@@ -44,10 +44,12 @@ namespace CreatuePartSystems
         private const float DAMAGE_MOD_FRESH_BREAK = 2;
 
         private Renderer m_renderer;
+        private Material defMaterial;
 
         private void Awake()
         {
             m_renderer = GetComponent<Renderer>();
+            defMaterial = m_renderer.material;
         }
 
         private void Start()
@@ -139,11 +141,16 @@ namespace CreatuePartSystems
 
         private void ApplyBurningEffectsToPart()
         {
-            // TODO Create Burn Effect here on part
-            StartCoroutine(Burn());
+            Vector2 effectPos = this.transform.position;
+            Quaternion effectRot = this.transform.rotation;
+            Transform effectParent = this.transform;
+            // Create fire burning effect
+            GameObject burning = Instantiate(EffectsManager.Instance.FireBurning, effectPos, effectRot, effectParent);
+            StartCoroutine(Burn(burning));
+            m_renderer.material = EffectsManager.Instance.BurningMaterial;
         }
 
-        private IEnumerator Burn()
+        private IEnumerator Burn(GameObject burningEffect)
         {
             float startBurnTime = Time.time;
             creature.isBurning = true;
@@ -153,6 +160,8 @@ namespace CreatuePartSystems
                 creature.Damage(BURN_DMG, DamageModifier);
             }
             creature.isBurning = false;
+            GameObject.Destroy(burningEffect);
+            m_renderer.material = defMaterial;
         }
 
         private void ReduceBurnBuildUp()

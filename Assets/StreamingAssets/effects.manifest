@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2688038756
+CRC: 781729427
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: bc5ff66cff4c6fd1625c5f05b31b26c2
+    Hash: 469b0fa0c1a72210f5b0ab1e663f7c3a
   TypeTreeHash:
     serializedVersion: 2
     Hash: 974b9eba03e8fd104bde5238c8729f79
@@ -30,7 +30,9 @@ ClassTypes:
 - Class: 199
   Script: {instanceID: 0}
 Assets:
+- Assets/Shaders/Fire/Burning.mat
 - Assets/Shaders/Bloodied/Bloodied.mat
+- Assets/Effects/Fire/Fire_Burning.prefab
 - Assets/Effects/Attack/Creature/Common/Roar/Roar.prefab
 - Assets/Effects/Gore/Bleeding.prefab
 - Assets/Effects/Gore/Blood Splash.prefab
