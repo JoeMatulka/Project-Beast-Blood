@@ -162,7 +162,7 @@ namespace CreatuePartSystems
 
         private void ApplyPoisonedEffectsToPart()
         {
-            // TODO Add poisoned effects here
+            m_renderer.material = EffectsManager.Instance.PoisonedMaterial;
             StartCoroutine(TakeStatusDamage(POISON_DMG, POISON_TIME));
         }
 

@@ -44,6 +44,11 @@ namespace ResourceManager
             get { return effectsBundle.LoadAsset<Material>("Burning"); }
         }
 
+        public Material PoisonedMaterial
+        {
+            get { return effectsBundle.LoadAsset<Material>("Poisoned"); }
+        }
+
         public GameObject FireBurning
         {
             get { return effectsBundle.LoadAsset<GameObject>("Fire_Burning"); }

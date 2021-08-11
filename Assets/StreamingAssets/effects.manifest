@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 781729427
+CRC: 3364954233
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 469b0fa0c1a72210f5b0ab1e663f7c3a
+    Hash: 918986fced38935f0e1e1626fc387ed6
   TypeTreeHash:
     serializedVersion: 2
     Hash: 974b9eba03e8fd104bde5238c8729f79
@@ -36,4 +36,5 @@ Assets:
 - Assets/Effects/Attack/Creature/Common/Roar/Roar.prefab
 - Assets/Effects/Gore/Bleeding.prefab
 - Assets/Effects/Gore/Blood Splash.prefab
+- Assets/Shaders/Poison/Poisoned.mat
 Dependencies: []
