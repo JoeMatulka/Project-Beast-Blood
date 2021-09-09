@@ -29,6 +29,7 @@ namespace CreatuePartSystems
         private const float POISON_TIME = 20f;
         private readonly Damage POISON_DMG = new Damage(2.5f, DamageType.POISON);
         private const float STATUS_RECOVER_RATE = 5f;
+        private bool isTakingStatusDamage = false;
         [SerializeField]
         private bool IsBreakable;
 
@@ -144,9 +145,14 @@ namespace CreatuePartSystems
             GameObject bleeding = EffectsManager.Instance.Bleeding;
             bleeding.GetComponent<ParticleSystem>().startColor = bloodColor;
             Instantiate(bleeding, effectPos, effectRot, effectParent);
-            // Apply bloodied material
-            m_renderer.material = EffectsManager.Instance.BloodiedMaterial;
-            m_renderer.material.SetColor("_Color", bloodColor);
+            // Apply bloodied material, don't apply while recieving status damage to remove the current effect
+            if (!isTakingStatusDamage)
+            {
+                m_renderer.material = EffectsManager.Instance.BloodiedMaterial;
+                m_renderer.material.SetColor("_Color", bloodColor);
+            }
+            // Add this as the default material from here on out so when burns and poisons stop, they don't remove this effect
+            defMaterial = m_renderer.material;
         }
 
         private void ApplyBurningEffectsToPart()
@@ -168,6 +174,7 @@ namespace CreatuePartSystems
 
         private IEnumerator TakeStatusDamage(Damage dmg, float statusTime, GameObject effect = null)
         {
+            isTakingStatusDamage = true;
             float startTime = Time.time;
             if (dmg.Type.Equals(DamageType.FIRE)) creature.isBurning = true;
             if (dmg.Type.Equals(DamageType.POISON)) creature.isPoisoned = true;
@@ -187,6 +194,7 @@ namespace CreatuePartSystems
                 PoisonBuildUp = 0;
             }
             if (effect != null) GameObject.Destroy(effect);
+            isTakingStatusDamage = false;
             m_renderer.material = defMaterial;
         }
 

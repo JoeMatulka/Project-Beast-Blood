@@ -14,6 +14,7 @@ public class TestMonster : Creature
         TripThreshold = 200,
         KOThreshold = 400,
         BurnThreshold = 100,
+        PoisonThreshold = 200,
         Speed = 5,
         BaseAggression = 2f,
         BaseSize = 10,
