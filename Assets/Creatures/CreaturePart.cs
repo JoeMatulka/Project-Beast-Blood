@@ -148,7 +148,7 @@ namespace CreatuePartSystems
             // Apply bloodied material, don't apply while recieving status damage to remove the current effect
             if (!isTakingStatusDamage)
             {
-                m_renderer.material = EffectsManager.Instance.BloodiedMaterial;
+                ApplyMaterialToChildRenderers(EffectsManager.Instance.BloodiedMaterial);
                 m_renderer.material.SetColor("_Color", bloodColor);
             }
             // Add this as the default material from here on out so when burns and poisons stop, they don't remove this effect
@@ -162,13 +162,13 @@ namespace CreatuePartSystems
             Transform effectParent = this.transform;
             // Create fire burning effect
             GameObject burning = Instantiate(EffectsManager.Instance.FireBurning, effectPos, effectRot, effectParent);
-            m_renderer.material = EffectsManager.Instance.BurningMaterial;
+            ApplyMaterialToChildRenderers(EffectsManager.Instance.BurningMaterial);
             StartCoroutine(TakeStatusDamage(BURN_DMG, BURN_TIME, burning));
         }
 
         private void ApplyPoisonedEffectsToPart()
         {
-            m_renderer.material = EffectsManager.Instance.PoisonedMaterial;
+            ApplyMaterialToChildRenderers(EffectsManager.Instance.PoisonedMaterial);
             StartCoroutine(TakeStatusDamage(POISON_DMG, POISON_TIME));
         }
 
@@ -195,7 +195,13 @@ namespace CreatuePartSystems
             }
             if (effect != null) GameObject.Destroy(effect);
             isTakingStatusDamage = false;
-            m_renderer.material = defMaterial;
+            ApplyMaterialToChildRenderers(defMaterial);
+        }
+
+        private void ApplyMaterialToChildRenderers(Material material)
+        {
+            Renderer[] renderers = GetComponentsInChildren<Renderer>();
+            foreach (Renderer renderer in renderers) { renderer.material = material; }
         }
 
         private void ReduceStatusBuildUp()
