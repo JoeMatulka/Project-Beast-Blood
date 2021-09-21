@@ -33,7 +33,12 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
         this.slowed = slowed;
     }
 
-    public void Enter() { }
+    public void Enter() {
+        if (lastPositionOfTarget != Vector2.zero) {
+            // Draw Debug Reference for where the creature is going to seek
+            Debug.DrawRay(lastPositionOfTarget, Vector2.up * 1, Color.green);
+        }
+    }
 
     public void Execute()
     {

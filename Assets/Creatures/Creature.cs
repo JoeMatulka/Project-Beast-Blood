@@ -96,6 +96,7 @@ namespace CreatureSystems
         protected Animator animator;
 
         public Transform Target;
+        public Vector2 LastKnownTargetPos;
         private Hitbox[] hitboxes;
         private CreatureAttack[] attackSet;
         protected CreatureAttack currentAttack;

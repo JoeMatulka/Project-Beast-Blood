@@ -86,7 +86,7 @@ public class TestMonster : Creature
             float distToTarget = Vector2.Distance(Target.position, transform.position);
             if (distToTarget > ATTACK_RANGE)
             {
-                return new Tuple<ICreatureState, bool>(new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE, isPoisoned), isPoisoned);
+                return new Tuple<ICreatureState, bool>(new CreatureGroundPursueBehvior(this, Target, WALK_RANGE, WALK_RANGE * ATTACK_RANGE, SIGHT_RANGE, isPoisoned), isPoisoned);
             }
             else
             {
