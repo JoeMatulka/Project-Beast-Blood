@@ -14,8 +14,6 @@ public struct CreatureGroundPursueBehvior : ICreatureState
 
     private readonly bool slowed;
 
-    private readonly LayerMask groundLayerMask;
-
     public CreatureGroundPursueBehvior(Creature creature, Transform target, float walkRange, float runRange, float sightRange, bool slowed = false)
     {
         this.creature = creature;
@@ -24,7 +22,6 @@ public struct CreatureGroundPursueBehvior : ICreatureState
         this.runRange = runRange;
         this.sightRange = sightRange;
         this.slowed = slowed;
-        this.groundLayerMask = LayerMask.GetMask("Ground");
     }
 
     public void Enter() { }
@@ -49,13 +46,22 @@ public struct CreatureGroundPursueBehvior : ICreatureState
 
     private bool IsTargetInLineOfSight(Vector2 targetPos, Vector2 creaturePos)
     {
-        /*
-        RaycastHit2D hit = Physics2D.Raycast(creaturePos, targetPos - creaturePos, sightRange, groundLayerMask);
-        Debug.DrawRay(creaturePos, (targetPos - creaturePos) * sightRange, Color.green);
-        Debug.Log(hit.transform.name);
-        return hit.collider == null;
-        */
-        return false;
+        RaycastHit2D[] hits = Physics2D.LinecastAll(creaturePos, targetPos);
+        Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.green);
+        bool los = true;
+        foreach (RaycastHit2D hit in hits) {
+            if (hit.transform.GetInstanceID().Equals(creature.transform.GetInstanceID()) || hit.transform.GetInstanceID().Equals(target.transform.GetInstanceID())) {
+                // Skip collisions with self or target
+                continue;
+            }
+            if (hit.collider != null)
+            {
+                // Target is not in line of sight
+                los = false;
+                break;
+            }
+        }
+        return los;
     }
 
     private void Pursue(Vector2 targetPos, Vector2 creaturePos)

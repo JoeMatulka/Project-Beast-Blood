@@ -33,11 +33,9 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
         this.slowed = slowed;
     }
 
-    public void Enter() {
-        if (lastPositionOfTarget != Vector2.zero) {
-            // Draw Debug Reference for where the creature is going to seek
-            Debug.DrawRay(lastPositionOfTarget, Vector2.up * 1, Color.green);
-        }
+    public void Enter()
+    {
+
     }
 
     public void Execute()
@@ -46,7 +44,11 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
 
         // Try to find a target, if found return because we don't want to continue
         Transform target = FindTarget(creaturePos);
-        if (target != null) return;
+        if (target != null)
+        {
+            creature.Target = target;
+            return;
+        }
 
         SeekTarget(creaturePos);
     }
@@ -62,22 +64,20 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
             {
                 // Check to see if target is in line of sight
                 Vector2 targetPos = colliders[i].gameObject.transform.localPosition;
-                RaycastHit2D[] hits = Physics2D.RaycastAll(creaturePos, targetPos - creaturePos, sightRange, sightLayerMask);
-                for (int ii = 0; ii < hits.Length; ii++)
+                // Bitshift layer mask to ignore anything we would expect within our vison circle, this should be able to avoid false positive wit LOS'd the creature from what it is looking for. Like the player
+                RaycastHit2D[] hits = Physics2D.LinecastAll(creaturePos, targetPos, ~sightLayerMask);
+                Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.yellow);
+                bool los = true;
+                foreach (RaycastHit2D hit in hits)
                 {
-                    // TODO Prefer player for now, need to account for creature aggressiveness towards other things (creatures, sounds, traps, etc.)
-                    if (hits[ii].collider != null && hits[ii].collider.transform.tag.Equals("Player"))
+                    if (hit.collider != null && !hit.collider.transform.GetInstanceID().Equals(creature.transform.GetInstanceID()) && !hit.collider.transform.IsChildOf(creature.transform))
                     {
-                        Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.green);
-                        creature.Target = hits[ii].collider.transform;
-                        target = creature.Target;
+                        // Target is in line of sight and is not the current creature or not a child of the creature object
+                        los = false;
                         break;
                     }
-                    else
-                    {
-                        Debug.DrawRay(creaturePos, targetPos - creaturePos, Color.red);
-                    }
                 }
+                target = los ? colliders[i].gameObject.transform : null;
             }
         }
         return target;
@@ -88,6 +88,8 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
         float movement = 0f;
         if (lastPositionOfTarget == Vector2.zero || Vector2.Distance(lastPositionOfTarget, creaturePos) <= collisionRange)
         {
+            // Unset last known position, this is if the creature got to this point but will know to wander
+            lastPositionOfTarget = Vector2.zero;
             // Seek aimlessly if no previous position of target has been set
             bool isFacingRight = creature.IsFacingRight;
             movement = isFacingRight ? Creature.WALK_INPUT : -Creature.WALK_INPUT;
@@ -106,6 +108,9 @@ public struct CreatureSearchForTargetBehavior : ICreatureState
         }
         else
         {
+            // Draw Debug Reference for where the creature is going to seek
+            Debug.DrawRay(lastPositionOfTarget, Vector2.up * 1, Color.green);
+
             // Go to last position of target
             // Calculate which direction to go
             bool isTargetToRight = creaturePos.x >= lastPositionOfTarget.x;

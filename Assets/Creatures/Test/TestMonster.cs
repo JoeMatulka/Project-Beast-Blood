@@ -102,7 +102,7 @@ public class TestMonster : Creature
         }
         else
         {
-            return new Tuple<ICreatureState, bool>(new CreatureSearchForTargetBehavior(this, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask, isPoisoned), isPoisoned);
+            return new Tuple<ICreatureState, bool>(new CreatureSearchForTargetBehavior(this, LastKnownTargetPos, SIGHT_RANGE, COLLISION_PATHING_RANGE, sightLayerMask, isPoisoned), isPoisoned);
         }
     }
 
