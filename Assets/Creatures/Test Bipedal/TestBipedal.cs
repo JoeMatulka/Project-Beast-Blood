@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestMonster : Creature
+public class TestBipedal : Creature
 {
     private readonly Creature.CreatureStats STATS = new Creature.CreatureStats
     {
-        Name = "Test Monster",
+        Name = "Test Bipedal",
         BaseHealth = 1000,
         TripThreshold = 200,
         KOThreshold = 400,

@@ -3276,7 +3276,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8437fa9d7e3b9f940937dc6b6598baa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1001 &1674295749
+--- !u!1001 &1788833804
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -3286,17 +3286,17 @@ PrefabInstance:
     - target: {fileID: 2286270447274434318, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
       propertyPath: m_Name
-      value: Test Monster
+      value: Test Bipedal
       objectReference: {fileID: 0}
     - target: {fileID: 2286270447274434319, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.158276
+      value: 10.251142
       objectReference: {fileID: 0}
     - target: {fileID: 2286270447274434319, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.4086405
+      value: 0.52443427
       objectReference: {fileID: 0}
     - target: {fileID: 2286270447274434319, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
@@ -3326,7 +3326,7 @@ PrefabInstance:
     - target: {fileID: 2286270447274434319, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2286270447274434319, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
         type: 3}
@@ -3342,11 +3342,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2550880977476961872, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a1b57bf8b85ee8c4aa6a37ffcaf88ec6, type: 3}
@@ -3621,7 +3616,7 @@ PrefabInstance:
     - target: {fileID: 6060935473022306439, guid: 2ca200b7347fc9f41bad3e8c27f3bbef,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6060935473022306439, guid: 2ca200b7347fc9f41bad3e8c27f3bbef,
         type: 3}

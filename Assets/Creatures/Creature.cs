@@ -147,7 +147,7 @@ namespace CreatureSystems
             CurrentHealth = stats.BaseHealth;
             CurrentAgression = stats.BaseAggression;
             Stats = stats;
-
+            gameObject.name = Stats.Name;
             this.attackSet = attackSet;
         }
 
@@ -160,6 +160,8 @@ namespace CreatureSystems
             animator.SetBool("IsDead", isDead);
         }
 
+        // Sets the creature state and if it should do a hard override of the current state
+        // Hard overrides are for if the state is the same but with new values, since they are structs
         protected abstract Tuple<ICreatureState, bool> DetermineBehavoir();
 
         public bool CheckGrounded()
