@@ -141,4 +141,8 @@ public class CharacterController2D : MonoBehaviour
     {
         get { return this.m_Grounded; }
     }
+
+    public Vector3 Velocity {
+        get { return this.m_Rigidbody2D.velocity; }
+    }
 }

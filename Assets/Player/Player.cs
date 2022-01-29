@@ -51,7 +51,6 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
-            Animator.SetBool("IsJumping", true);
             // TODO Cancel some attack animations with jump
         }
 
@@ -74,6 +73,8 @@ public class Player : MonoBehaviour
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
         Animator.SetBool("IsAttacking", isAttacking);
+        Animator.SetBool("IsGrounded", Controller.IsGrounded);
+        Animator.SetFloat("yVelocity", Controller.Velocity.y);
     }
     void FixedUpdate()
     {
@@ -110,7 +111,6 @@ public class Player : MonoBehaviour
 
     public void OnLanding()
     {
-        Animator.SetBool("IsJumping", false);
         // TODO Cancel some attack animations on landing
     }
 
