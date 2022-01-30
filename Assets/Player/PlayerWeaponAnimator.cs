@@ -18,7 +18,7 @@ public class PlayerWeaponAnimator : MonoBehaviour
     }
 
     public void SetSpriteByDirectionAndIndex(AimDirection direction, int index) {
-        spriteRenderer.sprite = sprites[index];
+        //spriteRenderer.sprite = sprites[index];
         // TODO account for animation from direction
     }
 
