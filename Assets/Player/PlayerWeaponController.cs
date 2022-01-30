@@ -137,5 +137,5 @@ public static class WeaponClassLibrary
     public static Dictionary<int, WeaponAttackFrame> ONE_HAND_ATK_FRAMES = new Dictionary<int, WeaponAttackFrame> {
         { 5, new WeaponAttackFrame(false, true) },
     };
-    public static float ONE_HAND_ATK_WEAPON_LENGTH = 1;
+    public static float ONE_HAND_ATK_WEAPON_LENGTH = .5f;
 }
