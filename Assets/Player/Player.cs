@@ -45,9 +45,17 @@ public class Player : MonoBehaviour
     private void Update()
     {
         // Check for cancel animations in Update since they will be called before in order for the animator to cancel and act within the same frame
-        if (Input.GetButtonDown("Jump") || Input.GetButtonDown("MainWeaponAction") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0)
+        if (Input.GetButtonDown("MainWeaponAction") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0)
         {
             ApplyAttackAnimationCancel();
+        }
+        // Override animation cancel checks for maximum reactiveness in controls
+        if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Crouch"))
+        {
+            if (isAttacking)
+            {
+                ApplyAttackAnimationCancel(true);
+            }
         }
     }
 
@@ -58,7 +66,7 @@ public class Player : MonoBehaviour
             jump = true;
         }
 
-        if (Input.GetButtonDown("Crouch"))
+        if (Input.GetButtonDown("Crouch") && Controller.IsGrounded)
         {
             if (!crouch) crouch = true;
         }
@@ -81,9 +89,9 @@ public class Player : MonoBehaviour
         Animator.SetFloat("yVelocity", Controller.Velocity.y);
     }
 
-    private void ApplyAttackAnimationCancel()
+    private void ApplyAttackAnimationCancel(bool overrideCheck = false)
     {
-        if (CanCancelAttackAnim)
+        if (CanCancelAttackAnim || overrideCheck)
         {
             Animator.SetTrigger("CancelAnimation");
             CanCancelAttackAnim = false;
@@ -125,7 +133,10 @@ public class Player : MonoBehaviour
 
     public void OnLanding()
     {
-        
+        if (isAttacking)
+        {
+            ApplyAttackAnimationCancel(true);
+        }
     }
 
     public void MainWeaponAction()
