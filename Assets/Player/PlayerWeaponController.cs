@@ -22,6 +22,8 @@ public class PlayerWeaponController : MonoBehaviour
     // Length of ray cast when weapon attacks
     private float weaponAttackRayLength;
     private readonly float diagonalWeaponRayMod = .25f;
+    private readonly float playerCenterOffset = .25f;
+    private readonly float playerCrouchOffect = .15f;
 
     private LayerMask playerLayerMask;
 
@@ -70,7 +72,15 @@ public class PlayerWeaponController : MonoBehaviour
             }
 
             // Activate weapon hurt box from offset of center of player
-            Vector3 center = transform.position + (rayDirection * .25f);
+            Vector3 center = transform.position + (rayDirection * playerCenterOffset);
+
+            // Adjust center if player is crouching
+            if (player.isCrouching)
+            {
+                center = new Vector3(center.x, center.y - playerCrouchOffect);
+            }
+
+
             RaycastHit2D hit = Physics2D.Raycast(center, rayDirection, attackLength, playerLayerMask);
             Debug.DrawRay(center, rayDirection * attackLength, Color.green);
             if (hit.collider != null)

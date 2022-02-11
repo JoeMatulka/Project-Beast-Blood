@@ -142,4 +142,8 @@ public class Player : MonoBehaviour
         isAttacking = false;
         WeaponController.EndAttack();
     }
+
+    public bool isCrouching {
+        get { return crouch; }
+    }
 }
