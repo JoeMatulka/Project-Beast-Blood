@@ -22,13 +22,9 @@ public class Player : MonoBehaviour
     private float x_input;
     private bool jump = false;
     private bool crouch = false;
-
-    private bool isAttacking = false;
-
-    // Ability to withstand damage without being staggered
-    // TODO Set up Super Armor Thresholds, think of how poise works in Dark Souls 3
-    private bool isSuperArmor = false;
-    private float knockBackDmgThreshold = 30f;
+    
+    private bool attacking = false;
+    public bool CanCancelAttackAnim = false;
 
     private void Awake()
     {
@@ -51,7 +47,6 @@ public class Player : MonoBehaviour
         if (Input.GetButtonDown("Jump"))
         {
             jump = true;
-            // TODO Cancel some attack animations with jump
         }
 
         if (Input.GetButtonDown("Crouch"))
@@ -68,14 +63,22 @@ public class Player : MonoBehaviour
             MainWeaponAction();
         }
 
-        x_input = (isAttacking && Controller.IsGrounded) || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+        x_input = (attacking && Controller.IsGrounded) || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
-        Animator.SetBool("IsAttacking", isAttacking);
+        Animator.SetBool("IsAttacking", attacking);
         Animator.SetBool("IsGrounded", Controller.IsGrounded);
         Animator.SetFloat("yVelocity", Controller.Velocity.y);
     }
+
+    private void ApplyAttackAnimationCancel() {
+        if (CanCancelAttackAnim) {
+            Animator.SetTrigger("CancelAnimation");
+            CanCancelAttackAnim = false;
+        }
+    }
+
     void FixedUpdate()
     {
         Controller.Move(x_input * Time.fixedDeltaTime, crouch, jump);
@@ -116,7 +119,8 @@ public class Player : MonoBehaviour
 
     public void MainWeaponAction()
     {
-        if (!isAttacking)
+        ApplyAttackAnimationCancel();
+        if (!attacking)
         {
             //Face aim direction before attacking
             if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
@@ -127,7 +131,7 @@ public class Player : MonoBehaviour
             {
                 Controller.Flip();
             }
-            isAttacking = true;
+            attacking = true;
             Animator.SetInteger("Aim", (int)Aim.AimDirection);
             Animator.SetTrigger("WeaponAction");
         }
@@ -139,11 +143,11 @@ public class Player : MonoBehaviour
 
     public void EndAttack()
     {
-        isAttacking = false;
+        attacking = false;
+
         WeaponController.EndAttack();
     }
 
-    public bool isCrouching {
-        get { return crouch; }
-    }
+    public bool isAttacking { get { return attacking; } }
+    public bool isCrouching { get { return crouch; } }
 }

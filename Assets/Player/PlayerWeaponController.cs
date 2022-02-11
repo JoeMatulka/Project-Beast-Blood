@@ -19,6 +19,8 @@ public class PlayerWeaponController : MonoBehaviour
 
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
+    // Allows for functions not to be called mutliple times during a frame
+    private int lastCalledFrame = 0;
     // Length of ray cast when weapon attacks
     private float weaponAttackRayLength;
     private readonly float diagonalWeaponRayMod = .25f;
@@ -40,57 +42,65 @@ public class PlayerWeaponController : MonoBehaviour
         WeaponAttackFrame attackFrame;
         if (weaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
-            //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
-            Vector3 rayDirection = Vector3.zero;
-            float attackLength = weaponAttackRayLength;
-            switch (direction)
-            {
-                case AimDirection.UP:
-                    rayDirection = Vector3.up;
-                    break;
-                case AimDirection.UP_DIAG:
-                    rayDirection = new Vector3(1, 1);
-                    // This is because rays are drawn longer at a diagonal angle from origin
-                    attackLength -= diagonalWeaponRayMod;
-                    break;
-                case AimDirection.STRAIGHT:
-                    rayDirection = Vector3.right;
-                    break;
-                case AimDirection.DOWN_DIAG:
-                    rayDirection = new Vector3(1, -1);
-                    // This is because rays are drawn longer at a diagonal angle from origin
-                    attackLength -= diagonalWeaponRayMod;
-                    break;
-                case AimDirection.DOWN:
-                    rayDirection = Vector3.down;
-                    break;
+            if (attackFrame.IsActiveHurtBox) {
+                DrawWeaponRecast(direction);
             }
-            // Flip x axis of aim if player is not facing right
-            if (!player.Controller.FacingRight)
-            {
-                rayDirection = new Vector3(rayDirection.x * -1, rayDirection.y);
+            if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame) {
+                player.CanCancelAttackAnim = true;
             }
+            lastCalledFrame = frame;
+        }
+    }
 
-            // Activate weapon hurt box from offset of center of player
-            Vector3 center = transform.position + (rayDirection * playerCenterOffset);
+    private void DrawWeaponRecast(AimDirection direction) {
+        //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
+        Vector3 rayDirection = Vector3.zero;
+        float attackLength = weaponAttackRayLength;
+        switch (direction)
+        {
+            case AimDirection.UP:
+                rayDirection = Vector3.up;
+                break;
+            case AimDirection.UP_DIAG:
+                rayDirection = new Vector3(1, 1);
+                // This is because rays are drawn longer at a diagonal angle from origin
+                attackLength -= diagonalWeaponRayMod;
+                break;
+            case AimDirection.STRAIGHT:
+                rayDirection = Vector3.right;
+                break;
+            case AimDirection.DOWN_DIAG:
+                rayDirection = new Vector3(1, -1);
+                // This is because rays are drawn longer at a diagonal angle from origin
+                attackLength -= diagonalWeaponRayMod;
+                break;
+            case AimDirection.DOWN:
+                rayDirection = Vector3.down;
+                break;
+        }
+        // Flip x axis of aim if player is not facing right
+        if (!player.Controller.FacingRight)
+        {
+            rayDirection = new Vector3(rayDirection.x * -1, rayDirection.y);
+        }
 
-            // Adjust center if player is crouching
-            if (player.isCrouching)
-            {
-                center = new Vector3(center.x, center.y - playerCrouchOffect);
-            }
+        // Activate weapon hurt box from offset of center of player
+        Vector3 center = transform.position + (rayDirection * playerCenterOffset);
+
+        // Adjust center if player is crouching
+        if (player.isCrouching)
+        {
+            center = new Vector3(center.x, center.y - playerCrouchOffect);
+        }
 
 
-            RaycastHit2D hit = Physics2D.Raycast(center, rayDirection, attackLength, playerLayerMask);
-            Debug.DrawRay(center, rayDirection * attackLength, Color.green);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(center, rayDirection, attackLength, playerLayerMask);
+        Debug.DrawRay(center, rayDirection * attackLength, Color.green);
+        foreach (RaycastHit2D hit in hits)
+        {
             if (hit.collider != null)
             {
-                Hitbox hitbox = hit.collider.GetComponent<Hitbox>();
-                if (hitbox != null)
-                {
-                    // Made contact with a hitbox
-                    hitbox.ReceiveDamage(currentAttackDamage, player.transform.position);
-                }
+                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(currentAttackDamage, player.transform.position);
             }
         }
     }
@@ -104,6 +114,7 @@ public class PlayerWeaponController : MonoBehaviour
     public void EndAttack()
     {
         animator.ClearSprite();
+        lastCalledFrame = 0;
     }
 
     public WeaponType CurrentWeaponType
@@ -132,15 +143,15 @@ public class PlayerWeaponController : MonoBehaviour
  */
 public struct WeaponAttackFrame
 {
-    // Does frame have armor to protect from interupt? Example: 2H weapons should be able to withstand some damage without attacks being interuptted
-    public readonly bool IsFrameArmor;
+    // Is this the end of the recovery frame, allows for cancelling animations with movement, etc.
+    public readonly bool IsEndOfRecoveryFrame;
     // Is the weapon hurt box active this frame?
     public readonly bool IsActiveHurtBox;
 
-    public WeaponAttackFrame(bool isFrameArmor, bool isActiveHurtBox)
+    public WeaponAttackFrame(bool isActiveHurtBox, bool IsEndOfRecoveryFrame)
     {
-        IsFrameArmor = isFrameArmor;
-        IsActiveHurtBox = isActiveHurtBox;
+        this.IsEndOfRecoveryFrame = IsEndOfRecoveryFrame;
+        this.IsActiveHurtBox = isActiveHurtBox;
     }
 }
 
@@ -151,7 +162,8 @@ public static class WeaponClassLibrary
 {
     // One handed weapon
     public static Dictionary<int, WeaponAttackFrame> ONE_HAND_ATK_FRAMES = new Dictionary<int, WeaponAttackFrame> {
-        { 5, new WeaponAttackFrame(false, true) },
+        { 5, new WeaponAttackFrame(true, false) },
+        { 12, new WeaponAttackFrame(false, true) },
     };
     public static float ONE_HAND_ATK_WEAPON_LENGTH = .7f;
 }
