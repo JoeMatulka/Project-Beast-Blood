@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     private float x_input;
     private bool jump = false;
     private bool crouch = false;
-    
+
     private bool attacking = false;
     public bool CanCancelAttackAnim = false;
 
@@ -46,7 +46,12 @@ public class Player : MonoBehaviour
     {
         if (Input.GetButtonDown("Jump"))
         {
-            jump = true;
+            // Can only cancel attacks if grounded, if we did check below we'd never cancel because attack is unset on animation exit
+            if(Controller.IsGrounded) { ApplyAttackAnimationCancel(); }
+            // Can't jump if grounded or attacking
+            if (!attacking && Controller.IsGrounded) {
+                jump = true;
+            }
         }
 
         if (Input.GetButtonDown("Crouch"))
@@ -72,8 +77,10 @@ public class Player : MonoBehaviour
         Animator.SetFloat("yVelocity", Controller.Velocity.y);
     }
 
-    private void ApplyAttackAnimationCancel() {
-        if (CanCancelAttackAnim) {
+    private void ApplyAttackAnimationCancel()
+    {
+        if (CanCancelAttackAnim)
+        {
             Animator.SetTrigger("CancelAnimation");
             CanCancelAttackAnim = false;
         }
@@ -114,7 +121,7 @@ public class Player : MonoBehaviour
 
     public void OnLanding()
     {
-        // TODO Cancel some attack animations on landing
+        Animator.SetTrigger("CancelAnimation");
     }
 
     public void MainWeaponAction()
