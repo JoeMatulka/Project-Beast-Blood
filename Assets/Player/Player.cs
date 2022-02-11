@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
             MainWeaponAction();
         }
 
-        x_input = (attacking && Controller.IsGrounded) || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+        x_input = attacking || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
