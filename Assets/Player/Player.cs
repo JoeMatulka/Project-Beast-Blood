@@ -42,28 +42,32 @@ public class Player : MonoBehaviour
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
     }
 
-    void Update()
+    private void Update()
     {
-        if (Input.GetButtonDown("Jump"))
+        // Check for cancel animations in Update since they will be called before in order for the animator to cancel and act within the same frame
+        if (Input.GetButtonDown("Jump") || Input.GetButtonDown("MainWeaponAction") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0)
         {
-            // Can only cancel attacks if grounded, if we did check below we'd never cancel because attack is unset on animation exit
-            if(Controller.IsGrounded) { ApplyAttackAnimationCancel(); }
-            // Can't jump if grounded or attacking
-            if (!attacking && Controller.IsGrounded) {
-                jump = true;
-            }
+            ApplyAttackAnimationCancel();
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (Input.GetButtonDown("Jump") && Controller.IsGrounded && !isAttacking)
+        {
+            jump = true;
         }
 
         if (Input.GetButtonDown("Crouch"))
         {
-            crouch = true;
+            if (!crouch) crouch = true;
         }
         else if (Input.GetButtonUp("Crouch"))
         {
             crouch = false;
         }
 
-        if (Input.GetButtonDown("MainWeaponAction"))
+        if (Input.GetButtonDown("MainWeaponAction") && !isAttacking)
         {
             MainWeaponAction();
         }
@@ -121,27 +125,23 @@ public class Player : MonoBehaviour
 
     public void OnLanding()
     {
-        Animator.SetTrigger("CancelAnimation");
+        
     }
 
     public void MainWeaponAction()
     {
-        ApplyAttackAnimationCancel();
-        if (!attacking)
+        //Face aim direction before attacking
+        if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
         {
-            //Face aim direction before attacking
-            if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
-            {
-                Controller.Flip();
-            }
-            else if (!Controller.FacingRight && (90 > Aim.AimAngle && Aim.AimAngle >= 0 || Aim.AimAngle > 270))
-            {
-                Controller.Flip();
-            }
-            attacking = true;
-            Animator.SetInteger("Aim", (int)Aim.AimDirection);
-            Animator.SetTrigger("WeaponAction");
+            Controller.Flip();
         }
+        else if (!Controller.FacingRight && (90 > Aim.AimAngle && Aim.AimAngle >= 0 || Aim.AimAngle > 270))
+        {
+            Controller.Flip();
+        }
+        attacking = true;
+        Animator.SetInteger("Aim", (int)Aim.AimDirection);
+        Animator.SetTrigger("WeaponAction");
     }
 
     public void SecondaryWeaponAction() { }
@@ -151,8 +151,8 @@ public class Player : MonoBehaviour
     public void EndAttack()
     {
         attacking = false;
-
         WeaponController.EndAttack();
+        CanCancelAttackAnim = false;
     }
 
     public bool isAttacking { get { return attacking; } }
