@@ -8,7 +8,7 @@ public enum WeaponType
 };
 
 [RequireComponent(typeof(PlayerWeaponAnimator))]
-public class PlayerWeaponController : MonoBehaviour
+public class PlayerAttackController : MonoBehaviour
 {
     private PlayerWeaponAnimator animator;
     private Player player;
@@ -19,6 +19,9 @@ public class PlayerWeaponController : MonoBehaviour
 
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
+    // Number key in dictionary is active frame for non-weapon attack (zero indexed)
+    private Dictionary<int, NonWeaponAttackFrame> nonWeaponAttackFrames;
+    private int currentNonWeaponAttackID = 0;
     // Allows for functions not to be called mutliple times during a frame
     private int lastCalledFrame = 0;
     // Length of ray cast when weapon attacks
@@ -42,17 +45,34 @@ public class PlayerWeaponController : MonoBehaviour
         WeaponAttackFrame attackFrame;
         if (weaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
-            if (attackFrame.IsActiveHurtBox) {
+            if (attackFrame.IsActiveHurtBox)
+            {
                 DrawWeaponRecast(direction);
             }
-            if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame) {
+            if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
+            {
                 player.CanCancelAttackAnim = true;
             }
             lastCalledFrame = frame;
         }
     }
 
-    private void DrawWeaponRecast(AimDirection direction) {
+    public void ActiveNonWeaponAttackFrame(int frame)
+    {
+        NonWeaponAttackFrame nonWeaponAtkFrame;
+        if (nonWeaponAttackFrames.TryGetValue(frame, out nonWeaponAtkFrame))
+        {
+
+            if (nonWeaponAtkFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
+            {
+                player.CanCancelAttackAnim = true;
+            }
+            lastCalledFrame = frame;
+        }
+    }
+
+    private void DrawWeaponRecast(AimDirection direction)
+    {
         //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
         Vector3 rayDirection = Vector3.zero;
         float attackLength = weaponAttackRayLength;
@@ -77,6 +97,8 @@ public class PlayerWeaponController : MonoBehaviour
             case AimDirection.DOWN:
                 rayDirection = Vector3.down;
                 break;
+            default:
+                break;
         }
         // Flip x axis of aim if player is not facing right
         if (!player.Controller.FacingRight)
@@ -100,7 +122,14 @@ public class PlayerWeaponController : MonoBehaviour
         {
             if (hit.collider != null)
             {
+                // If the hit has a hitbox to receive damage, then damage it
                 hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(currentAttackDamage, player.transform.position);
+                // If the hit is a creature that is staggered, perform a fatal attack
+                CreatureSystems.Creature creature = hit.collider.transform.root.GetComponent<CreatureSystems.Creature>();
+                if (creature != null && creature.IsStaggered)
+                {
+                    player.FatalAttack(creature);
+                }
             }
         }
     }
@@ -108,7 +137,7 @@ public class PlayerWeaponController : MonoBehaviour
     public void GenerateAttackDamage()
     {
         // TODO Grab damage from weapon
-        currentAttackDamage = new Damage(10, DamageType.POISON);
+        currentAttackDamage = new Damage(10, DamageType.RAW);
     }
 
     public void EndAttack()
@@ -136,10 +165,29 @@ public class PlayerWeaponController : MonoBehaviour
             }
         }
     }
+
+    public int CurrentNonWeaponAttackID
+    {
+        get { return currentNonWeaponAttackID; }
+        set
+        {
+            currentNonWeaponAttackID = value;
+            // Assign frames based off of ID
+            switch (currentNonWeaponAttackID)
+            {
+                case NonWeaponAttackLibrary.FATAL_ATK_ID:
+                    nonWeaponAttackFrames = NonWeaponAttackLibrary.FATAL_ATK_FRAMES;
+                    break;
+                default:
+                    Debug.LogError("Could not find that non weapon attack id, cannot assign attack frames");
+                    break;
+            }
+        }
+    }
 }
 
 /**
- * Class meant to represent a single frame of attack within an attack animation frame
+ * Class meant to represent a single frame of attack within an weapon attack animation frame
  */
 public struct WeaponAttackFrame
 {
@@ -148,10 +196,23 @@ public struct WeaponAttackFrame
     // Is the weapon hurt box active this frame?
     public readonly bool IsActiveHurtBox;
 
-    public WeaponAttackFrame(bool isActiveHurtBox, bool IsEndOfRecoveryFrame)
+    public WeaponAttackFrame(bool isActiveHurtBox, bool isEndOfRecoveryFrame)
     {
-        this.IsEndOfRecoveryFrame = IsEndOfRecoveryFrame;
-        this.IsActiveHurtBox = isActiveHurtBox;
+        IsEndOfRecoveryFrame = isEndOfRecoveryFrame;
+        IsActiveHurtBox = isActiveHurtBox;
+    }
+}
+
+public struct NonWeaponAttackFrame
+{
+    // Used for attacks that are cinematic in nature and should not take damage during the animation
+    public readonly bool ToggleInvulnerability;
+    // Is this the end of the recovery frame, allows for cancelling animations with movement, etc.
+    public readonly bool IsEndOfRecoveryFrame;
+    public NonWeaponAttackFrame(bool toggleInvulnerability, bool isEndOfRecoveryFrame)
+    {
+        ToggleInvulnerability = toggleInvulnerability;
+        IsEndOfRecoveryFrame = isEndOfRecoveryFrame;
     }
 }
 
@@ -165,5 +226,15 @@ public static class WeaponClassLibrary
         { 5, new WeaponAttackFrame(true, false) },
         { 12, new WeaponAttackFrame(false, true) },
     };
-    public static float ONE_HAND_ATK_WEAPON_LENGTH = .7f;
+    public static float ONE_HAND_ATK_WEAPON_LENGTH = .8f;
+}
+
+public static class NonWeaponAttackLibrary
+{
+    // Fatal attack, a cinematic attack that does large damage independent of the player weapon on a staggered monster
+    public const int FATAL_ATK_ID = 1;
+    public static Dictionary<int, NonWeaponAttackFrame> FATAL_ATK_FRAMES = new Dictionary<int, NonWeaponAttackFrame> {
+        { 0, new NonWeaponAttackFrame(true, false)},
+        { 20, new NonWeaponAttackFrame(false, true)},
+    };
 }

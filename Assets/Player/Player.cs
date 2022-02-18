@@ -16,7 +16,7 @@ public class Player : MonoBehaviour
     public CharacterController2D Controller;
     public Animator Animator;
     public PlayerAim Aim;
-    public PlayerWeaponController WeaponController;
+    public PlayerAttackController AttackController;
 
     private const float RUN_SPEED = 15f;
     private float x_input;
@@ -30,13 +30,14 @@ public class Player : MonoBehaviour
     {
         // TODO Definitely not where this should be, put here for now since no scene code is done yet
         EffectsManager.Instance.LoadEffectsBundle();
+        AttackController = GetComponentInChildren<PlayerAttackController>();
     }
 
     private void Start()
     {
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
-        WeaponController.CurrentWeaponType = WeaponType.ONE_HAND;
+        AttackController.CurrentWeaponType = WeaponType.ONE_HAND;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
@@ -139,7 +140,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void MainWeaponAction()
+    private void MainWeaponAction()
     {
         //Face aim direction before attacking
         if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
@@ -155,14 +156,27 @@ public class Player : MonoBehaviour
         Animator.SetTrigger("WeaponAction");
     }
 
-    public void SecondaryWeaponAction() { }
+    // Peforms a fatal attack, a cinematic attack that does large damage independent of the player weapon on a staggered creature
+    public void FatalAttack(CreatureSystems.Creature creature)
+    {
+        if (creature != null)
+        {
+            ApplyAttackAnimationCancel(true);
+            attacking = true;
+            AttackController.CurrentNonWeaponAttackID = NonWeaponAttackLibrary.FATAL_ATK_ID;
+            Animator.SetInteger("ActionId", AttackController.CurrentNonWeaponAttackID);
+            Animator.SetTrigger("NonWeaponAction");
+        }
+    }
 
-    public void UseEquipment() { }
+    private void SecondaryWeaponAction() { }
+
+    private void UseEquipment() { }
 
     public void EndAttack()
     {
         attacking = false;
-        WeaponController.EndAttack();
+        AttackController.EndAttack();
         CanCancelAttackAnim = false;
     }
 
