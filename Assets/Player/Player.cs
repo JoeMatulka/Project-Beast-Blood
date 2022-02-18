@@ -7,6 +7,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float Health = 100;
+    public bool IsInvulnerable = false;
 
     private Hitbox hitbox;
 
@@ -22,6 +23,8 @@ public class Player : MonoBehaviour
     private float x_input;
     private bool jump = false;
     private bool crouch = false;
+
+    public bool stopInput = false;
 
     private bool attacking = false;
     public bool CanCancelAttackAnim = false;
@@ -46,12 +49,12 @@ public class Player : MonoBehaviour
     private void Update()
     {
         // Check for cancel animations in Update since they will be called before in order for the animator to cancel and act within the same frame
-        if (Input.GetButtonDown("MainWeaponAction") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0)
+        if (Input.GetButtonDown("MainWeaponAction") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0 && !stopInput)
         {
             ApplyAttackAnimationCancel();
         }
         // Override animation cancel checks for maximum reactiveness in controls
-        if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Crouch"))
+        if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Crouch") && !stopInput)
         {
             if (isAttacking)
             {
@@ -62,12 +65,12 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetButtonDown("Jump") && Controller.IsGrounded && !isAttacking)
+        if (Input.GetButtonDown("Jump") && Controller.IsGrounded && !isAttacking && !stopInput)
         {
             jump = true;
         }
 
-        if (Input.GetButtonDown("Crouch") && Controller.IsGrounded)
+        if (Input.GetButtonDown("Crouch") && Controller.IsGrounded && !stopInput)
         {
             if (!crouch) crouch = true;
         }
@@ -76,12 +79,12 @@ public class Player : MonoBehaviour
             crouch = false;
         }
 
-        if (Input.GetButtonDown("MainWeaponAction") && !isAttacking)
+        if (Input.GetButtonDown("MainWeaponAction") && !isAttacking && !stopInput)
         {
             MainWeaponAction();
         }
 
-        x_input = attacking || crouch ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+        x_input = attacking || crouch || stopInput ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
@@ -119,7 +122,7 @@ public class Player : MonoBehaviour
         ApplyDamage(e.Damage);
     }
 
-    private void ApplyDamage(Damage dmg)
+    private void ApplyDamage(in Damage dmg)
     {
         if (!dmg.ID.Equals(lastDamageId))
         {
@@ -157,7 +160,7 @@ public class Player : MonoBehaviour
     }
 
     // Peforms a fatal attack, a cinematic attack that does large damage independent of the player weapon on a staggered creature
-    public void FatalAttack(CreatureSystems.Creature creature)
+    public void FatalAttack(in CreatureSystems.Creature creature)
     {
         if (creature != null)
         {

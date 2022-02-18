@@ -1,4 +1,5 @@
 ﻿using HitboxSystem;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,7 @@ public enum WeaponType
 public class PlayerAttackController : MonoBehaviour
 {
     private PlayerWeaponAnimator animator;
-    private Player player;
+    public Player Player;
 
     // This could be derived from the current equipped weapon instead of assigning a weapon type, assign an actual weapon and get the type from that
     private WeaponType currentWeaponType;
@@ -36,7 +37,7 @@ public class PlayerAttackController : MonoBehaviour
     {
         animator = this.GetComponent<PlayerWeaponAnimator>();
         playerLayerMask = ~LayerMask.GetMask("Player", "Ignore Raycast", "Creature");
-        player = this.GetComponentInParent<Player>();
+        Player = this.GetComponentInParent<Player>();
     }
 
     public void ActivateWeaponAttackFrame(AimDirection direction, int frame)
@@ -51,7 +52,7 @@ public class PlayerAttackController : MonoBehaviour
             }
             if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
-                player.CanCancelAttackAnim = true;
+                Player.CanCancelAttackAnim = true;
             }
             lastCalledFrame = frame;
         }
@@ -62,10 +63,14 @@ public class PlayerAttackController : MonoBehaviour
         NonWeaponAttackFrame nonWeaponAtkFrame;
         if (nonWeaponAttackFrames.TryGetValue(frame, out nonWeaponAtkFrame))
         {
-
+            if (nonWeaponAtkFrame.ActionOnFrame != null && lastCalledFrame != frame)
+            {
+                nonWeaponAtkFrame.ActionOnFrame(this);
+            }
+            Player.IsInvulnerable = nonWeaponAtkFrame.IsInvulnerable;
             if (nonWeaponAtkFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
-                player.CanCancelAttackAnim = true;
+                Player.CanCancelAttackAnim = true;
             }
             lastCalledFrame = frame;
         }
@@ -101,7 +106,7 @@ public class PlayerAttackController : MonoBehaviour
                 break;
         }
         // Flip x axis of aim if player is not facing right
-        if (!player.Controller.FacingRight)
+        if (!Player.Controller.FacingRight)
         {
             rayDirection = new Vector3(rayDirection.x * -1, rayDirection.y);
         }
@@ -110,7 +115,7 @@ public class PlayerAttackController : MonoBehaviour
         Vector3 center = transform.position + (rayDirection * playerCenterOffset);
 
         // Adjust center if player is crouching
-        if (player.isCrouching)
+        if (Player.isCrouching)
         {
             center = new Vector3(center.x, center.y - playerCrouchOffect);
         }
@@ -123,12 +128,13 @@ public class PlayerAttackController : MonoBehaviour
             if (hit.collider != null)
             {
                 // If the hit has a hitbox to receive damage, then damage it
-                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(currentAttackDamage, player.transform.position);
+                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(currentAttackDamage, Player.transform.position);
                 // If the hit is a creature that is staggered, perform a fatal attack
                 CreatureSystems.Creature creature = hit.collider.transform.root.GetComponent<CreatureSystems.Creature>();
                 if (creature != null && creature.IsStaggered)
                 {
-                    player.FatalAttack(creature);
+                    Player.stopInput = true;
+                    Player.FatalAttack(creature);
                 }
             }
         }
@@ -206,13 +212,16 @@ public struct WeaponAttackFrame
 public struct NonWeaponAttackFrame
 {
     // Used for attacks that are cinematic in nature and should not take damage during the animation
-    public readonly bool ToggleInvulnerability;
+    public readonly bool IsInvulnerable;
     // Is this the end of the recovery frame, allows for cancelling animations with movement, etc.
     public readonly bool IsEndOfRecoveryFrame;
-    public NonWeaponAttackFrame(bool toggleInvulnerability, bool isEndOfRecoveryFrame)
+    // Action called on frame, can be used for a lot of different use cases. Calls a method on the frame with same ref as this class
+    public readonly Action<PlayerAttackController> ActionOnFrame;
+    public NonWeaponAttackFrame(bool isInvulnerable = false, bool isEndOfRecoveryFrame = false, Action<PlayerAttackController> actionOnFrame = null)
     {
-        ToggleInvulnerability = toggleInvulnerability;
+        IsInvulnerable = isInvulnerable;
         IsEndOfRecoveryFrame = isEndOfRecoveryFrame;
+        ActionOnFrame = actionOnFrame;
     }
 }
 
@@ -235,6 +244,17 @@ public static class NonWeaponAttackLibrary
     public const int FATAL_ATK_ID = 1;
     public static Dictionary<int, NonWeaponAttackFrame> FATAL_ATK_FRAMES = new Dictionary<int, NonWeaponAttackFrame> {
         { 0, new NonWeaponAttackFrame(true, false)},
-        { 20, new NonWeaponAttackFrame(false, true)},
+        { 5, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
+            // Initial Small Damage to creature
+
+        })},
+        { 13, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
+            // Secondary Heavy Damage to creature
+
+        })},
+        { 16, new NonWeaponAttackFrame(false, true, (PlayerAttackController controller) => {
+            // Release input freeze on player
+            controller.Player.stopInput = false;
+        })},
     };
 }
