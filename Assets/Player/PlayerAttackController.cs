@@ -250,9 +250,10 @@ public static class NonWeaponAttackLibrary
     public static Dictionary<int, NonWeaponAttackFrame> FATAL_ATK_FRAMES = new Dictionary<int, NonWeaponAttackFrame> {
         { 0, new NonWeaponAttackFrame(true, false)},
         { 5, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
-            // Initial Damage to creature
+            // Initial Damage to creature cause creature to flinch
             Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
             controller.fatalAttackCreature.Damage(dmg);
+            controller.fatalAttackCreature.Flinch();
         })},
         { 13, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
             // Secondary Damage to creature and force a trip on the creature

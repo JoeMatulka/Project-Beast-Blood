@@ -3118,10 +3118,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 100
+  IsInvulnerable: 0
   Controller: {fileID: 886841389}
   Animator: {fileID: 886841396}
   Aim: {fileID: 6060935471757127031}
   AttackController: {fileID: 0}
+  stopInput: 0
   CanCancelAttackAnim: 0
 --- !u!95 &886841396
 Animator:
@@ -3200,6 +3202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ce18c9336cc06942a48737dc58880be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Player: {fileID: 0}
+  fatalAttackCreature: {fileID: 0}
 --- !u!114 &899496560
 MonoBehaviour:
   m_ObjectHideFlags: 0

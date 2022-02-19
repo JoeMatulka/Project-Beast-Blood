@@ -416,6 +416,12 @@ namespace CreatureSystems
             isTripped = false;
         }
 
+        public void Flinch()
+        {
+            EndAttack();
+            animator.SetTrigger("Flinch");
+        }
+
         /**
          * Grab the percentage the creature is crippled based off of the provided parts type
          */
