@@ -334,7 +334,7 @@ namespace CreatureSystems
             ClearActiveHitBoxes();
         }
 
-        public virtual void Damage(in Damage dmg, in CreaturePartDamageModifier dmgMod = CreaturePartDamageModifier.NONE, in float dmgModAmount = 1)
+        public virtual void Damage(in Damage dmg, in CreaturePartDamageModifier dmgMod = CreaturePartDamageModifier.NONE, in float dmgModAmount = 1, bool forceKnockout = false, bool forceTrip = false)
         {
             float calculatedDmg = dmg.Value * dmgModAmount;
             // Calculate damage based off of resisted types
@@ -347,12 +347,13 @@ namespace CreatureSystems
                 calculatedDmg -= calculatedResistDmg;
             }
             // Calculate affected tripping threshold
-            if (dmgMod.Equals(CreaturePartDamageModifier.TRIP) && !isTripped)
+            if (dmgMod.Equals(CreaturePartDamageModifier.TRIP) && !isTripped || forceTrip)
             {
                 CurrentTripThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (calculatedDmg * 1.5f) : calculatedDmg;
-                if (CurrentTripThreshold >= Stats.TripThreshold)
+                if (CurrentTripThreshold >= Stats.TripThreshold || forceTrip)
                 {
                     CurrentTripThreshold = 0;
+                    isStaggered = false;
                     isTripped = true;
                     EndAttack();
                     // Don't restart down count if already knocked out
@@ -363,13 +364,14 @@ namespace CreatureSystems
                 }
             }
             // Calculate affected knock out threshold
-            if (dmgMod.Equals(CreaturePartDamageModifier.KO) && !isKnockedOut)
+            if (dmgMod.Equals(CreaturePartDamageModifier.KO) && !isKnockedOut || forceKnockout)
             {
                 // Increase knockout damage modifier if mobility part cripple percentage is high enough
                 CurrentKOThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (calculatedDmg * 1.5f) : calculatedDmg;
-                if (CurrentKOThreshold >= Stats.KOThreshold)
+                if (CurrentKOThreshold >= Stats.KOThreshold || forceKnockout)
                 {
                     CurrentKOThreshold = 0;
+                    isStaggered = false;
                     isKnockedOut = true;
                     EndAttack();
                     // Don't restart down count if already tripped

@@ -12,7 +12,7 @@ public class TestGroundBipedal : Creature
         Name = "Test Ground Bipedal",
         BaseHealth = 1000,
         TripThreshold = 200,
-        KOThreshold = 400,
+        KOThreshold = 200,
         BurnThreshold = 100,
         PoisonThreshold = 200,
         Speed = 5,

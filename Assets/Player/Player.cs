@@ -167,6 +167,7 @@ public class Player : MonoBehaviour
             ApplyAttackAnimationCancel(true);
             attacking = true;
             AttackController.CurrentNonWeaponAttackID = NonWeaponAttackLibrary.FATAL_ATK_ID;
+            AttackController.fatalAttackCreature = creature;
             Animator.SetInteger("ActionId", AttackController.CurrentNonWeaponAttackID);
             Animator.SetTrigger("NonWeaponAction");
         }

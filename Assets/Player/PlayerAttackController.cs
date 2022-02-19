@@ -31,6 +31,11 @@ public class PlayerAttackController : MonoBehaviour
     private readonly float playerCenterOffset = .25f;
     private readonly float playerCrouchOffect = .15f;
 
+    // Variables for Fatal Attack
+    public CreatureSystems.Creature fatalAttackCreature;
+    // Different for first and second strikes in a fatal attack
+    public readonly float FATAL_ATK_DMG_MOD = .25f;
+
     private LayerMask playerLayerMask;
 
     private void Awake()
@@ -245,12 +250,14 @@ public static class NonWeaponAttackLibrary
     public static Dictionary<int, NonWeaponAttackFrame> FATAL_ATK_FRAMES = new Dictionary<int, NonWeaponAttackFrame> {
         { 0, new NonWeaponAttackFrame(true, false)},
         { 5, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
-            // Initial Small Damage to creature
-
+            // Initial Damage to creature
+            Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
+            controller.fatalAttackCreature.Damage(dmg);
         })},
         { 13, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
-            // Secondary Heavy Damage to creature
-
+            // Secondary Damage to creature and force a trip on the creature
+            Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
+            controller.fatalAttackCreature.Damage(dmg, CreatuePartSystems.CreaturePartDamageModifier.NONE, 1, false, true);
         })},
         { 16, new NonWeaponAttackFrame(false, true, (PlayerAttackController controller) => {
             // Release input freeze on player
