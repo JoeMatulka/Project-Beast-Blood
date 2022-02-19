@@ -24,7 +24,7 @@ namespace HitboxSystem
         // Prevents the hitbox from taking damage from the same source multiple times
         private Guid lastDamageId;
 
-        private BoxCollider2D collider;
+        private BoxCollider2D m_collider;
 
         public bool IsActive = false;
 
@@ -35,7 +35,7 @@ namespace HitboxSystem
 
         private void Awake()
         {
-            collider = this.GetComponent<BoxCollider2D>();
+            m_collider = this.GetComponent<BoxCollider2D>();
         }
 
         public void ReceiveDamage(Damage dmg, Vector3 pos)
@@ -57,7 +57,7 @@ namespace HitboxSystem
 
         public BoxCollider2D Collider
         {
-            get { return collider; }
+            get { return m_collider; }
         }
     }
 }

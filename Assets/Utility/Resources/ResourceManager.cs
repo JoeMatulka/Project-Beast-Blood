@@ -34,6 +34,12 @@ namespace ResourceManager
             get { return effectsBundle.LoadAsset<GameObject>("Blood Splash"); }
         }
 
+        public GameObject BloodSpurt
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Blood Spurt"); }
+        }
+
+
         public GameObject Bleeding
         {
             get { return effectsBundle.LoadAsset<GameObject>("Bleeding"); }

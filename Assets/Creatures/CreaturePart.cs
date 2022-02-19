@@ -31,7 +31,7 @@ namespace CreatuePartSystems
         private const float STATUS_RECOVER_RATE = 5f;
         private bool isTakingStatusDamage = false;
         [SerializeField]
-        private bool IsBreakable;
+        public bool IsBreakable;
 
         // If the part can apply Tripped or KO status to the creature
         [SerializeField]
@@ -139,11 +139,13 @@ namespace CreatuePartSystems
             Color bloodColor = creature.BloodColor;
             // Create Blood Splash
             GameObject splash = EffectsManager.Instance.BloodSplash;
-            splash.GetComponent<ParticleSystem>().startColor = bloodColor;
+            ParticleSystem.MainModule splashSettings = splash.GetComponent<ParticleSystem>().main;
+            splashSettings.startColor = bloodColor;
             Instantiate(splash, effectPos, effectRot, effectParent);
             // Create Bleeding Effect
             GameObject bleeding = EffectsManager.Instance.Bleeding;
-            bleeding.GetComponent<ParticleSystem>().startColor = bloodColor;
+            ParticleSystem.MainModule bleedSettings = splash.GetComponent<ParticleSystem>().main;
+            bleedSettings.startColor = bloodColor;
             Instantiate(bleeding, effectPos, effectRot, effectParent);
             // Apply bloodied material, don't apply while recieving status damage to remove the current effect
             if (!isTakingStatusDamage)

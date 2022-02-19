@@ -8,6 +8,7 @@ using UnityEngine.Experimental.U2D.Animation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ResourceManager;
 
 namespace CreatureSystems
 {
@@ -20,6 +21,14 @@ namespace CreatureSystems
     public enum CreaturePartsType
     {
         Ground, Flight
+    }
+
+    public enum CreatureOnEffect
+    {
+        // Creates a splash of blood
+        BloodSplash,
+        // Creates a short continuos spray of blood
+        BloodSpurt
     }
 
     [RequireComponent(typeof(Rigidbody2D))]
@@ -420,6 +429,40 @@ namespace CreatureSystems
         {
             EndAttack();
             animator.SetTrigger("Flinch");
+        }
+
+        public void SpawnEffectOnCreature(Vector3 sourceOfEffect, CreatureOnEffect fx)
+        {
+            Transform effectSource = null;
+            float closestDistanceSqr = Mathf.Infinity;
+            foreach (Hitbox potentialTarget in hitboxes)
+            {
+                Vector3 directionToTarget = potentialTarget.transform.position - sourceOfEffect;
+                float dSqrToTarget = directionToTarget.sqrMagnitude;
+                if (dSqrToTarget < closestDistanceSqr)
+                {
+                    closestDistanceSqr = dSqrToTarget;
+                    effectSource = potentialTarget.transform;
+                }
+            }
+
+            GameObject effect = null;
+            ParticleSystem.MainModule settings;
+            switch (fx)
+            {
+                case CreatureOnEffect.BloodSplash:
+                    effect = EffectsManager.Instance.BloodSplash;
+                    break;
+                case CreatureOnEffect.BloodSpurt:
+                    effect = EffectsManager.Instance.BloodSpurt;
+                    break;
+            }
+            if (effect != null)
+            {
+                settings = effect.GetComponent<ParticleSystem>().main;
+                settings.startColor = BloodColor;
+                Instantiate(effect, effectSource.position, effectSource.rotation, effectSource);
+            }
         }
 
         /**

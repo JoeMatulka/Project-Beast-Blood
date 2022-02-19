@@ -1,11 +1,12 @@
-﻿using HitboxSystem;
+﻿using CreatureSystems;
+using HitboxSystem;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public enum WeaponType
 {
-    ONE_HAND, TWO_HAND, SHIELD, POLEARM, RANGED
+    ONE_HAND, TWO_HAND, RANGED
 };
 
 [RequireComponent(typeof(PlayerWeaponAnimator))]
@@ -32,7 +33,7 @@ public class PlayerAttackController : MonoBehaviour
     private readonly float playerCrouchOffect = .15f;
 
     // Variables for Fatal Attack
-    public CreatureSystems.Creature fatalAttackCreature;
+    public Creature fatalAttackCreature;
     // Different for first and second strikes in a fatal attack
     public readonly float FATAL_ATK_DMG_MOD = .25f;
 
@@ -135,7 +136,7 @@ public class PlayerAttackController : MonoBehaviour
                 // If the hit has a hitbox to receive damage, then damage it
                 hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(currentAttackDamage, Player.transform.position);
                 // If the hit is a creature that is staggered, perform a fatal attack
-                CreatureSystems.Creature creature = hit.collider.transform.root.GetComponent<CreatureSystems.Creature>();
+                Creature creature = hit.collider.transform.root.GetComponent<Creature>();
                 if (creature != null && creature.IsStaggered)
                 {
                     Player.stopInput = true;
@@ -254,11 +255,14 @@ public static class NonWeaponAttackLibrary
             Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
             controller.fatalAttackCreature.Damage(dmg);
             controller.fatalAttackCreature.Flinch();
+            controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSpurt);
+
         })},
         { 13, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
             // Secondary Damage to creature and force a trip on the creature
             Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
             controller.fatalAttackCreature.Damage(dmg, CreatuePartSystems.CreaturePartDamageModifier.NONE, 1, false, true);
+            controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSplash);
         })},
         { 16, new NonWeaponAttackFrame(false, true, (PlayerAttackController controller) => {
             // Release input freeze on player
