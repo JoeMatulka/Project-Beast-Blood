@@ -15,6 +15,8 @@ public class PlayerAttackController : MonoBehaviour
     private PlayerWeaponAnimator animator;
     public Player Player;
 
+    public GameCamera GameCamera;
+
     // This could be derived from the current equipped weapon instead of assigning a weapon type, assign an actual weapon and get the type from that
     private WeaponType currentWeaponType;
     private Damage currentAttackDamage;
@@ -44,6 +46,8 @@ public class PlayerAttackController : MonoBehaviour
         animator = this.GetComponent<PlayerWeaponAnimator>();
         playerLayerMask = ~LayerMask.GetMask("Player", "Ignore Raycast", "Creature");
         Player = this.GetComponentInParent<Player>();
+
+        GameCamera = Camera.main.GetComponent<GameCamera>();
     }
 
     public void ActivateWeaponAttackFrame(AimDirection direction, int frame)
@@ -249,24 +253,27 @@ public static class NonWeaponAttackLibrary
     // Fatal attack, a cinematic attack that does large damage independent of the player weapon on a staggered monster
     public const int FATAL_ATK_ID = 1;
     public static Dictionary<int, NonWeaponAttackFrame> FATAL_ATK_FRAMES = new Dictionary<int, NonWeaponAttackFrame> {
-        { 0, new NonWeaponAttackFrame(true, false)},
+        { 0, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => {
+            controller.GameCamera.Zoom(2);
+        })},
         { 5, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
             // Initial Damage to creature cause creature to flinch
             Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
             controller.fatalAttackCreature.Damage(dmg);
             controller.fatalAttackCreature.Flinch();
             controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSpurt);
-
         })},
         { 13, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
             // Secondary Damage to creature and force a trip on the creature
             Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
             controller.fatalAttackCreature.Damage(dmg, CreatuePartSystems.CreaturePartDamageModifier.NONE, 1, false, true);
             controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSplash);
+            controller.GameCamera.Shake();
         })},
         { 16, new NonWeaponAttackFrame(false, true, (PlayerAttackController controller) => {
             // Release input freeze on player
             controller.Player.stopInput = false;
+            controller.GameCamera.Zoom(GameCamera.DEFAULT_CAMERA_ZOOM);
         })},
     };
 }
