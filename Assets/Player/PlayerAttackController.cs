@@ -253,8 +253,8 @@ public static class NonWeaponAttackLibrary
     // Fatal attack, a cinematic attack that does large damage independent of the player weapon on a staggered monster
     public const int FATAL_ATK_ID = 1;
     public static Dictionary<int, NonWeaponAttackFrame> FATAL_ATK_FRAMES = new Dictionary<int, NonWeaponAttackFrame> {
-        { 0, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => {
-            controller.GameCamera.Zoom(2);
+        { 1, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => {
+            controller.GameCamera.Zoom(3);
         })},
         { 5, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
             // Initial Damage to creature cause creature to flinch
@@ -270,7 +270,7 @@ public static class NonWeaponAttackLibrary
             controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSplash);
             controller.GameCamera.Shake();
         })},
-        { 16, new NonWeaponAttackFrame(false, true, (PlayerAttackController controller) => {
+        { 20, new NonWeaponAttackFrame(false, true, (PlayerAttackController controller) => {
             // Release input freeze on player
             controller.Player.stopInput = false;
             controller.GameCamera.Zoom(GameCamera.DEFAULT_CAMERA_ZOOM);
