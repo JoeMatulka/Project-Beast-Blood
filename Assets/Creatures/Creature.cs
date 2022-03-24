@@ -121,7 +121,7 @@ namespace CreatureSystems
         private const float JUMP_DURATION = 0.5f;
         private bool isJumping = false;
         private bool hasInitiatedJump = false;
-        private readonly Damage JUMPING_DOWN_DMG = new Damage(30, DamageType.RAW);
+        private readonly Damage JUMPING_DOWN_DMG = new Damage(50, DamageType.RAW);
 
         public bool IsFleeing = false;
         public float TimeSinceLastFlee = 0f;

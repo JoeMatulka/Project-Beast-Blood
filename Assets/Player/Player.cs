@@ -4,15 +4,17 @@ using ResourceManager;
 using System;
 using UnityEngine;
 
+public enum PlayerDamageId
+{
+    LIGHT = 1, KNOCKBACK = 2
+}
+
 public class Player : MonoBehaviour
 {
     public float Health = 100;
     public bool IsInvulnerable = false;
 
     private Hitbox hitbox;
-
-    // Prevents the player from taking damage from the same source multiple times
-    private Guid lastDamageId;
 
     public CharacterController2D Controller;
     public Animator Animator;
@@ -28,6 +30,14 @@ public class Player : MonoBehaviour
 
     private bool attacking = false;
     public bool CanCancelAttackAnim = false;
+
+    // Prevents the player from taking damage from the same source multiple times
+    private Guid lastDamageId;
+
+    // Thresholds for damage animations
+    private const float DMG_KNOCKBACK_THRESHOLD = 30f;
+    private const float KNOCKBACK_FORCE = 10f;
+    private const float DMG_LIGHT_THRESHOLD = 10f;
 
     private void Awake()
     {
@@ -126,12 +136,28 @@ public class Player : MonoBehaviour
     {
         if (!dmg.ID.Equals(lastDamageId))
         {
+            stopInput = true;
+            ApplyAttackAnimationCancel(true);
+            EndAttack();
             lastDamageId = dmg.ID;
             // TODO Apply damage type mitigation to Player based on armor
-            Health -= dmg.Value;
-            Vector2 forceDir = dmg.Position - transform.position;
-            forceDir = -forceDir.normalized;
-            Controller.ApplyImpulse(dmg.Value, dmg.Force);
+            float damage = dmg.Value;
+
+            Animator.SetInteger("DamageId", 0);
+            if (DMG_KNOCKBACK_THRESHOLD <= damage)
+            {
+                Vector2 forceDir = dmg.Position - transform.position;
+                forceDir = -forceDir.normalized;
+                Controller.ApplyImpulse(dmg.Value, dmg.Force);
+                Animator.SetInteger("DamageId", (int) PlayerDamageId.KNOCKBACK);
+            }
+            else if (DMG_LIGHT_THRESHOLD <= damage && DMG_KNOCKBACK_THRESHOLD >= damage)
+            {
+                Animator.SetInteger("DamageId", (int) PlayerDamageId.LIGHT);
+            }
+            Animator.SetTrigger("Damage");
+
+            Health -= damage;
         }
     }
 

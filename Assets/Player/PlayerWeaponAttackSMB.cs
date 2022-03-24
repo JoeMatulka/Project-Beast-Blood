@@ -2,6 +2,7 @@
 
 namespace Gamekit2D
 {
+    // Used for attacks that involve a player equipped weapon
     public class PlayerWeaponAttackSMB : SceneLinkedSMB<Player>
     {
         private AimDirection direction;
