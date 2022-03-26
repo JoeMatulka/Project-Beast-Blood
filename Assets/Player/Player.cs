@@ -66,7 +66,7 @@ public class Player : MonoBehaviour
         // Override animation cancel checks for maximum reactiveness in controls
         if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Crouch") && !stopInput)
         {
-            if (isAttacking)
+            if (isAttacking && Controller.IsGrounded)
             {
                 ApplyAttackAnimationCancel(true);
             }
@@ -142,20 +142,34 @@ public class Player : MonoBehaviour
             lastDamageId = dmg.ID;
             // TODO Apply damage type mitigation to Player based on armor
             float damage = dmg.Value;
+            Vector3 dmgPos = dmg.Position;
+            Vector3 forceDir = Vector3.zero;
 
             Animator.SetInteger("DamageId", 0);
             if (DMG_KNOCKBACK_THRESHOLD <= damage)
             {
-                Vector2 forceDir = dmg.Position - transform.position;
-                forceDir = -forceDir.normalized;
-                Controller.ApplyImpulse(dmg.Value, dmg.Force);
-                Animator.SetInteger("DamageId", (int) PlayerDamageId.KNOCKBACK);
+                // Face towards damage and apply force direction
+                if (dmgPos.x >= transform.position.x)
+                {
+                    forceDir = Vector3.left;
+                    if(!Controller.FacingRight) Controller.Flip();
+                }
+                else if (dmgPos.x <= transform.position.x)
+                {
+                    forceDir = Vector3.right;
+                    if(Controller.FacingRight) Controller.Flip();
+                }
+                // Apply force away from damage position
+                Controller.ApplyImpulse(dmg.Value, forceDir);
+                // Set animation ID
+                Animator.SetInteger("DamageId", (int)PlayerDamageId.KNOCKBACK);
             }
             else if (DMG_LIGHT_THRESHOLD <= damage && DMG_KNOCKBACK_THRESHOLD >= damage)
             {
-                Animator.SetInteger("DamageId", (int) PlayerDamageId.LIGHT);
+                Animator.SetInteger("DamageId", (int)PlayerDamageId.LIGHT);
             }
             Animator.SetTrigger("Damage");
+            // TODO Apply Hit spark here
 
             Health -= damage;
         }

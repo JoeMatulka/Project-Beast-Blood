@@ -222,6 +222,8 @@ namespace CreatureSystems
 
         private IEnumerator JumpToDestination(Vector2 destination)
         {
+            // Finish up attacking first
+            if (currentAttack != null) yield return new WaitUntil(() => currentAttack == null); 
             isJumping = true;
             m_Rigidbody.isKinematic = true;
             // Generate new damage ID for downward velocity damage and activate hitboxes
