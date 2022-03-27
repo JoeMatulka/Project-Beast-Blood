@@ -10,7 +10,7 @@ public enum WeaponType
 };
 
 [RequireComponent(typeof(PlayerWeaponAnimator))]
-public class PlayerAttackController : MonoBehaviour
+public class PlayerActionController : MonoBehaviour
 {
     private PlayerWeaponAnimator animator;
     public Player Player;
@@ -21,10 +21,13 @@ public class PlayerAttackController : MonoBehaviour
     private WeaponType currentWeaponType;
     private Damage currentAttackDamage;
 
+    // Current equipped item
+    public PlayerItem CurrentItem;
+
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
     // Number key in dictionary is active frame for non-weapon attack (zero indexed)
-    private Dictionary<int, NonWeaponAttackFrame> nonWeaponAttackFrames;
+    private Dictionary<int, ActionFrame> actionFrames;
     private int currentNonWeaponAttackID = 0;
     // Allows for functions not to be called mutliple times during a frame
     private int lastCalledFrame = 0;
@@ -68,17 +71,17 @@ public class PlayerAttackController : MonoBehaviour
         }
     }
 
-    public void ActiveNonWeaponAttackFrame(int frame)
+    public void ActiveActionFrame(int frame)
     {
-        NonWeaponAttackFrame nonWeaponAtkFrame;
-        if (nonWeaponAttackFrames.TryGetValue(frame, out nonWeaponAtkFrame))
+        ActionFrame actionFrame;
+        if (actionFrames.TryGetValue(frame, out actionFrame))
         {
-            if (nonWeaponAtkFrame.ActionOnFrame != null && lastCalledFrame != frame)
+            if (actionFrame.ActionOnFrame != null && lastCalledFrame != frame)
             {
-                nonWeaponAtkFrame.ActionOnFrame(this);
+                actionFrame.ActionOnFrame(this);
             }
-            Player.IsInvulnerable = nonWeaponAtkFrame.IsInvulnerable;
-            if (nonWeaponAtkFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
+            Player.IsInvulnerable = actionFrame.IsInvulnerable;
+            if (actionFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
                 Player.CanCancelAttackAnim = true;
             }
@@ -172,8 +175,8 @@ public class PlayerAttackController : MonoBehaviour
             switch (currentWeaponType)
             {
                 case WeaponType.ONE_HAND:
-                    weaponAttackFrames = WeaponClassLibrary.ONE_HAND_ATK_FRAMES;
-                    weaponAttackRayLength = WeaponClassLibrary.ONE_HAND_ATK_WEAPON_LENGTH;
+                    weaponAttackFrames = WeaponAttackFrameLibrary.ONE_HAND_ATK_FRAMES;
+                    weaponAttackRayLength = WeaponAttackFrameLibrary.ONE_HAND_ATK_WEAPON_LENGTH;
                     break;
                 default:
                     Debug.LogError("Could not find that weapon type, cannot assign weapon attack frames");
@@ -191,8 +194,8 @@ public class PlayerAttackController : MonoBehaviour
             // Assign frames based off of ID
             switch (currentNonWeaponAttackID)
             {
-                case NonWeaponAttackLibrary.FATAL_ATK_ID:
-                    nonWeaponAttackFrames = NonWeaponAttackLibrary.FATAL_ATK_FRAMES;
+                case ActionLibrary.FATAL_ATK_ID:
+                    actionFrames = ActionLibrary.FATAL_ATK_FRAMES;
                     break;
                 default:
                     Debug.LogError("Could not find that non weapon attack id, cannot assign attack frames");
@@ -219,15 +222,18 @@ public struct WeaponAttackFrame
     }
 }
 
-public struct NonWeaponAttackFrame
+/**
+ * Class meant to represent a single frame of an action a player can take, examples being unique attacks without weapons, using items
+ */
+public struct ActionFrame
 {
     // Used for attacks that are cinematic in nature and should not take damage during the animation
     public readonly bool IsInvulnerable;
     // Is this the end of the recovery frame, allows for cancelling animations with movement, etc.
     public readonly bool IsEndOfRecoveryFrame;
     // Action called on frame, can be used for a lot of different use cases. Calls a method on the frame with same ref as this class
-    public readonly Action<PlayerAttackController> ActionOnFrame;
-    public NonWeaponAttackFrame(bool isInvulnerable = false, bool isEndOfRecoveryFrame = false, Action<PlayerAttackController> actionOnFrame = null)
+    public readonly Action<PlayerActionController> ActionOnFrame;
+    public ActionFrame(bool isInvulnerable = false, bool isEndOfRecoveryFrame = false, Action<PlayerActionController> actionOnFrame = null)
     {
         IsInvulnerable = isInvulnerable;
         IsEndOfRecoveryFrame = isEndOfRecoveryFrame;
@@ -238,7 +244,7 @@ public struct NonWeaponAttackFrame
 /**
  * Class meant to hold the weapon type data by archtype, not intended for specific weapons, but for specific weapon types
  */
-public static class WeaponClassLibrary
+public static class WeaponAttackFrameLibrary
 {
     // One handed weapon
     public static Dictionary<int, WeaponAttackFrame> ONE_HAND_ATK_FRAMES = new Dictionary<int, WeaponAttackFrame> {
@@ -248,32 +254,36 @@ public static class WeaponClassLibrary
     public static float ONE_HAND_ATK_WEAPON_LENGTH = .8f;
 }
 
-public static class NonWeaponAttackLibrary
+public static class ActionLibrary
 {
     // Fatal attack, a cinematic attack that does large damage independent of the player weapon on a staggered monster
     public const int FATAL_ATK_ID = 1;
-    public static Dictionary<int, NonWeaponAttackFrame> FATAL_ATK_FRAMES = new Dictionary<int, NonWeaponAttackFrame> {
-        { 1, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => {
+    public static Dictionary<int, ActionFrame> FATAL_ATK_FRAMES = new Dictionary<int, ActionFrame> {
+        { 1, new ActionFrame(true, false, (PlayerActionController controller) => {
             controller.GameCamera.Zoom(3);
         })},
-        { 5, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
+        { 5, new ActionFrame(true, false, (PlayerActionController controller) => { 
             // Initial Damage to creature cause creature to flinch
             Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
             controller.fatalAttackCreature.Damage(dmg);
             controller.fatalAttackCreature.Flinch();
             controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSpurt);
         })},
-        { 13, new NonWeaponAttackFrame(true, false, (PlayerAttackController controller) => { 
+        { 13, new ActionFrame(true, false, (PlayerActionController controller) => { 
             // Secondary Damage to creature and force a trip on the creature
             Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
             controller.fatalAttackCreature.Damage(dmg, CreatuePartSystems.CreaturePartDamageModifier.NONE, 1, false, true);
             controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSplash);
             controller.GameCamera.Shake();
         })},
-        { 20, new NonWeaponAttackFrame(false, true, (PlayerAttackController controller) => {
+        { 20, new ActionFrame(false, true, (PlayerActionController controller) => {
             // Release input freeze on player
             controller.Player.stopInput = false;
             controller.GameCamera.Zoom(GameCamera.DEFAULT_CAMERA_ZOOM);
         })},
     };
+    // Throw item, a non-weapon attack involving throwing an item at the direction the player is aiming
+
+    // Consume item, a non-weapon action that involves consuming the currently equipped item
+
 }

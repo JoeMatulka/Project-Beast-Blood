@@ -19,7 +19,7 @@ public class Player : MonoBehaviour
     public CharacterController2D Controller;
     public Animator Animator;
     public PlayerAim Aim;
-    public PlayerAttackController AttackController;
+    public PlayerActionController ActionController;
 
     private const float RUN_SPEED = 15f;
     private float x_input;
@@ -43,14 +43,14 @@ public class Player : MonoBehaviour
     {
         // TODO Definitely not where this should be, put here for now since no scene code is done yet
         EffectsManager.Instance.LoadEffectsBundle();
-        AttackController = GetComponentInChildren<PlayerAttackController>();
+        ActionController = GetComponentInChildren<PlayerActionController>();
     }
 
     private void Start()
     {
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
-        AttackController.CurrentWeaponType = WeaponType.ONE_HAND;
+        ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
@@ -146,21 +146,21 @@ public class Player : MonoBehaviour
             Vector3 forceDir = Vector3.zero;
 
             Animator.SetInteger("DamageId", 0);
-            if (DMG_KNOCKBACK_THRESHOLD <= damage)
+            if (DMG_KNOCKBACK_THRESHOLD <= damage || !Controller.IsGrounded)
             {
                 // Face towards damage and apply force direction
                 if (dmgPos.x >= transform.position.x)
                 {
                     forceDir = Vector3.left;
-                    if(!Controller.FacingRight) Controller.Flip();
+                    if (!Controller.FacingRight) Controller.Flip();
                 }
                 else if (dmgPos.x <= transform.position.x)
                 {
                     forceDir = Vector3.right;
-                    if(Controller.FacingRight) Controller.Flip();
+                    if (Controller.FacingRight) Controller.Flip();
                 }
                 // Apply force away from damage position
-                Controller.ApplyImpulse(dmg.Value, forceDir);
+                Controller.ApplyImpulse(KNOCKBACK_FORCE, forceDir);
                 // Set animation ID
                 Animator.SetInteger("DamageId", (int)PlayerDamageId.KNOCKBACK);
             }
@@ -195,7 +195,7 @@ public class Player : MonoBehaviour
             Controller.Flip();
         }
         attacking = true;
-        Animator.SetInteger("Aim", (int)Aim.AimDirection);
+        Animator.SetInteger("Aim", (int) Aim.AimDirection);
         Animator.SetTrigger("WeaponAction");
     }
 
@@ -206,10 +206,10 @@ public class Player : MonoBehaviour
         {
             ApplyAttackAnimationCancel(true);
             attacking = true;
-            AttackController.CurrentNonWeaponAttackID = NonWeaponAttackLibrary.FATAL_ATK_ID;
-            AttackController.fatalAttackCreature = creature;
-            Animator.SetInteger("ActionId", AttackController.CurrentNonWeaponAttackID);
-            Animator.SetTrigger("NonWeaponAction");
+            ActionController.CurrentNonWeaponAttackID = ActionLibrary.FATAL_ATK_ID;
+            ActionController.fatalAttackCreature = creature;
+            Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
+            Animator.SetTrigger("Action");
         }
     }
 
@@ -220,7 +220,7 @@ public class Player : MonoBehaviour
     public void EndAttack()
     {
         attacking = false;
-        AttackController.EndAttack();
+        ActionController.EndAttack();
         CanCancelAttackAnim = false;
     }
 
