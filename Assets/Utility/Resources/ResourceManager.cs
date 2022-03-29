@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace ResourceManager
 {
+    // Used to capture effects applied in the game, not typically tied to anything affecting gameplay. More for feedback flavor
     public class EffectsManager : Singleton<EffectsManager>
     {
         AssetBundle effectsBundle;
@@ -58,6 +59,34 @@ namespace ResourceManager
         public GameObject FireBurning
         {
             get { return effectsBundle.LoadAsset<GameObject>("Fire_Burning"); }
+        }
+    }
+
+    // Used to manage projectiles produced in the game
+    public class ProjectileMananger : Singleton<ProjectileMananger>
+    {
+        AssetBundle effectsBundle;
+        // (Optional) Prevent non-singleton constructor use.
+        protected ProjectileMananger() { }
+
+        public void LoadProjectileBundle()
+        {
+            if (effectsBundle != null)
+            {
+                Debug.LogWarning("Tried to load projectiles asset bundle but it is already loaded!");
+                return;
+            }
+            effectsBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "projectiles"));
+            if (effectsBundle == null)
+            {
+                Debug.LogError("Failed to load projectiles asset bundle!");
+                return;
+            }
+        }
+
+        public GameObject FireBomb
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Firebomb"); }
         }
 
         public GameObject Roar

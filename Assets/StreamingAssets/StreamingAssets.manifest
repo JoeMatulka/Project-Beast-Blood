@@ -1,7 +1,10 @@
 ManifestFileVersion: 0
-CRC: 3696152899
+CRC: 3940674129
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
       Name: effects
+      Dependencies: {}
+    Info_1:
+      Name: projectiles
       Dependencies: {}

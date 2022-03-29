@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ResourceManager;
+using System;
 using UnityEngine;
 
 public enum ItemType
@@ -15,5 +16,26 @@ public struct PlayerItem
     {
         this.type = type;
         this.Activate = activateAction;
+    }
+
+    public ItemType Type { get { return this.type; } }
+}
+
+public static class PlayerItemLibrary
+{
+    private const float THROW_FORCE = 25f;
+
+    public static PlayerItem FireBomb
+    {
+        get
+        {
+            return new PlayerItem(ItemType.THROW, (Player player) =>
+            {
+                // Spawn Fire Bomb
+                GameObject fb = ProjectileMananger.Instance.FireBomb;
+                // Apply force in the aim of the player
+                fb?.GetComponent<Rigidbody2D>().AddForce(player.Aim.ToVector * THROW_FORCE);
+            });
+        }
     }
 }

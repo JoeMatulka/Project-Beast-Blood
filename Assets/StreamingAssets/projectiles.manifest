@@ -1,0 +1,39 @@
+ManifestFileVersion: 0
+CRC: 1104238018
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 36f7fd62ad8ba54a7c30f8d499dc8058
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 54073b5c5806f9ca30e49449a61ee297
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 50
+  Script: {instanceID: 0}
+- Class: 61
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: a54ce46aba60e564cb34e1f0722ce9fe, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 6f95fc82f8e82bc48ba104be01b66a12, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 212
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Projectiles/Creature/Common/Roar/Roar.prefab
+- Assets/Projectiles/Player/Items/Firebomb/Firebomb.prefab
+Dependencies: []

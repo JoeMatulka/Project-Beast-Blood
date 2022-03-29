@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-
 public enum AimDirection { UP, UP_DIAG, STRAIGHT, DOWN_DIAG, DOWN }
 public class PlayerAim : MonoBehaviour
 {
@@ -60,7 +59,35 @@ public class PlayerAim : MonoBehaviour
         return clamp;
     }
 
-    public AimDirection AimDirection
+    public Vector2 ToVector
+    {
+        get
+        {
+            if (AimAngle == 90)
+            {
+                return Vector2.up;
+            }
+            else if (AimAngle == 45 || AimAngle == 135)
+            {
+                return new Vector2(1, 1);
+            }
+            else if (AimAngle == 0 || AimAngle == 180)
+            {
+                return Vector2.right;
+            }
+            else if (AimAngle == 225 || AimAngle == 315)
+            {
+                return new Vector2(1, -1);
+            }
+            else if (AimAngle == 270)
+            {
+                return Vector2.down;
+            }
+            return Vector2.right;
+        }
+    }
+
+    public AimDirection ToEnum
     {
         get
         {

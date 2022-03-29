@@ -43,14 +43,16 @@ public class Player : MonoBehaviour
     {
         // TODO Definitely not where this should be, put here for now since no scene code is done yet
         EffectsManager.Instance.LoadEffectsBundle();
+        ProjectileMananger.Instance.LoadProjectileBundle();
         ActionController = GetComponentInChildren<PlayerActionController>();
     }
 
     private void Start()
     {
         SceneLinkedSMB<Player>.Initialise(Animator, this);
-        //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon from an equipment class later
+        //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon & item from an equipment class later
         ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
+        ActionController.CurrentItem = PlayerItemLibrary.FireBomb;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
@@ -59,7 +61,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         // Check for cancel animations in Update since they will be called before in order for the animator to cancel and act within the same frame
-        if (Input.GetButtonDown("MainWeaponAction") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0 && !stopInput)
+        if (Input.GetButtonDown("MainWeaponAction") || Input.GetButtonDown("Equipment") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0 && !stopInput)
         {
             ApplyAttackAnimationCancel();
         }
@@ -75,26 +77,35 @@ public class Player : MonoBehaviour
 
     void LateUpdate()
     {
-        if (Input.GetButtonDown("Jump") && Controller.IsGrounded && !isAttacking && !stopInput)
+        // All inputs should go into this conditional
+        if (!stopInput)
         {
-            jump = true;
-        }
+            if (Input.GetButtonDown("Jump") && Controller.IsGrounded && !isAttacking)
+            {
+                jump = true;
+            }
 
-        if (Input.GetButtonDown("Crouch") && Controller.IsGrounded && !stopInput)
-        {
-            if (!crouch) crouch = true;
-        }
-        else if (Input.GetButtonUp("Crouch"))
-        {
-            crouch = false;
-        }
+            if (Input.GetButtonDown("Crouch") && Controller.IsGrounded)
+            {
+                if (!crouch) crouch = true;
+            }
+            else if (Input.GetButtonUp("Crouch"))
+            {
+                crouch = false;
+            }
 
-        if (Input.GetButtonDown("MainWeaponAction") && !isAttacking && !stopInput)
-        {
-            MainWeaponAction();
-        }
+            if (Input.GetButtonDown("MainWeaponAction") && !isAttacking)
+            {
+                MainWeaponAction();
+            }
 
-        x_input = attacking || crouch || stopInput ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+            if (Input.GetButtonDown("Equipment") && !isAttacking)
+            {
+                UseEquipment();
+            }
+
+            x_input = attacking || crouch || stopInput ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+        }
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
@@ -195,7 +206,7 @@ public class Player : MonoBehaviour
             Controller.Flip();
         }
         attacking = true;
-        Animator.SetInteger("Aim", (int) Aim.AimDirection);
+        Animator.SetInteger("Aim", (int)Aim.ToEnum);
         Animator.SetTrigger("WeaponAction");
     }
 
@@ -215,7 +226,25 @@ public class Player : MonoBehaviour
 
     private void SecondaryWeaponAction() { }
 
-    private void UseEquipment() { }
+    private void UseEquipment()
+    {
+        stopInput = true;
+        if (ActionController.CurrentItem.Type.Equals(ItemType.THROW))
+        {
+            if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
+            {
+                Controller.Flip();
+            }
+            else if (!Controller.FacingRight && (90 > Aim.AimAngle && Aim.AimAngle >= 0 || Aim.AimAngle > 270))
+            {
+                Controller.Flip();
+            }
+            ActionController.CurrentNonWeaponAttackID = ActionLibrary.THROW_ID;
+            Animator.SetInteger("Aim", (int)Aim.ToEnum);
+            Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
+            Animator.SetTrigger("Action");
+        }
+    }
 
     public void EndAttack()
     {

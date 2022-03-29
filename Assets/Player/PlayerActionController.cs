@@ -28,7 +28,7 @@ public class PlayerActionController : MonoBehaviour
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
     // Number key in dictionary is active frame for non-weapon attack (zero indexed)
     private Dictionary<int, ActionFrame> actionFrames;
-    private int currentNonWeaponAttackID = 0;
+    private int currentActionID = 0;
     // Allows for functions not to be called mutliple times during a frame
     private int lastCalledFrame = 0;
     // Length of ray cast when weapon attacks
@@ -53,7 +53,7 @@ public class PlayerActionController : MonoBehaviour
         GameCamera = Camera.main.GetComponent<GameCamera>();
     }
 
-    public void ActivateWeaponAttackFrame(AimDirection direction, int frame)
+    public void ActivateWeaponAttackFrame(Vector2 direction, int frame)
     {
         animator.SetSpriteByDirectionAndIndex(direction, frame);
         WeaponAttackFrame attackFrame;
@@ -89,34 +89,15 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    private void DrawWeaponRecast(AimDirection direction)
+    private void DrawWeaponRecast(Vector2 direction)
     {
         //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
-        Vector3 rayDirection = Vector3.zero;
+        Vector3 rayDirection = direction;
         float attackLength = weaponAttackRayLength;
-        switch (direction)
+        if (rayDirection.Equals(new Vector2(1, 1)) || rayDirection.Equals(new Vector2(1, -1)))
         {
-            case AimDirection.UP:
-                rayDirection = Vector3.up;
-                break;
-            case AimDirection.UP_DIAG:
-                rayDirection = new Vector3(1, 1);
-                // This is because rays are drawn longer at a diagonal angle from origin
-                attackLength -= diagonalWeaponRayMod;
-                break;
-            case AimDirection.STRAIGHT:
-                rayDirection = Vector3.right;
-                break;
-            case AimDirection.DOWN_DIAG:
-                rayDirection = new Vector3(1, -1);
-                // This is because rays are drawn longer at a diagonal angle from origin
-                attackLength -= diagonalWeaponRayMod;
-                break;
-            case AimDirection.DOWN:
-                rayDirection = Vector3.down;
-                break;
-            default:
-                break;
+            // This is because rays are drawn longer at a diagonal angle from origin
+            attackLength -= diagonalWeaponRayMod;
         }
         // Flip x axis of aim if player is not facing right
         if (!Player.Controller.FacingRight)
@@ -125,7 +106,7 @@ public class PlayerActionController : MonoBehaviour
         }
 
         // Activate weapon hurt box from offset of center of player
-        Vector3 center = transform.position + (rayDirection * playerCenterOffset);
+        Vector2 center = transform.position + (rayDirection * playerCenterOffset);
 
         // Adjust center if player is crouching
         if (Player.isCrouching)
@@ -187,15 +168,18 @@ public class PlayerActionController : MonoBehaviour
 
     public int CurrentNonWeaponAttackID
     {
-        get { return currentNonWeaponAttackID; }
+        get { return currentActionID; }
         set
         {
-            currentNonWeaponAttackID = value;
+            currentActionID = value;
             // Assign frames based off of ID
-            switch (currentNonWeaponAttackID)
+            switch (currentActionID)
             {
                 case ActionLibrary.FATAL_ATK_ID:
                     actionFrames = ActionLibrary.FATAL_ATK_FRAMES;
+                    break;
+                case ActionLibrary.THROW_ID:
+                    actionFrames = ActionLibrary.THROW_FRAMES;
                     break;
                 default:
                     Debug.LogError("Could not find that non weapon attack id, cannot assign attack frames");
@@ -283,7 +267,13 @@ public static class ActionLibrary
         })},
     };
     // Throw item, a non-weapon attack involving throwing an item at the direction the player is aiming
-
+    public const int THROW_ID = 2;
+    public static Dictionary<int, ActionFrame> THROW_FRAMES = new Dictionary<int, ActionFrame> {
+        { 5, new ActionFrame(true, false, (PlayerActionController controller) => { 
+            // Activate throwable equipped to player
+            controller.CurrentItem.Activate(controller.Player);
+        })},
+    };
     // Consume item, a non-weapon action that involves consuming the currently equipped item
 
 }

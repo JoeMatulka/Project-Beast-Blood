@@ -5,13 +5,13 @@ namespace Gamekit2D
     // Used for attacks that involve a player equipped weapon
     public class PlayerWeaponAttackSMB : SceneLinkedSMB<Player>
     {
-        private AimDirection direction;
+        private Vector2 direction;
         public override void OnSLStatePostEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
             // Set layer priority for animating this attack
             animator.SetLayerWeight(layerIndex, 1);
             // Get aim at the beginning of attack
-            direction = m_MonoBehaviour.Aim.AimDirection;
+            direction = m_MonoBehaviour.Aim.ToVector;
             // Generate damage used for attack frames
             m_MonoBehaviour.ActionController.GenerateAttackDamage();
         }

@@ -26,7 +26,7 @@ namespace CreatureAttackLibrary
         public static GameObject LoadEffect(CreatureEffectID id) {
             switch (id) {
                 case CreatureEffectID.ROAR:
-                    return EffectsManager.Instance.Roar;
+                    return ProjectileMananger.Instance.Roar;
                 case CreatureEffectID.NONE:
                 default:
                     return null;
