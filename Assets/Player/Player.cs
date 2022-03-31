@@ -21,6 +21,12 @@ public class Player : MonoBehaviour
     public PlayerAim Aim;
     public PlayerActionController ActionController;
 
+    public PlayerItem CurrentItem;
+    public PlayerItem[] EquippedItems;
+
+    private const float THROW_FORCE = 5f;
+    private const float THROW_AIM_MOD = .25f;
+
     private const float RUN_SPEED = 15f;
     private float x_input;
     private bool jump = false;
@@ -52,7 +58,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon & item from an equipment class later
         ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
-        ActionController.CurrentItem = PlayerItemLibrary.FireBomb;
+        CurrentItem = PlayerItemLibrary.FireBomb;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
@@ -223,14 +229,33 @@ public class Player : MonoBehaviour
             Animator.SetTrigger("Action");
         }
     }
+    // Throw currently equipped item
+    public void ThrowItem()
+    {
+        if (CurrentItem.Type.Equals(ItemType.THROW))
+        {
+            // Grab player aim and apply mod to account for throw arc
+            Vector2 aim = new Vector2(Aim.ToVector.x, Aim.ToVector.y + THROW_AIM_MOD);
+            // Spawn item to be thrown
+            GameObject item = Instantiate(CurrentItem.Prefab);
+            item.transform.position = this.transform.position;
+            // Ignore collision with player colliders, this could probably be done better
+            BoxCollider2D itemCol = item.GetComponent<BoxCollider2D>();
+            Physics2D.IgnoreCollision(itemCol, GetComponent<BoxCollider2D>());
+            Physics2D.IgnoreCollision(itemCol, GetComponent<CircleCollider2D>());
+            // Apply throw force to item
+            item.GetComponent<Rigidbody2D>().AddForce(aim * THROW_FORCE, ForceMode2D.Impulse);
+        }
+    }
 
     private void SecondaryWeaponAction() { }
 
     private void UseEquipment()
     {
         stopInput = true;
-        if (ActionController.CurrentItem.Type.Equals(ItemType.THROW))
+        if (CurrentItem.Type.Equals(ItemType.THROW))
         {
+            // Set if item is a throwable
             if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
             {
                 Controller.Flip();
@@ -249,7 +274,7 @@ public class Player : MonoBehaviour
     public void EndAttack()
     {
         attacking = false;
-        ActionController.EndAttack();
+        ActionController.EndAttackOrAction();
         CanCancelAttackAnim = false;
     }
 

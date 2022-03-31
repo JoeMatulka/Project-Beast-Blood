@@ -63,27 +63,35 @@ public class PlayerAim : MonoBehaviour
     {
         get
         {
+            Vector2 aimToVector = Vector2.zero;
             if (AimAngle == 90)
             {
-                return Vector2.up;
+                aimToVector = Vector2.up;
             }
             else if (AimAngle == 45 || AimAngle == 135)
             {
-                return new Vector2(1, 1);
+                aimToVector = new Vector2(1, 1);
             }
             else if (AimAngle == 0 || AimAngle == 180)
             {
-                return Vector2.right;
+                aimToVector = Vector2.right;
             }
             else if (AimAngle == 225 || AimAngle == 315)
             {
-                return new Vector2(1, -1);
+                aimToVector = new Vector2(1, -1);
             }
             else if (AimAngle == 270)
             {
-                return Vector2.down;
+                aimToVector = Vector2.down;
             }
-            return Vector2.right;
+
+            // Flip x axis of aim if player is not facing right
+            if (!player.GetComponent<Player>().Controller.FacingRight)
+            {
+                aimToVector = new Vector2(aimToVector.x * -1, aimToVector.y);
+            }
+
+            return aimToVector;
         }
     }
 

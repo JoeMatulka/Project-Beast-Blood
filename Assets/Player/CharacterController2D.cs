@@ -121,7 +121,8 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    public void ApplyImpulse(float magnitude, Vector2 direction) {
+    public void ApplyImpulse(float magnitude, Vector2 direction)
+    {
         m_Rigidbody2D.AddForce(direction * magnitude, ForceMode2D.Impulse);
     }
 
@@ -142,7 +143,8 @@ public class CharacterController2D : MonoBehaviour
         get { return this.m_Grounded; }
     }
 
-    public Vector3 Velocity {
+    public Vector3 Velocity
+    {
         get { return this.m_Rigidbody2D.velocity; }
     }
 }

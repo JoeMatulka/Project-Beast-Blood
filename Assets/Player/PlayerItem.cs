@@ -10,32 +10,26 @@ public enum ItemType
 public struct PlayerItem
 {
     private readonly ItemType type;
-    public readonly Action<Player> Activate;
+    private readonly GameObject prefab;
 
-    public PlayerItem(ItemType type, Action<Player> activateAction)
+    public PlayerItem(ItemType type, GameObject prefab)
     {
         this.type = type;
-        this.Activate = activateAction;
+        this.prefab = prefab;
     }
 
     public ItemType Type { get { return this.type; } }
+
+    public GameObject Prefab { get { return this.prefab; } }
 }
 
 public static class PlayerItemLibrary
 {
-    private const float THROW_FORCE = 25f;
-
     public static PlayerItem FireBomb
     {
         get
         {
-            return new PlayerItem(ItemType.THROW, (Player player) =>
-            {
-                // Spawn Fire Bomb
-                GameObject fb = ProjectileMananger.Instance.FireBomb;
-                // Apply force in the aim of the player
-                fb?.GetComponent<Rigidbody2D>().AddForce(player.Aim.ToVector * THROW_FORCE);
-            });
+            return new PlayerItem(ItemType.THROW, ProjectileMananger.Instance.FireBomb);
         }
     }
 }

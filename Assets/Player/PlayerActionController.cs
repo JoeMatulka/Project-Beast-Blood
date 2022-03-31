@@ -21,9 +21,6 @@ public class PlayerActionController : MonoBehaviour
     private WeaponType currentWeaponType;
     private Damage currentAttackDamage;
 
-    // Current equipped item
-    public PlayerItem CurrentItem;
-
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
     // Number key in dictionary is active frame for non-weapon attack (zero indexed)
@@ -61,7 +58,7 @@ public class PlayerActionController : MonoBehaviour
         {
             if (attackFrame.IsActiveHurtBox)
             {
-                DrawWeaponRecast(direction);
+                DrawWeaponRaycast(direction);
             }
             if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
@@ -89,7 +86,7 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    private void DrawWeaponRecast(Vector2 direction)
+    private void DrawWeaponRaycast(Vector2 direction)
     {
         //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
         Vector3 rayDirection = direction;
@@ -99,13 +96,7 @@ public class PlayerActionController : MonoBehaviour
             // This is because rays are drawn longer at a diagonal angle from origin
             attackLength -= diagonalWeaponRayMod;
         }
-        // Flip x axis of aim if player is not facing right
-        if (!Player.Controller.FacingRight)
-        {
-            rayDirection = new Vector3(rayDirection.x * -1, rayDirection.y);
-        }
-
-        // Activate weapon hurt box from offset of center of player
+        // Activate weapon raycast from offset of center of player
         Vector2 center = transform.position + (rayDirection * playerCenterOffset);
 
         // Adjust center if player is crouching
@@ -113,7 +104,6 @@ public class PlayerActionController : MonoBehaviour
         {
             center = new Vector3(center.x, center.y - playerCrouchOffect);
         }
-
 
         RaycastHit2D[] hits = Physics2D.RaycastAll(center, rayDirection, attackLength, playerLayerMask);
         Debug.DrawRay(center, rayDirection * attackLength, Color.green);
@@ -140,7 +130,7 @@ public class PlayerActionController : MonoBehaviour
         currentAttackDamage = new Damage(10, DamageType.RAW);
     }
 
-    public void EndAttack()
+    public void EndAttackOrAction()
     {
         animator.ClearSprite();
         lastCalledFrame = 0;
@@ -269,9 +259,9 @@ public static class ActionLibrary
     // Throw item, a non-weapon attack involving throwing an item at the direction the player is aiming
     public const int THROW_ID = 2;
     public static Dictionary<int, ActionFrame> THROW_FRAMES = new Dictionary<int, ActionFrame> {
-        { 5, new ActionFrame(true, false, (PlayerActionController controller) => { 
+        { 5, new ActionFrame(true, false, (PlayerActionController controller) => {
             // Activate throwable equipped to player
-            controller.CurrentItem.Activate(controller.Player);
+            controller.Player.ThrowItem();
         })},
     };
     // Consume item, a non-weapon action that involves consuming the currently equipped item
