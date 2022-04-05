@@ -195,7 +195,7 @@ namespace CreatuePartSystems
                 creature.isPoisoned = false;
                 PoisonBuildUp = 0;
             }
-            if (effect != null) GameObject.Destroy(effect);
+            if (effect != null) Destroy(effect);
             isTakingStatusDamage = false;
             ApplyMaterialToChildRenderers(defMaterial);
         }

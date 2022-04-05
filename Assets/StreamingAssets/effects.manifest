@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3647142551
+CRC: 2264569301
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1cb50a56a36af83b2a204467c0475970
+    Hash: dfa25e036e524c9d68af18bc3bc57c29
   TypeTreeHash:
     serializedVersion: 2
-    Hash: f0919d9e882246cce89a5d92886a5cfd
+    Hash: c94d7c9eaa4fd9e6ee871e066c63881b
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -21,6 +21,8 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 7596b049d44702c47b9c8657f798b9c3, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 626117d9342a5a44b8534f82eadf5c72, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 198
@@ -32,6 +34,7 @@ Assets:
 - Assets/Shaders/Bloodied/Bloodied.mat
 - Assets/Effects/Fire/Fire_Burning.prefab
 - Assets/Effects/Gore/Blood Spurt.prefab
+- Assets/Effects/Fire/Explosion/Fire_Explosion.prefab
 - Assets/Effects/Gore/Bleeding.prefab
 - Assets/Effects/Gore/Blood Splash.prefab
 - Assets/Shaders/Poison/Poisoned.mat

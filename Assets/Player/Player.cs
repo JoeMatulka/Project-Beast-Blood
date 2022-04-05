@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     public PlayerItem CurrentItem;
     public PlayerItem[] EquippedItems;
 
-    private const float THROW_FORCE = 5f;
+    private const float THROW_FORCE = 10f;
     private const float THROW_AIM_MOD = .25f;
 
     private const float RUN_SPEED = 15f;
@@ -151,7 +151,7 @@ public class Player : MonoBehaviour
 
     private void ApplyDamage(in Damage dmg)
     {
-        if (!dmg.ID.Equals(lastDamageId))
+        if (!dmg.ID.Equals(lastDamageId) && !IsInvulnerable)
         {
             stopInput = true;
             ApplyAttackAnimationCancel(true);

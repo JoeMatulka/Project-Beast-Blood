@@ -60,6 +60,11 @@ namespace ResourceManager
         {
             get { return effectsBundle.LoadAsset<GameObject>("Fire_Burning"); }
         }
+
+        public GameObject FireExplosion
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Fire_Explosion"); }
+        }
     }
 
     // Used to manage projectiles produced in the game

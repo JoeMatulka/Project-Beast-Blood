@@ -16,8 +16,9 @@ public class ParticleSystemCleaner : MonoBehaviour
 
         if (!ps.IsAlive())
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
 
     }
 }
+

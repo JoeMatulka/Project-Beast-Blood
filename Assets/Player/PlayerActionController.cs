@@ -259,7 +259,7 @@ public static class ActionLibrary
     // Throw item, a non-weapon attack involving throwing an item at the direction the player is aiming
     public const int THROW_ID = 2;
     public static Dictionary<int, ActionFrame> THROW_FRAMES = new Dictionary<int, ActionFrame> {
-        { 5, new ActionFrame(true, false, (PlayerActionController controller) => {
+        { 5, new ActionFrame(false, false, (PlayerActionController controller) => {
             // Activate throwable equipped to player
             controller.Player.ThrowItem();
         })},
