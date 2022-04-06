@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 3259342736
+CRC: 2913761227
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4240170ce3647a701cd6669a92f3e1b5
+    Hash: 00c995ed1709e77e27bb7b12d5fe8f8a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6618494dc150e07141ccc65bed573b74
+    Hash: 4a94af8d002545224bb63c67695f2231
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -21,13 +21,21 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 50
   Script: {instanceID: 0}
+- Class: 58
+  Script: {instanceID: 0}
 - Class: 61
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 6f95fc82f8e82bc48ba104be01b66a12, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: a54ce46aba60e564cb34e1f0722ce9fe, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 9e4229b41cbcd034cb27836ab8170e5b, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 198
+  Script: {instanceID: 0}
+- Class: 199
   Script: {instanceID: 0}
 - Class: 212
   Script: {instanceID: 0}
@@ -36,4 +44,5 @@ ClassTypes:
 Assets:
 - Assets/Projectiles/Creature/Common/Roar/Roar.prefab
 - Assets/Projectiles/Player/Items/Firebomb/Firebomb.prefab
+- Assets/Effects/Fire/Flame/Flame.prefab
 Dependencies: []

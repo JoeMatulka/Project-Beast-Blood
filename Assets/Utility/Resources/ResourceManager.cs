@@ -70,19 +70,19 @@ namespace ResourceManager
     // Used to manage projectiles produced in the game
     public class ProjectileMananger : Singleton<ProjectileMananger>
     {
-        AssetBundle effectsBundle;
+        AssetBundle projectileBundle;
         // (Optional) Prevent non-singleton constructor use.
         protected ProjectileMananger() { }
 
         public void LoadProjectileBundle()
         {
-            if (effectsBundle != null)
+            if (projectileBundle != null)
             {
                 Debug.LogWarning("Tried to load projectiles asset bundle but it is already loaded!");
                 return;
             }
-            effectsBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "projectiles"));
-            if (effectsBundle == null)
+            projectileBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "projectiles"));
+            if (projectileBundle == null)
             {
                 Debug.LogError("Failed to load projectiles asset bundle!");
                 return;
@@ -91,12 +91,17 @@ namespace ResourceManager
 
         public GameObject FireBomb
         {
-            get { return effectsBundle.LoadAsset<GameObject>("Firebomb"); }
+            get { return projectileBundle.LoadAsset<GameObject>("Firebomb"); }
         }
 
         public GameObject Roar
         {
-            get { return effectsBundle.LoadAsset<GameObject>("Roar"); }
+            get { return projectileBundle.LoadAsset<GameObject>("Roar"); }
+        }
+
+        public GameObject Flame
+        {
+            get { return projectileBundle.LoadAsset<GameObject>("Flame"); }
         }
     }
 }
