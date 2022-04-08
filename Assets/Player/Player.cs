@@ -47,9 +47,10 @@ public class Player : MonoBehaviour
 
     private void Awake()
     {
-        // TODO Definitely not where this should be, put here for now since no scene code is done yet
+        // TODO Definitely not where loading should be, put here for now since no scene code is done yet
         EffectsManager.Instance.LoadEffectsBundle();
         ProjectileMananger.Instance.LoadProjectileBundle();
+
         ActionController = GetComponentInChildren<PlayerActionController>();
     }
 

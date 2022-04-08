@@ -8,7 +8,7 @@ public class Flame : MonoBehaviour
 {
     public float Lifetime = 5f;
 
-    public Damage Damage = new Damage(1, DamageType.FIRE);
+    public Damage Damage = new Damage(5, DamageType.FIRE);
 
     private const float REDUCE_TIME = 5f;
     private const float REDUCE_STEP = .01f;
@@ -44,27 +44,22 @@ public class Flame : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // Stop the flame if it is falling, delay the collision to ensure the flame is set onto the parent
-        Invoke("SetKinematic", .35f);
-        // Make flame part of transform it collided with
-        this.transform.parent = collision.transform;
+        // Become kinematic with contact with ground
+        if (collision.gameObject.layer.Equals("Ground")) rb.isKinematic = true;
         // Apply fire damage if collision has a hit box
-        ApplyDamageToHitbox(collision);
+        Hitbox hb = collision.GetComponent<Hitbox>();
+        if (hb != null)
+        {
+            ApplyDamageToHitbox(hb);
+        }
     }
 
-    private void OnTriggerStay2D(Collider2D collision)
+    private void ApplyDamageToHitbox(in Hitbox hb)
     {
-        ApplyDamageToHitbox(collision);
-    }
-
-    private void ApplyDamageToHitbox(Collider2D collision)
-    {
-        Hitbox hitbox = collision.GetComponent<Hitbox>();
+        Hitbox hitbox = hb.GetComponent<Hitbox>();
         if (hitbox != null)
         {
             hitbox.ReceiveDamage(Damage, this.transform.localPosition);
         }
     }
-
-    private void SetKinematic() { rb.isKinematic = true; }
 }
