@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 2264569301
+CRC: 3501001994
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: dfa25e036e524c9d68af18bc3bc57c29
+    Hash: 25fb96985fbaabecec165233ef44b348
   TypeTreeHash:
     serializedVersion: 2
     Hash: c94d7c9eaa4fd9e6ee871e066c63881b
@@ -33,6 +33,7 @@ Assets:
 - Assets/Shaders/Fire/Burning.mat
 - Assets/Shaders/Bloodied/Bloodied.mat
 - Assets/Effects/Fire/Fire_Burning.prefab
+- Assets/Effects/Fire/Smolder/Smolder.prefab
 - Assets/Effects/Gore/Blood Spurt.prefab
 - Assets/Effects/Fire/Explosion/Fire_Explosion.prefab
 - Assets/Effects/Gore/Bleeding.prefab

@@ -1,4 +1,5 @@
 ﻿using HitboxSystem;
+using ResourceManager;
 using System.Collections;
 using UnityEngine;
 
@@ -39,10 +40,10 @@ public class Explosion : MonoBehaviour
                 {
                     hitbox.ReceiveDamage(Damage, this.transform.position);
                 }
-
             }
             yield return new WaitForFixedUpdate();
         }
+        Instantiate(EffectsManager.Instance.Smolder, this.transform.position, this.transform.rotation);
     }
 
     void OnDrawGizmos()

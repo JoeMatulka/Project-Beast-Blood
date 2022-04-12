@@ -11,12 +11,14 @@ public class FireBomb : MonoBehaviour
 
     private readonly Damage CONTACT_DAMAGE = new Damage(5, DamageType.RAW);
 
-    private readonly Damage EXPLOSION_DAMAGE = new Damage(2, DamageType.FIRE);
+    private readonly Damage EXPLOSION_DAMAGE = new Damage(1, DamageType.FIRE);
     private const float EXPLOSION_SIZE = .5f;
 
-    private const int AMOUNT_OF_FLAMES_SPAWNED = 4;
-    private const float FLAME_SPAWN_STEP = .2f;
-    private const float FLAME_SPAWN_FORCE = 7.5f;
+    private const float AMOUNT_FLAMES_SPAWN = 8;
+    private const float FLAME_SPAWN_STEP = .25f;
+    
+    private const float FLAMES_SPAWN_THRESHOLD = FLAME_SPAWN_STEP * AMOUNT_FLAMES_SPAWN;
+    private const float FLAME_SPAWN_FORCE = .4f;
     private const float FLAME_LIFETME = 7.5f;
 
     private void Awake()
@@ -40,9 +42,9 @@ public class FireBomb : MonoBehaviour
             explosion.Size = EXPLOSION_SIZE;
         }
         // Spawn flames from explosion in different directions
-        for (float i = 0; i <= AMOUNT_OF_FLAMES_SPAWNED; i += FLAME_SPAWN_STEP)
+        for (float i = 0; i <= FLAMES_SPAWN_THRESHOLD; i += FLAME_SPAWN_STEP)
         {
-            GameObject flame = Instantiate(ProjectileMananger.Instance.Flame, this.transform.position, this.transform.rotation);
+            GameObject flame = Instantiate(ProjectileMananger.Instance.Flame, new Vector2(this.transform.position.x, this.transform.position.y + .5f), this.transform.rotation);
             flame.GetComponent<Flame>().Lifetime = FLAME_LIFETME;
             flame.GetComponent<Rigidbody2D>().AddForce(new Vector2(
                 Mathf.Clamp(Vector2.left.x + i, -1, 1),
