@@ -8,7 +8,9 @@ public class Flame : MonoBehaviour
 {
     public float Lifetime = 5f;
 
-    public Damage Damage = new Damage(2, DamageType.FIRE);
+    public Damage Damage = new Damage(1, DamageType.FIRE);
+    // How often fire damage is applied
+    private const float DAMAGE_STEP = .35f;
 
     private const float REDUCE_TIME = 5f;
     private const float REDUCE_STEP = .01f;
@@ -64,7 +66,7 @@ public class Flame : MonoBehaviour
                     if (hitbox != null)
                     {
                         hitbox.ReceiveDamage(Damage, this.transform.position);
-                        yield return new WaitForSeconds(.5f);
+                        yield return new WaitForSeconds(DAMAGE_STEP);
                     }
                 }
 
