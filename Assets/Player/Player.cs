@@ -154,7 +154,6 @@ public class Player : MonoBehaviour
     {
         if (!dmg.ID.Equals(lastDamageId) && !IsInvulnerable)
         {
-            stopInput = true;
             ApplyAttackAnimationCancel(true);
             EndAttack();
             lastDamageId = dmg.ID;

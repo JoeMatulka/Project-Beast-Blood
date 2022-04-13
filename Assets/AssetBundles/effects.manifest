@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 3665773858
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: dd997cb06c3b121643168541b85d124a
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 21c99c86a43ad817b2cb7f65458ae090
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+Assets:
+- Assets/Shaders/Dissolve/Dissolve.mat
+- Assets/Shaders/Bloodied/Bloodied.mat
+Dependencies: []

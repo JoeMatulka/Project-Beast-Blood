@@ -9,10 +9,6 @@ namespace Gamekit2D
         {
             // Set layer priority for animating this recovery
             animator.SetLayerWeight(layerIndex, 1);
-        }
-
-        public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-        {
             m_MonoBehaviour.stopInput = true;
         }
 
