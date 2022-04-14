@@ -92,11 +92,6 @@ namespace ResourceManager
             }
         }
 
-        public GameObject FireBomb
-        {
-            get { return projectileBundle.LoadAsset<GameObject>("Firebomb"); }
-        }
-
         public GameObject Roar
         {
             get { return projectileBundle.LoadAsset<GameObject>("Roar"); }
@@ -105,6 +100,39 @@ namespace ResourceManager
         public GameObject Flame
         {
             get { return projectileBundle.LoadAsset<GameObject>("Flame"); }
+        }
+    }
+
+    // Used to manage items equipped to the player
+    public class PlayerItemMananger : Singleton<PlayerItemMananger>
+    {
+        AssetBundle playerItemBundle;
+        // (Optional) Prevent non-singleton constructor use.
+        protected PlayerItemMananger() { }
+
+        public void LoadPlayerItemBundle()
+        {
+            if (playerItemBundle != null)
+            {
+                Debug.LogWarning("Tried to load projectiles asset bundle but it is already loaded!");
+                return;
+            }
+            playerItemBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "playeritems"));
+            if (playerItemBundle == null)
+            {
+                Debug.LogError("Failed to load projectiles asset bundle!");
+                return;
+            }
+        }
+
+        public GameObject Medicine
+        {
+            get { return playerItemBundle.LoadAsset<GameObject>("Medicine"); }
+        }
+
+        public GameObject FireBomb
+        {
+            get { return playerItemBundle.LoadAsset<GameObject>("Firebomb"); }
         }
     }
 }

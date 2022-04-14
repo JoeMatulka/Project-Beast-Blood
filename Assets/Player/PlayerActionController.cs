@@ -171,6 +171,9 @@ public class PlayerActionController : MonoBehaviour
                 case ActionLibrary.THROW_ID:
                     actionFrames = ActionLibrary.THROW_FRAMES;
                     break;
+                case ActionLibrary.CONSUME_ID:
+                    actionFrames = ActionLibrary.CONSUME_FRAMES;
+                    break;
                 default:
                     Debug.LogError("Could not find that non weapon attack id, cannot assign attack frames");
                     break;
@@ -265,5 +268,11 @@ public static class ActionLibrary
         })},
     };
     // Consume item, a non-weapon action that involves consuming the currently equipped item
-
+    public const int CONSUME_ID = 3;
+    public static Dictionary<int, ActionFrame> CONSUME_FRAMES = new Dictionary<int, ActionFrame> {
+        { 10, new ActionFrame(false, false, (PlayerActionController controller) => {
+            // Activate consumable equipped to player
+            controller.Player.ConsumeItem();
+        })},
+    };
 }

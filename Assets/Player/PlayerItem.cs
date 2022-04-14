@@ -29,7 +29,15 @@ public static class PlayerItemLibrary
     {
         get
         {
-            return new PlayerItem(ItemType.THROW, ProjectileMananger.Instance.FireBomb);
+            return new PlayerItem(ItemType.THROW, PlayerItemMananger.Instance.FireBomb);
+        }
+    }
+
+    public static PlayerItem Medicine
+    {
+        get
+        {
+            return new PlayerItem(ItemType.CONSUME, PlayerItemMananger.Instance.Medicine);
         }
     }
 }

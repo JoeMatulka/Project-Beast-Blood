@@ -11,7 +11,8 @@ public enum PlayerDamageId
 
 public class Player : MonoBehaviour
 {
-    public float Health = 100;
+    public readonly float MAX_HEALTH = 100;
+    public float Health = 0;
     public bool IsInvulnerable = false;
 
     private Hitbox hitbox;
@@ -50,8 +51,10 @@ public class Player : MonoBehaviour
         // TODO Definitely not where loading should be, put here for now since no scene code is done yet
         EffectsManager.Instance.LoadEffectsBundle();
         ProjectileMananger.Instance.LoadProjectileBundle();
+        PlayerItemMananger.Instance.LoadPlayerItemBundle();
 
         ActionController = GetComponentInChildren<PlayerActionController>();
+        Health = MAX_HEALTH;
     }
 
     private void Start()
@@ -59,7 +62,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon & item from an equipment class later
         ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
-        CurrentItem = PlayerItemLibrary.FireBomb;
+        CurrentItem = PlayerItemLibrary.Medicine;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
@@ -248,26 +251,43 @@ public class Player : MonoBehaviour
         }
     }
 
+    // Consume currently equipped item
+    public void ConsumeItem()
+    {
+        if (CurrentItem.Type.Equals(ItemType.CONSUME))
+        {
+            GameObject item = Instantiate(CurrentItem.Prefab);
+            item.transform.position = this.transform.position;
+            item.transform.parent = this.transform;
+        }
+    }
+
     private void SecondaryWeaponAction() { }
 
     private void UseEquipment()
     {
         stopInput = true;
-        if (CurrentItem.Type.Equals(ItemType.THROW))
+        switch (CurrentItem.Type)
         {
-            // Set if item is a throwable
-            if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
-            {
-                Controller.Flip();
-            }
-            else if (!Controller.FacingRight && (90 > Aim.AimAngle && Aim.AimAngle >= 0 || Aim.AimAngle > 270))
-            {
-                Controller.Flip();
-            }
-            ActionController.CurrentNonWeaponAttackID = ActionLibrary.THROW_ID;
-            Animator.SetInteger("Aim", (int)Aim.ToEnum);
-            Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
-            Animator.SetTrigger("Action");
+            case ItemType.THROW:
+                if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
+                {
+                    Controller.Flip();
+                }
+                else if (!Controller.FacingRight && (90 > Aim.AimAngle && Aim.AimAngle >= 0 || Aim.AimAngle > 270))
+                {
+                    Controller.Flip();
+                }
+                ActionController.CurrentNonWeaponAttackID = ActionLibrary.THROW_ID;
+                Animator.SetInteger("Aim", (int)Aim.ToEnum);
+                Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
+                Animator.SetTrigger("Action");
+                break;
+            case ItemType.CONSUME:
+                ActionController.CurrentNonWeaponAttackID = ActionLibrary.CONSUME_ID;
+                Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
+                Animator.SetTrigger("Action");
+                break;
         }
     }
 
