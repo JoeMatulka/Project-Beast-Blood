@@ -54,7 +54,7 @@ public class Flame : MonoBehaviour
             for (int i = 0; i < colliders.Length; i++)
             {
                 // Ignore collision with other flame objects
-                if (colliders[i].GetComponent<Flame>() == null)
+                if (colliders[i] != null && colliders[i].GetComponent<Flame>() == null)
                 {
                     // Apply to parent if applicable
                     this.transform.parent = colliders[i].transform;
