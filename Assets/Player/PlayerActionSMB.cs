@@ -9,7 +9,6 @@ namespace Gamekit2D
         {
             // Set layer priority for animating this action
             animator.SetLayerWeight(layerIndex, 1);
-            m_MonoBehaviour.stopInput = true;
         }
 
         public override void OnSLStateNoTransitionUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
@@ -22,8 +21,7 @@ namespace Gamekit2D
 
         public override void OnSLStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
         {
-            m_MonoBehaviour.stopInput = false;
-            m_MonoBehaviour.ActionController.EndAttackOrAction();
+            m_MonoBehaviour.EndAction();
             // Unset layer priority for animation this action
             animator.SetLayerWeight(layerIndex, 0);
         }

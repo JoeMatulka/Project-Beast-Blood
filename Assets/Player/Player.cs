@@ -2,6 +2,7 @@
 using HitboxSystem;
 using ResourceManager;
 using System;
+using System.Collections;
 using UnityEngine;
 
 public enum PlayerDamageId
@@ -36,7 +37,8 @@ public class Player : MonoBehaviour
     public bool stopInput = false;
 
     private bool attacking = false;
-    public bool CanCancelAttackAnim = false;
+    private bool doingAction = false;
+    public bool CanCancelAnim = false;
 
     // Prevents the player from taking damage from the same source multiple times
     private Guid lastDamageId;
@@ -62,7 +64,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon & item from an equipment class later
         ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
-        CurrentItem = PlayerItemLibrary.Medicine;
+        CurrentItem = PlayerItemLibrary.FireBomb;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
@@ -78,7 +80,7 @@ public class Player : MonoBehaviour
         // Override animation cancel checks for maximum reactiveness in controls
         if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Crouch") && !stopInput)
         {
-            if (isAttacking && Controller.IsGrounded)
+            if (IsAttacking && Controller.IsGrounded)
             {
                 ApplyAttackAnimationCancel(true);
             }
@@ -90,7 +92,7 @@ public class Player : MonoBehaviour
         // All inputs should go into this conditional
         if (!stopInput)
         {
-            if (Input.GetButtonDown("Jump") && Controller.IsGrounded && !isAttacking)
+            if (Input.GetButtonDown("Jump") && Controller.IsGrounded)
             {
                 jump = true;
             }
@@ -101,15 +103,15 @@ public class Player : MonoBehaviour
             }
             else if (Input.GetButtonUp("Crouch"))
             {
-                crouch = false;
+                StartCoroutine(Uncrouch());
             }
 
-            if (Input.GetButtonDown("MainWeaponAction") && !isAttacking)
+            if (Input.GetButtonDown("MainWeaponAction") && !IsAttacking && !IsDoingAction)
             {
                 MainWeaponAction();
             }
 
-            if (Input.GetButtonDown("Equipment") && !isAttacking)
+            if (Input.GetButtonDown("Equipment") && !IsAttacking && !IsDoingAction)
             {
                 UseEquipment();
             }
@@ -124,12 +126,20 @@ public class Player : MonoBehaviour
         Animator.SetFloat("yVelocity", Controller.Velocity.y);
     }
 
+    // Since button up is called in an update cycle and it needs to wait until action and attack is false, do in a Coroutine
+    private IEnumerator Uncrouch()
+    {
+        yield return new WaitUntil(() => IsDoingAction == false && IsAttacking == false);
+        crouch = false;
+    }
+
     private void ApplyAttackAnimationCancel(bool overrideCheck = false)
     {
-        if (CanCancelAttackAnim || overrideCheck)
+        if (CanCancelAnim || overrideCheck)
         {
             Animator.SetTrigger("CancelAnimation");
-            CanCancelAttackAnim = false;
+            // Unset can cancel for nexy cancel call
+            CanCancelAnim = false;
         }
     }
 
@@ -197,7 +207,7 @@ public class Player : MonoBehaviour
 
     public void OnLanding()
     {
-        if (isAttacking)
+        if (IsAttacking)
         {
             ApplyAttackAnimationCancel(true);
         }
@@ -266,7 +276,7 @@ public class Player : MonoBehaviour
 
     private void UseEquipment()
     {
-        stopInput = true;
+        doingAction = true;
         switch (CurrentItem.Type)
         {
             case ItemType.THROW:
@@ -295,9 +305,16 @@ public class Player : MonoBehaviour
     {
         attacking = false;
         ActionController.EndAttackOrAction();
-        CanCancelAttackAnim = false;
+        CanCancelAnim = false;
     }
 
-    public bool isAttacking { get { return attacking; } }
-    public bool isCrouching { get { return crouch; } }
+    public void EndAction()
+    {
+        doingAction = false;
+        ActionController.EndAttackOrAction();
+    }
+
+    public bool IsAttacking { get { return attacking; } }
+    public bool IsDoingAction { get { return doingAction; } }
+    public bool IsCrouching { get { return crouch; } }
 }

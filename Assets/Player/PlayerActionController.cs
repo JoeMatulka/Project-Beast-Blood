@@ -62,7 +62,7 @@ public class PlayerActionController : MonoBehaviour
             }
             if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
-                Player.CanCancelAttackAnim = true;
+                Player.CanCancelAnim = true;
             }
             lastCalledFrame = frame;
         }
@@ -80,7 +80,7 @@ public class PlayerActionController : MonoBehaviour
             Player.IsInvulnerable = actionFrame.IsInvulnerable;
             if (actionFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
-                Player.CanCancelAttackAnim = true;
+                Player.CanCancelAnim = true;
             }
             lastCalledFrame = frame;
         }
@@ -100,7 +100,7 @@ public class PlayerActionController : MonoBehaviour
         Vector2 center = transform.position + (rayDirection * playerCenterOffset);
 
         // Adjust center if player is crouching
-        if (Player.isCrouching)
+        if (Player.IsCrouching)
         {
             center = new Vector3(center.x, center.y - playerCrouchOffect);
         }
