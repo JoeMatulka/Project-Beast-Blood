@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon & item from an equipment class later
         ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
-        CurrentItem = PlayerItemLibrary.FireBomb;
+        CurrentItem = PlayerItemLibrary.Medicine;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
@@ -80,7 +80,7 @@ public class Player : MonoBehaviour
         // Override animation cancel checks for maximum reactiveness in controls
         if (Input.GetButtonDown("Jump") || Input.GetButtonDown("Crouch") && !stopInput)
         {
-            if (IsAttacking && Controller.IsGrounded)
+            if ((IsAttacking || IsDoingAction) && Controller.IsGrounded)
             {
                 ApplyAttackAnimationCancel(true);
             }
@@ -116,7 +116,7 @@ public class Player : MonoBehaviour
                 UseEquipment();
             }
 
-            x_input = attacking || crouch || stopInput ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+            x_input = attacking || crouch || stopInput || IsDoingAction ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
         }
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
@@ -167,8 +167,6 @@ public class Player : MonoBehaviour
     {
         if (!dmg.ID.Equals(lastDamageId) && !IsInvulnerable)
         {
-            ApplyAttackAnimationCancel(true);
-            EndAttack();
             lastDamageId = dmg.ID;
             // TODO Apply damage type mitigation to Player based on armor
             float damage = dmg.Value;
@@ -178,6 +176,10 @@ public class Player : MonoBehaviour
             Animator.SetInteger("DamageId", 0);
             if (DMG_KNOCKBACK_THRESHOLD <= damage || !Controller.IsGrounded)
             {
+                // Cancel any animations currently happening
+                ApplyAttackAnimationCancel(true);
+                EndAttack();
+                EndAction();
                 // Face towards damage and apply force direction
                 if (dmgPos.x >= transform.position.x)
                 {
@@ -196,6 +198,10 @@ public class Player : MonoBehaviour
             }
             else if (DMG_LIGHT_THRESHOLD <= damage && DMG_KNOCKBACK_THRESHOLD >= damage)
             {
+                // Cancel any animations currently happening
+                ApplyAttackAnimationCancel(true);
+                EndAttack();
+                EndAction();
                 Animator.SetInteger("DamageId", (int)PlayerDamageId.LIGHT);
             }
             Animator.SetTrigger("Damage");
@@ -269,6 +275,7 @@ public class Player : MonoBehaviour
             GameObject item = Instantiate(CurrentItem.Prefab);
             item.transform.position = this.transform.position;
             item.transform.parent = this.transform;
+            // TODO Remove consumed items from equipped items
         }
     }
 
@@ -312,6 +319,7 @@ public class Player : MonoBehaviour
     {
         doingAction = false;
         ActionController.EndAttackOrAction();
+        CanCancelAnim = false;
     }
 
     public bool IsAttacking { get { return attacking; } }
