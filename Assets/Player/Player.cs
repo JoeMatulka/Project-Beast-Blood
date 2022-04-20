@@ -64,7 +64,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
         //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon & item from an equipment class later
         ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
-        CurrentItem = PlayerItemLibrary.Medicine;
+        CurrentItem = PlayerItemLibrary.FireBomb;
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
