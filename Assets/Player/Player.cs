@@ -121,7 +121,6 @@ public class Player : MonoBehaviour
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
         Animator.SetBool("IsCrouching", crouch);
-        Animator.SetBool("IsAttacking", attacking);
         Animator.SetBool("IsGrounded", Controller.IsGrounded);
         Animator.SetFloat("yVelocity", Controller.Velocity.y);
     }
@@ -213,10 +212,7 @@ public class Player : MonoBehaviour
 
     public void OnLanding()
     {
-        if (IsAttacking)
-        {
-            ApplyAttackAnimationCancel(true);
-        }
+
     }
 
     private void MainWeaponAction()
