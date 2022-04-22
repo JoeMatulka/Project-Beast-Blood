@@ -23,6 +23,8 @@ public class Player : MonoBehaviour
     public PlayerAim Aim;
     public PlayerActionController ActionController;
 
+    public PlayerWeapon EquippedWeapon;
+    
     public PlayerItem CurrentItem;
     public PlayerItem[] EquippedItems;
 
@@ -62,8 +64,9 @@ public class Player : MonoBehaviour
     private void Start()
     {
         SceneLinkedSMB<Player>.Initialise(Animator, this);
-        //TODO Hardcoded for now, needs to be assigned from the currently equipped weapon & item from an equipment class later
-        ActionController.CurrentWeaponType = WeaponType.ONE_HAND;
+
+        // TODO These should come from some inventory load out in the future
+        EquippedWeapon = PlayerWeaponLibrary.HUNTER_SWORD;
         CurrentItem = PlayerItemLibrary.FireBomb;
 
         hitbox = GetComponent<Hitbox>();
@@ -300,6 +303,8 @@ public class Player : MonoBehaviour
                 ActionController.CurrentNonWeaponAttackID = ActionLibrary.CONSUME_ID;
                 Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
                 Animator.SetTrigger("Action");
+                break;
+            default:
                 break;
         }
     }

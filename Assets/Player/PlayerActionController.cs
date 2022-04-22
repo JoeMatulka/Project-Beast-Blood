@@ -4,22 +4,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WeaponType
-{
-    ONE_HAND, TWO_HAND, RANGED
-};
-
-[RequireComponent(typeof(PlayerWeaponAnimator))]
+[RequireComponent(typeof(Player))]
 public class PlayerActionController : MonoBehaviour
 {
-    private PlayerWeaponAnimator animator;
     public Player Player;
 
     public GameCamera GameCamera;
-
-    // This could be derived from the current equipped weapon instead of assigning a weapon type, assign an actual weapon and get the type from that
-    private WeaponType currentWeaponType;
-    private Damage currentAttackDamage;
 
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
@@ -43,16 +33,15 @@ public class PlayerActionController : MonoBehaviour
 
     private void Awake()
     {
-        animator = this.GetComponent<PlayerWeaponAnimator>();
         playerLayerMask = ~LayerMask.GetMask("Player", "Ignore Raycast", "Creature");
-        Player = this.GetComponentInParent<Player>();
+        Player = this.GetComponent<Player>();
+        AssignAttackFrames();
 
         GameCamera = Camera.main.GetComponent<GameCamera>();
     }
 
     public void ActivateWeaponAttackFrame(Vector2 direction, int frame)
     {
-        animator.SetSpriteByDirectionAndIndex(direction, frame);
         WeaponAttackFrame attackFrame;
         if (weaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
@@ -112,7 +101,7 @@ public class PlayerActionController : MonoBehaviour
             if (hit.collider != null)
             {
                 // If the hit has a hitbox to receive damage, then damage it
-                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(currentAttackDamage, Player.transform.position);
+                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(Player.EquippedWeapon.Damage, Player.transform.position);
                 // If the hit is a creature that is staggered, perform a fatal attack
                 Creature creature = hit.collider.transform.root.GetComponent<Creature>();
                 if (creature != null && creature.IsStaggered)
@@ -126,34 +115,29 @@ public class PlayerActionController : MonoBehaviour
 
     public void GenerateAttackDamage()
     {
-        // TODO Grab damage from weapon
-        currentAttackDamage = new Damage(10, DamageType.RAW);
+        // This is to ensure unique damages are being applied to anything with a hitbox
+        Player.EquippedWeapon.Damage.GenerateNewGuid();
     }
 
     public void EndAttackOrAction()
     {
-        animator.ClearSprite();
         lastCalledFrame = 0;
     }
 
-    public WeaponType CurrentWeaponType
+    public void AssignAttackFrames()
     {
-        get { return currentWeaponType; }
-        set
+        // Assign weapon attack frames from the set current weapon type
+        switch (Player.EquippedWeapon.Type)
         {
-            currentWeaponType = value;
-            // Assign weapon attack frames from the set current weapon type
-            switch (currentWeaponType)
-            {
-                case WeaponType.ONE_HAND:
-                    weaponAttackFrames = WeaponAttackFrameLibrary.ONE_HAND_ATK_FRAMES;
-                    weaponAttackRayLength = WeaponAttackFrameLibrary.ONE_HAND_ATK_WEAPON_LENGTH;
-                    break;
-                default:
-                    Debug.LogError("Could not find that weapon type, cannot assign weapon attack frames");
-                    break;
-            }
+            case WeaponType.ONE_HAND:
+                weaponAttackFrames = WeaponAttackFrameLibrary.ONE_HAND_ATK_FRAMES;
+                weaponAttackRayLength = WeaponAttackFrameLibrary.ONE_HAND_ATK_WEAPON_LENGTH;
+                break;
+            default:
+                Debug.LogError("Could not find that weapon type, cannot assign weapon attack frames");
+                break;
         }
+
     }
 
     public int CurrentNonWeaponAttackID
