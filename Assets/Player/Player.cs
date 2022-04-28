@@ -56,6 +56,7 @@ public class Player : MonoBehaviour
         EffectsManager.Instance.LoadEffectsBundle();
         ProjectileMananger.Instance.LoadProjectileBundle();
         PlayerItemMananger.Instance.LoadPlayerItemBundle();
+        PlayerWeaponMananger.Instance.LoadOneHandSwordBundle();
 
         ActionController = GetComponentInChildren<PlayerActionController>();
         Health = MAX_HEALTH;
@@ -66,7 +67,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
 
         // TODO These should come from some inventory load out in the future
-        EquippedWeapon = PlayerWeaponLibrary.HUNTER_SWORD;
+        EquippedWeapon = PlayerWeaponLibrary.Weapons[PlayerWeaponLibrary.IRON_SWORD_ID];
         CurrentItem = PlayerItemLibrary.FireBomb;
 
         hitbox = GetComponent<Hitbox>();
@@ -139,8 +140,8 @@ public class Player : MonoBehaviour
     {
         if (CanCancelAnim || overrideCheck)
         {
-            Animator.SetTrigger("CancelAnimation");
-            // Unset can cancel for nexy cancel call
+            ActionController.ActivateAttackCancelAnimation();
+            // Unset can cancel for next cancel call
             CanCancelAnim = false;
         }
     }
@@ -230,8 +231,7 @@ public class Player : MonoBehaviour
             Controller.Flip();
         }
         attacking = true;
-        Animator.SetInteger("Aim", (int)Aim.ToEnum);
-        Animator.SetTrigger("WeaponAction");
+        ActionController.ActivateMainWeaponAction();
     }
 
     // Peforms a fatal attack, a cinematic attack that does large damage independent of the player weapon on a staggered creature

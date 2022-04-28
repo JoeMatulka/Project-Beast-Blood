@@ -11,18 +11,13 @@ public class PlayerActionController : MonoBehaviour
 
     public GameCamera GameCamera;
 
-    // Number key in dictionary is active frame for weapon attack (zero indexed)
-    private Dictionary<int, WeaponAttackFrame> weaponAttackFrames;
+    private PlayerWeaponController weaponController;
+
     // Number key in dictionary is active frame for non-weapon attack (zero indexed)
     private Dictionary<int, ActionFrame> actionFrames;
     private int currentActionID = 0;
     // Allows for functions not to be called mutliple times during a frame
     private int lastCalledFrame = 0;
-    // Length of ray cast when weapon attacks
-    private float weaponAttackRayLength;
-    private readonly float diagonalWeaponRayMod = .25f;
-    private readonly float playerCenterOffset = .25f;
-    private readonly float playerCrouchOffect = .15f;
 
     // Variables for Fatal Attack
     public Creature fatalAttackCreature;
@@ -35,19 +30,35 @@ public class PlayerActionController : MonoBehaviour
     {
         playerLayerMask = ~LayerMask.GetMask("Player", "Ignore Raycast", "Creature");
         Player = this.GetComponent<Player>();
-        AssignAttackFrames();
 
         GameCamera = Camera.main.GetComponent<GameCamera>();
+
+        weaponController = transform.Find("Weapon").GetComponent<PlayerWeaponController>();
+    }
+
+    public void ActivateMainWeaponAction()
+    {
+        int aim = (int)Player.Aim.ToEnum;
+        Player.Animator.SetInteger("Aim", aim);
+        weaponController.Animator.SetInteger("Aim", aim);
+        Player.Animator.SetTrigger("WeaponAction");
+        weaponController.Animator.SetTrigger("WeaponAction");
+    }
+
+    public void ActivateAttackCancelAnimation()
+    {
+        Player.Animator.SetTrigger("CancelAnimation");
+        weaponController.Animator.SetTrigger("CancelAnimation");
     }
 
     public void ActivateWeaponAttackFrame(Vector2 direction, int frame)
     {
         WeaponAttackFrame attackFrame;
-        if (weaponAttackFrames.TryGetValue(frame, out attackFrame))
+        if (weaponController.WeaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
             if (attackFrame.IsActiveHurtBox)
             {
-                DrawWeaponRaycast(direction);
+                weaponController.DrawWeaponRaycast(direction, playerLayerMask);
             }
             if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
@@ -75,44 +86,6 @@ public class PlayerActionController : MonoBehaviour
         }
     }
 
-    private void DrawWeaponRaycast(Vector2 direction)
-    {
-        //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
-        Vector3 rayDirection = direction;
-        float attackLength = weaponAttackRayLength;
-        if (rayDirection.Equals(new Vector2(1, 1)) || rayDirection.Equals(new Vector2(1, -1)))
-        {
-            // This is because rays are drawn longer at a diagonal angle from origin
-            attackLength -= diagonalWeaponRayMod;
-        }
-        // Activate weapon raycast from offset of center of player
-        Vector2 center = transform.position + (rayDirection * playerCenterOffset);
-
-        // Adjust center if player is crouching
-        if (Player.IsCrouching)
-        {
-            center = new Vector3(center.x, center.y - playerCrouchOffect);
-        }
-
-        RaycastHit2D[] hits = Physics2D.RaycastAll(center, rayDirection, attackLength, playerLayerMask);
-        Debug.DrawRay(center, rayDirection * attackLength, Color.green);
-        foreach (RaycastHit2D hit in hits)
-        {
-            if (hit.collider != null)
-            {
-                // If the hit has a hitbox to receive damage, then damage it
-                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(Player.EquippedWeapon.Damage, Player.transform.position);
-                // If the hit is a creature that is staggered, perform a fatal attack
-                Creature creature = hit.collider.transform.root.GetComponent<Creature>();
-                if (creature != null && creature.IsStaggered)
-                {
-                    Player.stopInput = true;
-                    Player.FatalAttack(creature);
-                }
-            }
-        }
-    }
-
     public void GenerateAttackDamage()
     {
         // This is to ensure unique damages are being applied to anything with a hitbox
@@ -122,22 +95,7 @@ public class PlayerActionController : MonoBehaviour
     public void EndAttackOrAction()
     {
         lastCalledFrame = 0;
-    }
-
-    public void AssignAttackFrames()
-    {
-        // Assign weapon attack frames from the set current weapon type
-        switch (Player.EquippedWeapon.Type)
-        {
-            case WeaponType.ONE_HAND:
-                weaponAttackFrames = WeaponAttackFrameLibrary.ONE_HAND_ATK_FRAMES;
-                weaponAttackRayLength = WeaponAttackFrameLibrary.ONE_HAND_ATK_WEAPON_LENGTH;
-                break;
-            default:
-                Debug.LogError("Could not find that weapon type, cannot assign weapon attack frames");
-                break;
-        }
-
+        weaponController.EndWeaponAttack();
     }
 
     public int CurrentNonWeaponAttackID
@@ -167,23 +125,6 @@ public class PlayerActionController : MonoBehaviour
 }
 
 /**
- * Class meant to represent a single frame of attack within an weapon attack animation frame
- */
-public struct WeaponAttackFrame
-{
-    // Is this the end of the recovery frame, allows for cancelling animations with movement, etc.
-    public readonly bool IsEndOfRecoveryFrame;
-    // Is the weapon hurt box active this frame?
-    public readonly bool IsActiveHurtBox;
-
-    public WeaponAttackFrame(bool isActiveHurtBox, bool isEndOfRecoveryFrame)
-    {
-        IsEndOfRecoveryFrame = isEndOfRecoveryFrame;
-        IsActiveHurtBox = isActiveHurtBox;
-    }
-}
-
-/**
  * Class meant to represent a single frame of an action a player can take, examples being unique attacks without weapons, using items
  */
 public struct ActionFrame
@@ -200,19 +141,6 @@ public struct ActionFrame
         IsEndOfRecoveryFrame = isEndOfRecoveryFrame;
         ActionOnFrame = actionOnFrame;
     }
-}
-
-/**
- * Class meant to hold the weapon type data by archtype, not intended for specific weapons, but for specific weapon types
- */
-public static class WeaponAttackFrameLibrary
-{
-    // One handed weapon
-    public static Dictionary<int, WeaponAttackFrame> ONE_HAND_ATK_FRAMES = new Dictionary<int, WeaponAttackFrame> {
-        { 5, new WeaponAttackFrame(true, false) },
-        { 12, new WeaponAttackFrame(false, true) },
-    };
-    public static float ONE_HAND_ATK_WEAPON_LENGTH = .8f;
 }
 
 public static class ActionLibrary

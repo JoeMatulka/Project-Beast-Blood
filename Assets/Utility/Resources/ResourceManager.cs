@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace ResourceManager
@@ -114,13 +115,13 @@ namespace ResourceManager
         {
             if (playerItemBundle != null)
             {
-                Debug.LogWarning("Tried to load projectiles asset bundle but it is already loaded!");
+                Debug.LogWarning("Tried to load player items asset bundle but it is already loaded!");
                 return;
             }
             playerItemBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "playeritems"));
             if (playerItemBundle == null)
             {
-                Debug.LogError("Failed to load projectiles asset bundle!");
+                Debug.LogError("Failed to load player items asset bundle!");
                 return;
             }
         }
@@ -133,6 +134,45 @@ namespace ResourceManager
         public GameObject FireBomb
         {
             get { return playerItemBundle.LoadAsset<GameObject>("Firebomb"); }
+        }
+    }
+
+    // Used to manage weapon sprites and effects for equipped weapons to the player
+    public class PlayerWeaponMananger : Singleton<PlayerWeaponMananger>
+    {
+        // 1 handed sword sprite bundles
+        AssetBundle oneHandSwordAtkStraightBundle;
+
+        // (Optional) Prevent non-singleton constructor use.
+        protected PlayerWeaponMananger() { }
+
+        public void LoadOneHandSwordBundle()
+        {
+            if (oneHandSwordAtkStraightBundle != null)
+            {
+                Debug.LogWarning("Tried to load 1h sword attack straight asset bundle but it is already loaded!");
+                return;
+            }
+            oneHandSwordAtkStraightBundle = AssetBundle.LoadFromFile(Path.Combine(Application.streamingAssetsPath, "1hswordatkstraight"));
+            if (oneHandSwordAtkStraightBundle == null)
+            {
+                Debug.LogError("Failed to load 1h sword attack straight asset bundle!");
+                return;
+            }
+        }
+
+        public Dictionary<AimDirection, Sprite[]> OneHandedSwordSprites
+        {
+            get
+            {
+                return new Dictionary<AimDirection, Sprite[]>{
+                    { AimDirection.UP, null },
+                    { AimDirection.UP_DIAG, null },
+                    { AimDirection.STRAIGHT, oneHandSwordAtkStraightBundle.LoadAllAssets<Sprite>() },
+                    { AimDirection.DOWN_DIAG, null },
+                    { AimDirection.DOWN, null }
+                };
+            }
         }
     }
 }

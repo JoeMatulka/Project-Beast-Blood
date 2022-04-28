@@ -1,0 +1,41 @@
+ManifestFileVersion: 0
+CRC: 575322318
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 02fc642598908e538aa3215f74fecde0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9e6ad29cbd2df8fbe1a15315db0e51ab
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+Assets:
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0020.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0021.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0011.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0017.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0023.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0013.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0022.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0005.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0003.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0016.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0004.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0024.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0019.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0010.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0006.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0002.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0007.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0009.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0008.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0018.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0014.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0001.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0012.png
+- Assets/Art/Player/Weapons/1 Handed/Sword/Animation/Straight/0015.png
+Dependencies: []

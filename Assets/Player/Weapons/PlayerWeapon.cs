@@ -1,7 +1,14 @@
-﻿public enum WeaponType
+﻿using System.Collections.Generic;
+
+public enum WeaponType
 {
     ONE_HAND, TWO_HAND, RANGED
 };
+
+public enum WeaponSpriteType
+{
+    SWORD, MACE, AXE, GUN, CROSSBOW
+}
 
 public struct PlayerWeapon
 {
@@ -9,17 +16,23 @@ public struct PlayerWeapon
 
     public readonly WeaponType Type;
 
-    public PlayerWeapon(Damage damage, WeaponType type)
+    public readonly WeaponSpriteType Sprite;
+
+    public PlayerWeapon(Damage damage, WeaponType type, WeaponSpriteType sprite)
     {
         this.Damage = damage;
         this.Type = type;
+        this.Sprite = sprite;
     }
 }
 
 public static class PlayerWeaponLibrary
 {
-    public static PlayerWeapon HUNTER_SWORD
-    {
-        get { return new PlayerWeapon(new Damage(10, DamageType.RAW), WeaponType.ONE_HAND); }
-    }
+    // IDs of weapons
+    public static int IRON_SWORD_ID = 1;
+
+    // Library of weapons
+    public static Dictionary<int, PlayerWeapon> Weapons = new Dictionary<int, PlayerWeapon> {
+        { IRON_SWORD_ID, new PlayerWeapon(new Damage(10, DamageType.RAW), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) },
+    };
 }
