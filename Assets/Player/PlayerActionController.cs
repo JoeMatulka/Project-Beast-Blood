@@ -48,7 +48,8 @@ public class PlayerActionController : MonoBehaviour
     public void ActivateAttackCancelAnimation()
     {
         Player.Animator.SetTrigger("CancelAnimation");
-        weaponController.Animator.SetTrigger("CancelAnimation");
+        weaponController.Animator.Rebind();
+        weaponController.Animator.Update(0f);
     }
 
     public void ActivateWeaponAttackFrame(Vector2 direction, int frame)
