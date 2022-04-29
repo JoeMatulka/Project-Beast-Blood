@@ -19,6 +19,9 @@ public class PlayerWeaponController : MonoBehaviour
     private readonly float playerCenterOffset = .25f;
     private readonly float playerCrouchOffect = .15f;
 
+    private Vector2 defaultPosition;
+    private Vector2 crouchPosition;
+
     void Awake()
     {
         // Grab player and equipped weapon
@@ -26,6 +29,9 @@ public class PlayerWeaponController : MonoBehaviour
         AssignAttackFrames();
 
         Animator = this.GetComponent<Animator>();
+
+        defaultPosition = this.transform.localPosition;
+        crouchPosition = new Vector2(defaultPosition.x, defaultPosition.y - playerCrouchOffect);
     }
 
     public void DrawWeaponRaycast(Vector2 direction, LayerMask playerLayerMask)
@@ -83,9 +89,19 @@ public class PlayerWeaponController : MonoBehaviour
 
     }
 
+    public void ActivateWeaponAttackAnimation(int aim)
+    {
+        //Change position if player is crouching
+        if (player.IsCrouching) this.transform.localPosition = crouchPosition;
+        Animator.SetTrigger("WeaponAction");
+        Animator.SetInteger("Aim", aim);
+        Animator.SetInteger("WeaponType", (int)player.EquippedWeapon.Type);
+        Animator.SetInteger("WeaponSpriteType", (int)player.EquippedWeapon.Sprite);
+    }
+
     public void EndWeaponAttack()
     {
-
+        this.transform.localPosition = defaultPosition;
     }
 }
 

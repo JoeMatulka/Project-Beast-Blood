@@ -33,6 +33,6 @@ public static class PlayerWeaponLibrary
 
     // Library of weapons
     public static Dictionary<int, PlayerWeapon> Weapons = new Dictionary<int, PlayerWeapon> {
-        { IRON_SWORD_ID, new PlayerWeapon(new Damage(10, DamageType.RAW), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) },
+        { IRON_SWORD_ID, new PlayerWeapon(new Damage(50, DamageType.RAW), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) },
     };
 }

@@ -40,14 +40,14 @@ public class PlayerActionController : MonoBehaviour
     {
         int aim = (int)Player.Aim.ToEnum;
         Player.Animator.SetInteger("Aim", aim);
-        weaponController.Animator.SetInteger("Aim", aim);
         Player.Animator.SetTrigger("WeaponAction");
-        weaponController.Animator.SetTrigger("WeaponAction");
+        weaponController.ActivateWeaponAttackAnimation(aim);
     }
 
     public void ActivateAttackCancelAnimation()
     {
         Player.Animator.SetTrigger("CancelAnimation");
+        // Needed because cancelling doesn't work for some reason...
         weaponController.Animator.Rebind();
         weaponController.Animator.Update(0f);
     }
