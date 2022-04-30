@@ -3156,11 +3156,32 @@ PrefabInstance:
       propertyPath: m_FlipX
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4566971364188076487, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.9375
+      objectReference: {fileID: 0}
+    - target: {fileID: 4566971364188076487, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 1.328125
+      objectReference: {fileID: 0}
+    - target: {fileID: 4566971364188076487, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+        type: 3}
+      propertyPath: m_WasSpriteAssigned
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6369137422292609765, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
         type: 3}
       propertyPath: Aim
       value: 
       objectReference: {fileID: 6060935471757127031}
+    - target: {fileID: 6369137422292609784, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 6f1fd752035f55348b8c324ded0cd9f6,
+        type: 3}
     - target: {fileID: 6369137422292609785, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3248,17 +3269,17 @@ PrefabInstance:
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 250432.9
+      value: 778473.94
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -90629.24
+      value: -281714.8
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1372819.2
+      value: 4267579.5
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
