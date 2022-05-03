@@ -2469,6 +2469,12 @@ TilemapCollider2D:
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
+--- !u!95 &172428908 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 8988508730548455509, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+    type: 3}
+  m_PrefabInstance: {fileID: 6369137423036304086}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &219948778
 GameObject:
   m_ObjectHideFlags: 0
@@ -3151,6 +3157,17 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2868294095088530930, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+        type: 3}
+      propertyPath: OneHandedSwordHolsteredSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: d71d30640b1f00646b35224e2aa09bb2,
+        type: 3}
+    - target: {fileID: 2868294095088530930, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+        type: 3}
+      propertyPath: Animator
+      value: 
+      objectReference: {fileID: 172428908}
     - target: {fileID: 4566971364188076487, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
         type: 3}
       propertyPath: m_FlipX
@@ -3164,12 +3181,17 @@ PrefabInstance:
     - target: {fileID: 4566971364188076487, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
         type: 3}
       propertyPath: m_Size.y
-      value: 0.9375
+      value: 1.328125
       objectReference: {fileID: 0}
     - target: {fileID: 4566971364188076487, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
         type: 3}
       propertyPath: m_WasSpriteAssigned
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4566971364188076487, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6369137422292609765, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
         type: 3}
@@ -3180,7 +3202,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Sprite
       value: 
-      objectReference: {fileID: 21300000, guid: e81fb442537b8f643b2f260d1859eeee,
+      objectReference: {fileID: 21300000, guid: e1860262255772a4d8dace9c4c93105c,
         type: 3}
     - target: {fileID: 6369137422292609785, guid: 1c0174e9599ed4343a1c6c2e50a12d95,
         type: 3}
@@ -3269,17 +3291,17 @@ PrefabInstance:
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1165454.6
+      value: 1347943.9
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -421758.94
+      value: -487799.8
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6388984.5
+      value: 7389379.5
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}

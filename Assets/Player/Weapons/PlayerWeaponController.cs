@@ -1,4 +1,5 @@
 ﻿using CreatureSystems;
+using Gamekit2D;
 using HitboxSystem;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +12,8 @@ public class PlayerWeaponController : MonoBehaviour
 
     public Animator Animator;
 
+    private SpriteRenderer m_renderer;
+
     // Number key in dictionary is active frame for weapon attack (zero indexed)
     public Dictionary<int, WeaponAttackFrame> WeaponAttackFrames;
     // Length of ray cast when weapon attacks
@@ -22,16 +25,39 @@ public class PlayerWeaponController : MonoBehaviour
     private Vector2 defaultPosition;
     private Vector2 crouchPosition;
 
+    private Sprite holsteredWeaponSprite;
+
+    public Sprite OneHandedSwordHolsteredSprite;
+
     void Awake()
     {
-        // Grab player and equipped weapon
         player = this.GetComponentInParent<Player>();
-        AssignAttackFrames();
 
-        Animator = this.GetComponent<Animator>();
+        m_renderer = this.GetComponent<SpriteRenderer>();
 
         defaultPosition = this.transform.localPosition;
         crouchPosition = new Vector2(defaultPosition.x, defaultPosition.y - playerCrouchOffect);
+
+        AssignAttackFrames();
+        AssignHolsteredSprite();
+        SetHolsteredWeaponSprite();
+    }
+
+    void Update()
+    {
+        //Change position if player is crouching
+        this.transform.localPosition = player.IsCrouching ? crouchPosition : defaultPosition;
+    }
+
+    public void SetHolsteredWeaponSprite()
+    {
+        Animator.enabled = false;
+        m_renderer.sprite = holsteredWeaponSprite;
+    }
+
+    public void HideHolsteredWeapon()
+    {
+        m_renderer.sprite = null;
     }
 
     public void DrawWeaponRaycast(Vector2 direction, LayerMask playerLayerMask)
@@ -46,12 +72,6 @@ public class PlayerWeaponController : MonoBehaviour
         }
         // Activate weapon raycast from offset of center of player
         Vector2 center = transform.position + (rayDirection * playerCenterOffset);
-
-        // Adjust center if player is crouching
-        if (player.IsCrouching)
-        {
-            center = new Vector3(center.x, center.y - playerCrouchOffect);
-        }
 
         RaycastHit2D[] hits = Physics2D.RaycastAll(center, rayDirection, attackLength, playerLayerMask);
         Debug.DrawRay(center, rayDirection * attackLength, Color.green);
@@ -89,10 +109,17 @@ public class PlayerWeaponController : MonoBehaviour
 
     }
 
+    public void AssignHolsteredSprite()
+    {
+        if (player.EquippedWeapon.Sprite.Equals(WeaponSpriteType.SWORD) && player.EquippedWeapon.Type.Equals(WeaponType.ONE_HAND))
+        {
+            holsteredWeaponSprite = OneHandedSwordHolsteredSprite;
+        }
+    }
+
     public void ActivateWeaponAttackAnimation(int aim)
     {
-        //Change position if player is crouching
-        if (player.IsCrouching) this.transform.localPosition = crouchPosition;
+        Animator.enabled = true;
         Animator.SetTrigger("WeaponAction");
         Animator.SetInteger("Aim", aim);
         Animator.SetInteger("WeaponType", (int)player.EquippedWeapon.Type);
@@ -101,7 +128,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     public void EndWeaponAttack()
     {
-        this.transform.localPosition = defaultPosition;
+        SetHolsteredWeaponSprite();
     }
 }
 

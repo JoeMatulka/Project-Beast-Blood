@@ -56,7 +56,6 @@ public class Player : MonoBehaviour
         EffectsManager.Instance.LoadEffectsBundle();
         ProjectileMananger.Instance.LoadProjectileBundle();
         PlayerItemMananger.Instance.LoadPlayerItemBundle();
-        PlayerWeaponMananger.Instance.LoadOneHandSwordBundle();
 
         ActionController = GetComponentInChildren<PlayerActionController>();
         Health = MAX_HEALTH;

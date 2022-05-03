@@ -11,7 +11,7 @@ public class PlayerActionController : MonoBehaviour
 
     public GameCamera GameCamera;
 
-    private PlayerWeaponController weaponController;
+    public PlayerWeaponController WeaponController;
 
     // Number key in dictionary is active frame for non-weapon attack (zero indexed)
     private Dictionary<int, ActionFrame> actionFrames;
@@ -33,7 +33,7 @@ public class PlayerActionController : MonoBehaviour
 
         GameCamera = Camera.main.GetComponent<GameCamera>();
 
-        weaponController = transform.Find("Weapon").GetComponent<PlayerWeaponController>();
+        WeaponController = transform.Find("Weapon").GetComponent<PlayerWeaponController>();
     }
 
     public void ActivateMainWeaponAction()
@@ -41,25 +41,25 @@ public class PlayerActionController : MonoBehaviour
         int aim = (int)Player.Aim.ToEnum;
         Player.Animator.SetInteger("Aim", aim);
         Player.Animator.SetTrigger("WeaponAction");
-        weaponController.ActivateWeaponAttackAnimation(aim);
+        WeaponController.ActivateWeaponAttackAnimation(aim);
     }
 
     public void ActivateAttackCancelAnimation()
     {
         Player.Animator.SetTrigger("CancelAnimation");
         // Needed because cancelling doesn't work for some reason...
-        weaponController.Animator.Rebind();
-        weaponController.Animator.Update(0f);
+        WeaponController.Animator.Rebind();
+        WeaponController.Animator.Update(0f);
     }
 
     public void ActivateWeaponAttackFrame(Vector2 direction, int frame)
     {
         WeaponAttackFrame attackFrame;
-        if (weaponController.WeaponAttackFrames.TryGetValue(frame, out attackFrame))
+        if (WeaponController.WeaponAttackFrames.TryGetValue(frame, out attackFrame))
         {
             if (attackFrame.IsActiveHurtBox)
             {
-                weaponController.DrawWeaponRaycast(direction, playerLayerMask);
+                WeaponController.DrawWeaponRaycast(direction, playerLayerMask);
             }
             if (attackFrame.IsEndOfRecoveryFrame && lastCalledFrame != frame)
             {
@@ -96,7 +96,7 @@ public class PlayerActionController : MonoBehaviour
     public void EndAttackOrAction()
     {
         lastCalledFrame = 0;
-        weaponController.EndWeaponAttack();
+        WeaponController.EndWeaponAttack();
     }
 
     public int CurrentNonWeaponAttackID
@@ -150,6 +150,7 @@ public static class ActionLibrary
     public const int FATAL_ATK_ID = 1;
     public static Dictionary<int, ActionFrame> FATAL_ATK_FRAMES = new Dictionary<int, ActionFrame> {
         { 1, new ActionFrame(true, false, (PlayerActionController controller) => {
+            controller.WeaponController.HideHolsteredWeapon();
             controller.GameCamera.Zoom(3);
         })},
         { 5, new ActionFrame(true, false, (PlayerActionController controller) => { 
@@ -168,6 +169,7 @@ public static class ActionLibrary
         })},
         { 20, new ActionFrame(false, true, (PlayerActionController controller) => {
             // Release input freeze on player
+            controller.WeaponController.SetHolsteredWeaponSprite();
             controller.Player.stopInput = false;
             controller.GameCamera.Zoom(GameCamera.DEFAULT_CAMERA_ZOOM);
         })},
