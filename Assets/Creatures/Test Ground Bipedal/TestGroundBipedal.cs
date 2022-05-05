@@ -20,7 +20,7 @@ public class TestGroundBipedal : Creature
         BaseSize = 10,
         SizeModifier = 1,
         CreatureType = CreatureType.Bipedal,
-        ResistedElements = new Dictionary<DamageType, float> { { DamageType.RAW, 1.5f }, { DamageType.FIRE, -1.5f } },
+        ResistedElements = new Dictionary<DamageElementType, float> { { DamageElementType.RAW, 1.5f }, { DamageElementType.FIRE, -1.5f } },
     };
 
     private const float ATTACK_RANGE = 2.5f;
@@ -48,10 +48,10 @@ public class TestGroundBipedal : Creature
         CreatureAttack[] attackSet = new CreatureAttack[] {
             BipedalCreatureBaseAttackLibrary.LowPunch
                 .SetAttackPart(ArmAttackPart)
-                .SetDamage(new Damage(30, DamageType.RAW)),
+                .SetDamage(new Damage(30, DamageElementType.RAW)),
             BipedalCreatureBaseAttackLibrary.DownwardSlam
                 .SetAttackPart(ArmAttackPart)
-                .SetDamage(new Damage(50, DamageType.RAW))
+                .SetDamage(new Damage(50, DamageElementType.RAW))
         };
         InitialSetUp(STATS, attackSet);
     }

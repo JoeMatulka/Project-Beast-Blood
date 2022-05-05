@@ -1,5 +1,5 @@
 ﻿using ResourceManager;
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemType
@@ -25,19 +25,13 @@ public struct PlayerItem
 
 public static class PlayerItemLibrary
 {
-    public static PlayerItem FireBomb
-    {
-        get
-        {
-            return new PlayerItem(ItemType.THROW, PlayerItemMananger.Instance.FireBomb);
-        }
-    }
+    // Item IDs
+    public readonly static int FIREBOMB_ID = 1;
+    public readonly static int MEDICINE_ID = 2;
 
-    public static PlayerItem Medicine
-    {
-        get
-        {
-            return new PlayerItem(ItemType.CONSUME, PlayerItemMananger.Instance.Medicine);
-        }
-    }
+    // Library of weapons
+    public static Dictionary<int, PlayerItem> Items = new Dictionary<int, PlayerItem> {
+        { FIREBOMB_ID, new PlayerItem(ItemType.THROW, PlayerItemMananger.Instance.FireBomb) },
+        { MEDICINE_ID, new PlayerItem(ItemType.CONSUME, PlayerItemMananger.Instance.Medicine)}
+    };
 }

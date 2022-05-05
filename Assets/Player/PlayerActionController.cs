@@ -155,14 +155,14 @@ public static class ActionLibrary
         })},
         { 5, new ActionFrame(true, false, (PlayerActionController controller) => { 
             // Initial Damage to creature cause creature to flinch
-            Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
+            Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageElementType.RAW);
             controller.fatalAttackCreature.Damage(dmg);
             controller.fatalAttackCreature.Flinch();
             controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSpurt);
         })},
         { 13, new ActionFrame(true, false, (PlayerActionController controller) => { 
             // Secondary Damage to creature and force a trip on the creature
-            Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageType.RAW);
+            Damage dmg = new Damage(controller.fatalAttackCreature.Stats.BaseHealth * controller.FATAL_ATK_DMG_MOD, DamageElementType.RAW);
             controller.fatalAttackCreature.Damage(dmg, CreatuePartSystems.CreaturePartDamageModifier.NONE, 1, false, true);
             controller.fatalAttackCreature.SpawnEffectOnCreature(controller.Player.transform.position, CreatureOnEffect.BloodSplash);
             controller.GameCamera.Shake();

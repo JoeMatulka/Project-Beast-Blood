@@ -8,7 +8,7 @@ public class Flame : MonoBehaviour
 {
     public float Lifetime = 5f;
 
-    public Damage Damage = new Damage(1, DamageType.FIRE);
+    public Damage Damage = new Damage(1, DamageElementType.FIRE);
     // How often fire damage is applied
     private const float DAMAGE_STEP = .35f;
 

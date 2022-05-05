@@ -23,11 +23,11 @@ namespace CreatuePartSystems
         [SerializeField]
         public float BurnBuildUp;
         private const float BURN_TIME = 5f;
-        private readonly Damage BURN_DMG = new Damage(10, DamageType.FIRE);
+        private readonly Damage BURN_DMG = new Damage(10, DamageElementType.FIRE);
         [SerializeField]
         public float PoisonBuildUp;
         private const float POISON_TIME = 20f;
-        private readonly Damage POISON_DMG = new Damage(2.5f, DamageType.POISON);
+        private readonly Damage POISON_DMG = new Damage(2.5f, DamageElementType.POISON);
         private const float STATUS_RECOVER_RATE = 5f;
         private bool isTakingStatusDamage = false;
         [SerializeField]
@@ -100,12 +100,13 @@ namespace CreatuePartSystems
 
         private void OnHit(object sender, HitboxEventArgs e)
         {
-            Damage dmg = e.Damage;
             float dmgModAmount = DAMAGE_MOD_BASE;
             // Apply part damage is part is breakable and break it if part health is depleted
             if (IsBreakable & !isBroken)
             {
-                PartHealth -= dmg.Value;
+                // Sharp modifier increases damage to parts
+                float partDamage = e.Damage.Mods[DamageModType.SHARP] * e.Damage.Value;
+                PartHealth -= partDamage;
                 isBroken = PartHealth <= 0;
                 if (isBroken)
                 {
@@ -116,19 +117,19 @@ namespace CreatuePartSystems
             // Apply Damage modifier if part is broken, used to deter the player from attacking the same part the whole fight
             if (isBroken) dmgModAmount = DAMAGE_MOD_BROKEN;
             // If incoming damage is FIRE, apply buring build up and burn status if threshold is met
-            if (dmg.Type.Equals(DamageType.FIRE) && !creature.isBurning)
+            if (e.Damage.Type.Equals(DamageElementType.FIRE) && !creature.isBurning)
             {
-                BurnBuildUp += dmg.Value;
+                BurnBuildUp += e.Damage.Value;
                 if (BurnBuildUp >= creature.Stats.BurnThreshold) ApplyBurningEffectsToPart();
             }
             // If incoming damage is Poison, apply poisoned build up and poison status if threshold is met
-            if (dmg.Type.Equals(DamageType.POISON))
+            if (e.Damage.Type.Equals(DamageElementType.POISON))
             {
-                PoisonBuildUp += dmg.Value;
+                PoisonBuildUp += e.Damage.Value;
                 if (PoisonBuildUp >= creature.Stats.PoisonThreshold) ApplyPoisonedEffectsToPart();
             }
 
-            creature.Damage(dmg, DamageModifier, dmgModAmount);
+            creature.Damage(e.Damage, DamageModifier, dmgModAmount);
         }
 
         private void ApplyBrokenEffectsToPart()
@@ -178,19 +179,19 @@ namespace CreatuePartSystems
         {
             isTakingStatusDamage = true;
             float startTime = Time.time;
-            if (dmg.Type.Equals(DamageType.FIRE)) creature.isBurning = true;
-            if (dmg.Type.Equals(DamageType.POISON)) creature.isPoisoned = true;
+            if (dmg.Type.Equals(DamageElementType.FIRE)) creature.isBurning = true;
+            if (dmg.Type.Equals(DamageElementType.POISON)) creature.isPoisoned = true;
             while ((Time.time - startTime) <= statusTime)
             {
                 yield return new WaitForSeconds(1);
                 creature.Damage(dmg, DamageModifier);
             }
-            if (dmg.Type.Equals(DamageType.FIRE))
+            if (dmg.Type.Equals(DamageElementType.FIRE))
             {
                 creature.isBurning = false;
                 BurnBuildUp = 0;
             }
-            if (dmg.Type.Equals(DamageType.POISON))
+            if (dmg.Type.Equals(DamageElementType.POISON))
             {
                 creature.isPoisoned = false;
                 PoisonBuildUp = 0;

@@ -10,7 +10,7 @@ public class Roar : MonoBehaviour
 
     private const float ROAR_LIFE = 1f;
 
-    private readonly Damage ROAR_DMG = new Damage(0, DamageType.RAW, new Vector2(5, 0));
+    private readonly Damage ROAR_DMG = new Damage(0, DamageElementType.RAW, new Vector2(5, 0));
 
     private LayerMask roarMask;
 

@@ -9,9 +9,9 @@ public class FireBomb : MonoBehaviour
     private BoxCollider2D col;
     private Rigidbody2D rb;
 
-    private readonly Damage CONTACT_DAMAGE = new Damage(2.5f, DamageType.RAW);
+    private readonly Damage CONTACT_DAMAGE = new Damage(2.5f, DamageElementType.RAW);
 
-    private readonly Damage EXPLOSION_DAMAGE = new Damage(.5f, DamageType.FIRE);
+    private readonly Damage EXPLOSION_DAMAGE = new Damage(.5f, DamageElementType.FIRE);
     private const float EXPLOSION_SIZE = .5f;
 
     private const float AMOUNT_FLAMES_SPAWN = 8;

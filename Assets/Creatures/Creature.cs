@@ -53,7 +53,7 @@ namespace CreatureSystems
             public float SizeModifier;
             public CreatureType CreatureType;
             // Resisted element and the resistance value to it
-            public Dictionary<DamageType, float> ResistedElements;
+            public Dictionary<DamageElementType, float> ResistedElements;
         }
 
         public Creature.CreatureStats Stats;
@@ -121,7 +121,7 @@ namespace CreatureSystems
         private const float JUMP_DURATION = 0.5f;
         private bool isJumping = false;
         private bool hasInitiatedJump = false;
-        private readonly Damage JUMPING_DOWN_DMG = new Damage(50, DamageType.RAW);
+        private readonly Damage JUMPING_DOWN_DMG = new Damage(50, DamageElementType.RAW);
 
         public bool IsFleeing = false;
         public float TimeSinceLastFlee = 0f;
@@ -360,7 +360,9 @@ namespace CreatureSystems
             // Calculate affected tripping threshold
             if (dmgMod.Equals(CreaturePartDamageModifier.TRIP) && !isTripped || forceTrip)
             {
-                CurrentTripThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (calculatedDmg * 1.5f) : calculatedDmg;
+                // Apply chop modifier to trip damage
+                float tripDmg = dmg.Mods[DamageModType.CHOP] * calculatedDmg;
+                CurrentTripThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (tripDmg * 1.5f) : tripDmg;
                 if (CurrentTripThreshold >= Stats.TripThreshold || forceTrip)
                 {
                     CurrentTripThreshold = 0;
@@ -377,8 +379,10 @@ namespace CreatureSystems
             // Calculate affected knock out threshold
             if (dmgMod.Equals(CreaturePartDamageModifier.KO) && !isKnockedOut || forceKnockout)
             {
+                // Apply strike modifier to knock out damage
+                float koDmg = dmg.Mods[DamageModType.STRIKE] * calculatedDmg;
                 // Increase knockout damage modifier if mobility part cripple percentage is high enough
-                CurrentKOThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (calculatedDmg * 1.5f) : calculatedDmg;
+                CurrentKOThreshold += (GetCripplePercent(CreaturePartsType.Ground) >= .5f || GetCripplePercent(CreaturePartsType.Flight) >= .5f) ? (koDmg * 1.5f) : koDmg;
                 if (CurrentKOThreshold >= Stats.KOThreshold || forceKnockout)
                 {
                     CurrentKOThreshold = 0;

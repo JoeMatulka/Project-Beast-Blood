@@ -117,7 +117,7 @@ namespace CreatureAttackLibrary
                     {
                         return damage;
                     },
-                    new Damage(0, DamageType.RAW)
+                    new Damage(0, DamageElementType.RAW)
                 );
             }
         }

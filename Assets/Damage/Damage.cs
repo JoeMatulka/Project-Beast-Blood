@@ -1,9 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
-public enum DamageType
+public enum DamageElementType
 {
     FIRE, POISON, RAW
+}
+
+public enum DamageModType
+{
+    // Adds more KO damage
+    STRIKE,
+    // Adds more Trip damage
+    CHOP,
+    // Adds more Part damage
+    SHARP,
 }
 
 public class Damage
@@ -12,24 +23,38 @@ public class Damage
 
     private readonly float value;
 
-    private readonly DamageType type;
+    private readonly DamageElementType element;
+
+    // Modifier amount to specific types of damage
+    private readonly Dictionary<DamageModType, float> mods = new Dictionary<DamageModType, float>()
+    {
+        { DamageModType.STRIKE, 1f}, { DamageModType.CHOP, 1f}, { DamageModType.SHARP, 1f},
+    };
 
     private readonly Vector2 force;
 
     public Vector3 Position;
 
-    public Damage(float value, DamageType type)
+    public Damage(float value, DamageElementType element)
     {
         this.id = Guid.NewGuid();
         this.value = value;
-        this.type = type;
+        this.element = element;
     }
 
-    public Damage(float value, DamageType type, Vector2 force)
+    public Damage(float value, DamageElementType element, Dictionary<DamageModType, float> mods)
     {
         this.id = Guid.NewGuid();
         this.value = value;
-        this.type = type;
+        this.element = element;
+        this.mods = mods;
+    }
+
+    public Damage(float value, DamageElementType element, Vector2 force)
+    {
+        this.id = Guid.NewGuid();
+        this.value = value;
+        this.element = element;
         this.force = force;
     }
 
@@ -48,9 +73,14 @@ public class Damage
         get { return this.value; }
     }
 
-    public DamageType Type
+    public Dictionary<DamageModType, float> Mods
     {
-        get { return this.type; }
+        get { return this.mods; }
+    }
+
+    public DamageElementType Type
+    {
+        get { return this.element; }
     }
 
     public Vector2 Force

@@ -12,7 +12,7 @@ public class Explosion : MonoBehaviour
     private float currentSize = 0;
     private const float SIZE_STEP = .25f;
 
-    public Damage Damage = new Damage(0, DamageType.RAW);
+    public Damage Damage = new Damage(0, DamageElementType.RAW);
 
     private LayerMask explosionMask;
 

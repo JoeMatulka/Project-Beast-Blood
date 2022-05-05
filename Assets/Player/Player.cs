@@ -67,7 +67,7 @@ public class Player : MonoBehaviour
 
         // TODO These should come from some inventory load out in the future
         EquippedWeapon = PlayerWeaponLibrary.Weapons[PlayerWeaponLibrary.IRON_SWORD_ID];
-        CurrentItem = PlayerItemLibrary.FireBomb;
+        CurrentItem = PlayerItemLibrary.Items[PlayerItemLibrary.FIREBOMB_ID];
 
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
