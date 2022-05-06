@@ -7,7 +7,7 @@ public enum ItemType
     THROW, CONSUME, WEAR, TRAP
 }
 
-public struct PlayerItem
+public class PlayerItem
 {
     private readonly ItemType type;
     private readonly GameObject prefab;
@@ -34,4 +34,20 @@ public static class PlayerItemLibrary
         { FIREBOMB_ID, new PlayerItem(ItemType.THROW, PlayerItemMananger.Instance.FireBomb) },
         { MEDICINE_ID, new PlayerItem(ItemType.CONSUME, PlayerItemMananger.Instance.Medicine)}
     };
+
+    public static int GetItemStackSize(ItemType type)
+    {
+        switch (type)
+        {
+            case ItemType.THROW:
+                return 2;
+            case ItemType.CONSUME:
+                return 5;
+            case ItemType.WEAR:
+            case ItemType.TRAP:
+                return 1;
+            default:
+                return 0;
+        }
+    }
 }

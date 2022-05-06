@@ -3,6 +3,8 @@ using HitboxSystem;
 using ResourceManager;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public enum PlayerDamageId
@@ -24,9 +26,10 @@ public class Player : MonoBehaviour
     public PlayerActionController ActionController;
 
     public PlayerWeapon EquippedWeapon;
-    
-    public PlayerItem CurrentItem;
-    public PlayerItem[] EquippedItems;
+
+    // Dictionary is the key being the current item in the inventory, the tuple being first the amount in the inventory and the second being the max amount
+    public Dictionary<PlayerItem, Tuple<int, int>> EquippedItems;
+    public int CurrentEquippedItemIndex = 0;
 
     private const float THROW_FORCE = 10f;
     private const float THROW_AIM_MOD = .25f;
@@ -67,8 +70,13 @@ public class Player : MonoBehaviour
 
         // TODO These should come from some inventory load out in the future
         EquippedWeapon = PlayerWeaponLibrary.Weapons[PlayerWeaponLibrary.IRON_SWORD_ID];
-        CurrentItem = PlayerItemLibrary.Items[PlayerItemLibrary.FIREBOMB_ID];
+        EquippedItems = new Dictionary<PlayerItem, Tuple<int, int>>()
+        {
+            { PlayerItemLibrary.Items[PlayerItemLibrary.FIREBOMB_ID], new Tuple<int, int>(PlayerItemLibrary.GetItemStackSize(ItemType.THROW), PlayerItemLibrary.GetItemStackSize(ItemType.THROW)) },
+            { PlayerItemLibrary.Items[PlayerItemLibrary.MEDICINE_ID], new Tuple<int, int>(PlayerItemLibrary.GetItemStackSize(ItemType.CONSUME), PlayerItemLibrary.GetItemStackSize(ItemType.CONSUME)) },
+        };
 
+        // Set up hitbox listener for damage events
         hitbox = GetComponent<Hitbox>();
         hitbox.Handler += new Hitbox.HitboxEventHandler(OnHit);
     }
@@ -249,12 +257,13 @@ public class Player : MonoBehaviour
     // Throw currently equipped item
     public void ThrowItem()
     {
-        if (CurrentItem.Type.Equals(ItemType.THROW))
+        PlayerItem currentItem = GetCurrentEquippedItem();
+        if (currentItem != null && currentItem.Type.Equals(ItemType.THROW))
         {
             // Grab player aim and apply mod to account for throw arc
             Vector2 aim = new Vector2(Aim.ToVector.x, Aim.ToVector.y + THROW_AIM_MOD);
             // Spawn item to be thrown
-            GameObject item = Instantiate(CurrentItem.Prefab);
+            GameObject item = Instantiate(currentItem.Prefab);
             item.transform.position = this.transform.position;
             // Ignore collision with player colliders, this could probably be done better
             BoxCollider2D itemCol = item.GetComponent<BoxCollider2D>();
@@ -262,18 +271,49 @@ public class Player : MonoBehaviour
             Physics2D.IgnoreCollision(itemCol, GetComponent<CircleCollider2D>());
             // Apply throw force to item
             item.GetComponent<Rigidbody2D>().AddForce(aim * THROW_FORCE, ForceMode2D.Impulse);
+            RemoveItemCountFromCurrentEquippedItem();
         }
     }
 
     // Consume currently equipped item
     public void ConsumeItem()
     {
-        if (CurrentItem.Type.Equals(ItemType.CONSUME))
+        PlayerItem currentItem = GetCurrentEquippedItem();
+        if (currentItem != null && currentItem.Type.Equals(ItemType.CONSUME))
         {
-            GameObject item = Instantiate(CurrentItem.Prefab);
+            GameObject item = Instantiate(currentItem.Prefab);
             item.transform.position = this.transform.position;
             item.transform.parent = this.transform;
-            // TODO Remove consumed items from equipped items
+            RemoveItemCountFromCurrentEquippedItem();
+        }
+    }
+
+    private void RemoveItemCountFromCurrentEquippedItem()
+    {
+        // Get current item by index
+        KeyValuePair<PlayerItem, Tuple<int, int>> item = EquippedItems.ElementAt(CurrentEquippedItemIndex);
+        // Subtract one of the uses from the dictionary
+        int amountOfUses = item.Value.Item1;
+        amountOfUses = amountOfUses - 1;
+        // Assign that back to the equipped items dictionary
+        EquippedItems[item.Key] = new Tuple<int, int>(amountOfUses, item.Value.Item2);
+
+        // Remove item from inventory if no longer has any uses
+        if (amountOfUses <= 0)
+        {
+            EquippedItems.Remove(item.Key);
+        }
+    }
+
+    public PlayerItem GetCurrentEquippedItem()
+    {
+        if (EquippedItems.Count > 0)
+        {
+            return EquippedItems.ElementAt(CurrentEquippedItemIndex).Key;
+        }
+        else
+        {
+            return null;
         }
     }
 
@@ -281,30 +321,34 @@ public class Player : MonoBehaviour
 
     private void UseEquipment()
     {
-        doingAction = true;
-        switch (CurrentItem.Type)
+        PlayerItem currentItem = GetCurrentEquippedItem();
+        if (currentItem != null)
         {
-            case ItemType.THROW:
-                if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
-                {
-                    Controller.Flip();
-                }
-                else if (!Controller.FacingRight && (90 > Aim.AimAngle && Aim.AimAngle >= 0 || Aim.AimAngle > 270))
-                {
-                    Controller.Flip();
-                }
-                ActionController.CurrentNonWeaponAttackID = ActionLibrary.THROW_ID;
-                Animator.SetInteger("Aim", (int)Aim.ToEnum);
-                Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
-                Animator.SetTrigger("Action");
-                break;
-            case ItemType.CONSUME:
-                ActionController.CurrentNonWeaponAttackID = ActionLibrary.CONSUME_ID;
-                Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
-                Animator.SetTrigger("Action");
-                break;
-            default:
-                break;
+            doingAction = true;
+            switch (currentItem.Type)
+            {
+                case ItemType.THROW:
+                    if (Controller.FacingRight && (90 < Aim.AimAngle && Aim.AimAngle < 270))
+                    {
+                        Controller.Flip();
+                    }
+                    else if (!Controller.FacingRight && (90 > Aim.AimAngle && Aim.AimAngle >= 0 || Aim.AimAngle > 270))
+                    {
+                        Controller.Flip();
+                    }
+                    ActionController.CurrentNonWeaponAttackID = ActionLibrary.THROW_ID;
+                    Animator.SetInteger("Aim", (int)Aim.ToEnum);
+                    Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
+                    Animator.SetTrigger("Action");
+                    break;
+                case ItemType.CONSUME:
+                    ActionController.CurrentNonWeaponAttackID = ActionLibrary.CONSUME_ID;
+                    Animator.SetInteger("ActionId", ActionController.CurrentNonWeaponAttackID);
+                    Animator.SetTrigger("Action");
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
