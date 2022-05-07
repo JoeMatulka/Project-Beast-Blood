@@ -10,7 +10,6 @@ public class PlayerAim : MonoBehaviour
 
     private const float AIM_RADIUS = 0.75f;
 
-    //TODO implement analog aim
     public bool IsAnalogAim = true;
 
     void Start()
@@ -21,18 +20,42 @@ public class PlayerAim : MonoBehaviour
 
     void Update()
     {
-        AlignCursorWithAim();
+        if (!IsAnalogAim)
+        {
+            AlignCursorWithAim();
+        }
+        else
+        {
+            AnalogAim();
+        }
     }
 
     private void AlignCursorWithAim()
     {
+        Cursor.visible = true;
         // Construct Aim Vector
         Vector3 aimVector = Input.mousePosition;
         aimVector.z = player.position.z - cameraMain.transform.position.z;
         aimVector = cameraMain.ScreenToWorldPoint(aimVector);
         aimVector = aimVector - player.position;
+        ApplyXYtoAimVector(aimVector.y, aimVector.x);
+    }
+
+    private void AnalogAim()
+    {
+        Cursor.visible = false;
+        float aimY = Input.GetAxis("Aim Y");
+        float aimX = Input.GetAxis("Aim X");
+        if (aimX != 0 && aimY != 0)
+        {
+            ApplyXYtoAimVector(aimY, aimX);
+        }
+    }
+
+    private void ApplyXYtoAimVector(float y, float x)
+    {
         // Get angle from Aim Vector
-        AimAngle = Mathf.Atan2(aimVector.y, aimVector.x) * Mathf.Rad2Deg;
+        AimAngle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
         if (AimAngle < 0.0f) AimAngle += 360.0f;
         AimAngle = clampAngle(AimAngle);
         // Apply rotation to aim sprite
