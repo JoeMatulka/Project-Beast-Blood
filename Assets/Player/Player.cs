@@ -136,7 +136,7 @@ public class Player : MonoBehaviour
                 UseEquipment();
             }
 
-            x_input = (attacking && Controller.IsGrounded) || crouch || stopInput || IsDoingAction ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+            x_input = (IsAttacking && Controller.IsGrounded) || crouch || stopInput || (IsDoingAction && Controller.IsGrounded) ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
         }
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
