@@ -84,6 +84,9 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        // Lock flipping on controller for Air controls
+        Controller.LockFlipping = IsAttacking || IsDoingAction;
+        
         // Check for cancel animations in Update since they will be called before in order for the animator to cancel and act within the same frame
         if (Input.GetButtonDown("MainWeaponAction") || Input.GetButtonDown("Equipment") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0 && !stopInput)
         {
@@ -133,7 +136,7 @@ public class Player : MonoBehaviour
                 UseEquipment();
             }
 
-            x_input = attacking || crouch || stopInput || IsDoingAction ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
+            x_input = (attacking && Controller.IsGrounded) || crouch || stopInput || IsDoingAction ? 0 : Input.GetAxisRaw("Horizontal") * RUN_SPEED;
         }
 
         Animator.SetFloat("Speed", Mathf.Abs(x_input));
@@ -327,7 +330,8 @@ public class Player : MonoBehaviour
 
     private void UseEquipment()
     {
-        if (EquippedItems.Count > 0) {
+        if (EquippedItems.Count > 0)
+        {
             KeyValuePair<PlayerItem, Tuple<int, int>> currentItem = EquippedItems.ElementAt(CurrentEquippedItemIndex);
             if (currentItem.Value.Item1 > 0)
             {

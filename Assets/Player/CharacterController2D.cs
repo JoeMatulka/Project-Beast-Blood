@@ -15,6 +15,7 @@ public class CharacterController2D : MonoBehaviour
     const float k_CeilingRadius = .2f; // Radius of the overlap circle to determine if the player can stand up
     private Rigidbody2D m_Rigidbody2D;
     public bool FacingRight = true;  // For determining which way the player is currently facing.
+    public bool LockFlipping = false;
     private Vector3 m_Velocity = Vector3.zero;
 
     [Header("Events")]
@@ -100,13 +101,13 @@ public class CharacterController2D : MonoBehaviour
             m_Rigidbody2D.velocity = Vector3.SmoothDamp(m_Rigidbody2D.velocity, targetVelocity, ref m_Velocity, m_MovementSmoothing);
 
             // If the input is moving the player right and the player is facing left...
-            if (move > 0 && !FacingRight)
+            if (move > 0 && !FacingRight && !LockFlipping)
             {
                 // ... flip the player.
                 Flip();
             }
             // Otherwise if the input is moving the player left and the player is facing right...
-            else if (move < 0 && FacingRight)
+            else if (move < 0 && FacingRight && !LockFlipping)
             {
                 // ... flip the player.
                 Flip();
