@@ -19,7 +19,7 @@ public class PlayerWeaponController : MonoBehaviour
     // Length of ray cast when weapon attacks
     private float weaponAttackRayLength;
     private readonly float diagonalWeaponRayMod = .25f;
-    private readonly float playerCenterOffset = .25f;
+    private readonly float playerCenterOffset = .2f;
     private readonly float playerCrouchOffect = .15f;
 
     private Vector2 defaultPosition;
@@ -65,13 +65,17 @@ public class PlayerWeaponController : MonoBehaviour
         //Determine Vector Direction based off of Aim Direction (It's not part of the enum since the AimDirection is used by the animator)
         Vector3 rayDirection = direction;
         float attackLength = weaponAttackRayLength;
-        if (rayDirection.Equals(new Vector2(1, 1)) || rayDirection.Equals(new Vector2(1, -1)))
+        // Activate weapon raycast from offset of center of player
+        Vector2 center = transform.position + (rayDirection * playerCenterOffset);
+
+        // Adjust for diagonal raycasts
+        if (Mathf.Abs(rayDirection.x) == 1 && Mathf.Abs(rayDirection.y) == 1)
         {
             // This is because rays are drawn longer at a diagonal angle from origin
             attackLength -= diagonalWeaponRayMod;
+
+            center = rayDirection.y > 0 ? new Vector2(center.x, center.y + diagonalWeaponRayMod) : new Vector2(center.x, center.y - diagonalWeaponRayMod);
         }
-        // Activate weapon raycast from offset of center of player
-        Vector2 center = transform.position + (rayDirection * playerCenterOffset);
 
         RaycastHit2D[] hits = Physics2D.RaycastAll(center, rayDirection, attackLength, playerLayerMask);
         Debug.DrawRay(center, rayDirection * attackLength, Color.green);
@@ -159,5 +163,5 @@ public static class WeaponAttackFrameLibrary
         { 5, new WeaponAttackFrame(true, false) },
         { 12, new WeaponAttackFrame(false, true) },
     };
-    public static float ONE_HAND_ATK_WEAPON_LENGTH = .8f;
+    public static float ONE_HAND_ATK_WEAPON_LENGTH = .45f;
 }
