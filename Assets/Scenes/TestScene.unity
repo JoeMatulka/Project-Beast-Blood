@@ -3061,6 +3061,11 @@ PrefabInstance:
       propertyPath: m_Color.a
       value: 0.39215687
       objectReference: {fileID: 0}
+    - target: {fileID: 6060935473022306437, guid: 2ca200b7347fc9f41bad3e8c27f3bbef,
+        type: 3}
+      propertyPath: IsAnalogAim
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6060935473022306438, guid: 2ca200b7347fc9f41bad3e8c27f3bbef,
         type: 3}
       propertyPath: m_Name
@@ -3291,17 +3296,17 @@ PrefabInstance:
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1347943.9
+      value: 1553082.5
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -487799.8
+      value: -562037.25
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 7389379.5
+      value: 8513955
       objectReference: {fileID: 0}
     - target: {fileID: 6688908835556643036, guid: 3103ff3613db98445bf9cc39f12f9c1f,
         type: 3}

@@ -46,20 +46,21 @@ public class PlayerAim : MonoBehaviour
         Cursor.visible = false;
         float aimY = Input.GetAxis("Aim Y");
         float aimX = Input.GetAxis("Aim X");
-        if (aimX != 0 && aimY != 0)
-        {
-            ApplyXYtoAimVector(aimY, aimX);
-        }
+        ApplyXYtoAimVector(aimY, aimX, false);
+
     }
 
-    private void ApplyXYtoAimVector(float y, float x)
+    private void ApplyXYtoAimVector(float y, float x, bool allowZeroes = true)
     {
-        // Get angle from Aim Vector
-        AimAngle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
-        if (AimAngle < 0.0f) AimAngle += 360.0f;
-        AimAngle = clampAngle(AimAngle);
-        // Apply rotation to aim sprite
-        transform.localEulerAngles = new Vector3(0, 0, AimAngle);
+        if (!allowZeroes && (y != 0 && x != 0) || allowZeroes)
+        {
+            // Get angle from Aim Vector
+            AimAngle = Mathf.Atan2(y, x) * Mathf.Rad2Deg;
+            if (AimAngle < 0.0f) AimAngle += 360.0f;
+            AimAngle = clampAngle(AimAngle);
+            // Apply rotation to aim sprite
+            transform.localEulerAngles = new Vector3(0, 0, AimAngle);
+        }
         // Apply positioning off of radius
         float xPos = Mathf.Cos(Mathf.Deg2Rad * AimAngle) * AIM_RADIUS;
         float yPos = Mathf.Sin(Mathf.Deg2Rad * AimAngle) * AIM_RADIUS;
