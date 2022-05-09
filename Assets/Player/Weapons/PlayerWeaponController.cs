@@ -3,6 +3,7 @@ using Gamekit2D;
 using HitboxSystem;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator))]
@@ -41,6 +42,11 @@ public class PlayerWeaponController : MonoBehaviour
         AssignAttackFrames();
         AssignHolsteredSprite();
         SetHolsteredWeaponSprite();
+    }
+
+    private void Start()
+    {
+        ApplyWeaponEffects();
     }
 
     void Update()
@@ -128,6 +134,11 @@ public class PlayerWeaponController : MonoBehaviour
         Animator.SetInteger("Aim", aim);
         Animator.SetInteger("WeaponType", (int)player.EquippedWeapon.Type);
         Animator.SetInteger("WeaponSpriteType", (int)player.EquippedWeapon.Sprite);
+    }
+
+    public void ApplyWeaponEffects()
+    {
+        m_renderer.materials = player.EquippedWeapon.Materials.Concat(m_renderer.materials).ToArray();
     }
 
     public void EndWeaponAttack()

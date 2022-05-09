@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using ResourceManager;
+using System.Collections.Generic;
+using UnityEngine;
 
 public enum WeaponType
 {
@@ -20,12 +22,15 @@ public struct PlayerWeapon
 
     public readonly WeaponSpriteType Sprite;
 
-    public PlayerWeapon(string name, Damage damage, WeaponType type, WeaponSpriteType sprite)
+    public readonly Material[] Materials;
+
+    public PlayerWeapon(string name, Damage damage, WeaponType type, WeaponSpriteType sprite, Material[] materials = null)
     {
         this.Name = name;
         this.Damage = damage;
         this.Type = type;
         this.Sprite = sprite;
+        this.Materials = materials != null ? materials : new Material[] { };
     }
 }
 
@@ -42,20 +47,20 @@ public static class PlayerWeaponLibrary
     public static Dictionary<int, PlayerWeapon> Weapons = new Dictionary<int, PlayerWeapon> {
         { IRON_SWORD_ID, new PlayerWeapon("Iron Sword", new Damage(50, DamageElementType.RAW, new Dictionary<DamageModType, float>() {
             { DamageModType.STRIKE, 1f}, { DamageModType.CHOP, 1f}, { DamageModType.SHARP, 3f},
-        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) },
+        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD, new Material[] { EffectsManager.Instance.WeaponIronMaterial }) },
         // TODO Change Sprite type to mace when sprites exist
         { IRON_MACE_ID, new PlayerWeapon("Iron Mace", new Damage(50, DamageElementType.RAW, new Dictionary<DamageModType, float>() {
             { DamageModType.STRIKE, 3f}, { DamageModType.CHOP, 1f}, { DamageModType.SHARP, 1f},
-        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) },
+        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD, new Material[] { EffectsManager.Instance.WeaponIronMaterial }) },
         // TODO Change Sprite type to axe when sprites exist
         { IRON_AXE_ID, new PlayerWeapon("Iron Axe", new Damage(50, DamageElementType.RAW, new Dictionary<DamageModType, float>() {
             { DamageModType.STRIKE, 1f}, { DamageModType.CHOP, 3f}, { DamageModType.SHARP, 1f},
-        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) },
+        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD, new Material[] { EffectsManager.Instance.WeaponIronMaterial }) },
         { WARM_IRON_SWORD_ID, new PlayerWeapon("Warm Iron Sword", new Damage(50, DamageElementType.FIRE, new Dictionary<DamageModType, float>() {
             { DamageModType.STRIKE, 1f}, { DamageModType.CHOP, 1f}, { DamageModType.SHARP, 1f},
-        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) },
+        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD, new Material[] { EffectsManager.Instance.WeaponWarmMaterial }) },
         { RUSTY_IRON_SWORD_ID, new PlayerWeapon("Rusty Iron Sword", new Damage(50, DamageElementType.POISON, new Dictionary<DamageModType, float>() {
             { DamageModType.STRIKE, 1f}, { DamageModType.CHOP, 1f}, { DamageModType.SHARP, 1f},
-        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD) }
+        }), WeaponType.ONE_HAND, WeaponSpriteType.SWORD, new Material[] { EffectsManager.Instance.WeaponRustyMaterial }) }
     };
 }

@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
 
         // TODO These should come from some inventory load out in the future
-        EquippedWeapon = PlayerWeaponLibrary.Weapons[PlayerWeaponLibrary.IRON_SWORD_ID];
+        EquippedWeapon = PlayerWeaponLibrary.Weapons[PlayerWeaponLibrary.WARM_IRON_SWORD_ID];
         EquippedItems = new Dictionary<PlayerItem, Tuple<int, int>>()
         {
             { PlayerItemLibrary.Items[PlayerItemLibrary.FIREBOMB_ID], new Tuple<int, int>(PlayerItemLibrary.GetItemStackSize(ItemType.THROW), PlayerItemLibrary.GetItemStackSize(ItemType.THROW)) },

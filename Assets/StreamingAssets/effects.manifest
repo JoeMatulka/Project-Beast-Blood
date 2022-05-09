@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 3501001994
+CRC: 3319122451
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 25fb96985fbaabecec165233ef44b348
+    Hash: 2ee84c82330864e3ccc135a6a0c98e05
   TypeTreeHash:
     serializedVersion: 2
     Hash: c94d7c9eaa4fd9e6ee871e066c63881b
@@ -30,8 +30,10 @@ ClassTypes:
 - Class: 199
   Script: {instanceID: 0}
 Assets:
+- Assets/Shaders/Weapon/Iron/Iron.mat
 - Assets/Shaders/Fire/Burning.mat
 - Assets/Shaders/Bloodied/Bloodied.mat
+- Assets/Shaders/Weapon/Warm/Warm.mat
 - Assets/Effects/Fire/Fire_Burning.prefab
 - Assets/Effects/Fire/Smolder/Smolder.prefab
 - Assets/Effects/Gore/Blood Spurt.prefab
@@ -39,4 +41,5 @@ Assets:
 - Assets/Effects/Gore/Bleeding.prefab
 - Assets/Effects/Gore/Blood Splash.prefab
 - Assets/Shaders/Poison/Poisoned.mat
+- Assets/Shaders/Weapon/Rusty/Rusty.mat
 Dependencies: []

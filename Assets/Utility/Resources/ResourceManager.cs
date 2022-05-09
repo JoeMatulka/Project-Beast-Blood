@@ -69,6 +69,26 @@ namespace ResourceManager
         {
             get { return effectsBundle.LoadAsset<GameObject>("Fire_Explosion"); }
         }
+
+        public Material WeaponShine
+        {
+            get { return effectsBundle.LoadAsset<Material>("Shine"); }
+        }
+
+        public Material WeaponIronMaterial
+        {
+            get { return effectsBundle.LoadAsset<Material>("Iron"); }
+        }
+
+        public Material WeaponWarmMaterial
+        {
+            get { return effectsBundle.LoadAsset<Material>("Warm"); }
+        }
+
+        public Material WeaponRustyMaterial
+        {
+            get { return effectsBundle.LoadAsset<Material>("Rusty"); }
+        }
     }
 
     // Used to manage projectiles produced in the game
