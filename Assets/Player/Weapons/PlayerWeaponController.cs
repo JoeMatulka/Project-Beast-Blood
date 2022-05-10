@@ -138,7 +138,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     public void ApplyWeaponEffects()
     {
-        m_renderer.materials = player.EquippedWeapon.Materials.Concat(m_renderer.materials).ToArray();
+        m_renderer.materials = player.EquippedWeapon.Materials;
     }
 
     public void EndWeaponAttack()

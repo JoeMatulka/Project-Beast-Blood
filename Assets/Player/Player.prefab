@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 0}
+  OneHandedSwordHolsteredSprite: {fileID: 0}
 --- !u!212 &4566971364188076487
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -228,6 +229,7 @@ MonoBehaviour:
   m_GroundCheck: {fileID: 6369137423344314469}
   m_CrouchDisableCollider: {fileID: 6369137422292609764}
   FacingRight: 1
+  LockFlipping: 0
   OnLandEvent:
     m_PersistentCalls:
       m_Calls:
@@ -326,6 +328,7 @@ MonoBehaviour:
   Animator: {fileID: 6369137422292609762}
   Aim: {fileID: 0}
   ActionController: {fileID: 0}
+  CurrentEquippedItemIndex: 0
   stopInput: 0
   CanCancelAnim: 0
 --- !u!95 &6369137422292609762
@@ -374,6 +377,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Player: {fileID: 0}
   GameCamera: {fileID: 0}
+  WeaponController: {fileID: 0}
   fatalAttackCreature: {fileID: 0}
 --- !u!1 &6369137423266479196
 GameObject:

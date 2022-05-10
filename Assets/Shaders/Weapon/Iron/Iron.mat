@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Iron
-  m_Shader: {fileID: -6465566751694194690, guid: ff2862ecbcfde124f81afd8fbf3cc36d,
+  m_Shader: {fileID: -6465566751694194690, guid: abb6b22611123c2438fa663c6389014f,
     type: 3}
   m_ShaderKeywords: ETC1_EXTERNAL_ALPHA
   m_LightmapFlags: 4
@@ -21,7 +21,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: fcdc205b77e76ec46ac06616077eaed1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats: []
