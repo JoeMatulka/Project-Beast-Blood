@@ -37,7 +37,7 @@ public class Roar : MonoBehaviour
                 Hitbox hitbox = colliders[i].GetComponent<Hitbox>();
                 if (hitbox != null)
                 {
-                    hitbox.ReceiveDamage(ROAR_DMG, this.transform.position);
+                    hitbox.ReceiveDamage(ROAR_DMG, colliders[i].transform.position);
                 }
             }
         }

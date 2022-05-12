@@ -100,14 +100,17 @@ namespace CreatuePartSystems
 
         private void OnHit(object sender, HitboxEventArgs e)
         {
-            float dmgModAmount = DAMAGE_MOD_BASE;
+            // Return if there is no damage value
+            if (e.Damage.Value <= 0) return;
             // Apply part damage is part is breakable and break it if part health is depleted
+            float dmgModAmount = DAMAGE_MOD_BASE;
             if (IsBreakable & !isBroken)
             {
                 // Sharp modifier increases damage to parts
                 float partDamage = e.Damage.Mods[DamageModType.SHARP] * e.Damage.Value;
                 PartHealth -= partDamage;
                 isBroken = PartHealth <= 0;
+                // If hit breaks part, apply effects to part
                 if (isBroken)
                 {
                     dmgModAmount = DAMAGE_MOD_FRESH_BREAK;
@@ -119,6 +122,9 @@ namespace CreatuePartSystems
             // If incoming damage is FIRE, apply buring build up and burn status if threshold is met
             if (e.Damage.Type.Equals(DamageElementType.FIRE) && !creature.isBurning)
             {
+                // Spawn small blood splash for hit effect
+                GameObject spark = EffectsManager.Instance.Spark;
+                Instantiate(spark, e.Damage.Position, Quaternion.identity, this.transform);
                 BurnBuildUp += e.Damage.Value;
                 if (BurnBuildUp >= creature.Stats.BurnThreshold) ApplyBurningEffectsToPart();
             }
@@ -128,7 +134,16 @@ namespace CreatuePartSystems
                 PoisonBuildUp += e.Damage.Value;
                 if (PoisonBuildUp >= creature.Stats.PoisonThreshold) ApplyPoisonedEffectsToPart();
             }
-
+            // Spawn small blood splash for hit effect
+            if (dmgModAmount != DAMAGE_MOD_BROKEN)
+            {
+                // Only apply blood splash if part is not broken to give some feedback that not as much damage is being done, damage numbers may help this as well
+                GameObject splash = EffectsManager.Instance.BloodSplashSmall;
+                ParticleSystem.MainModule splashSettings = splash.GetComponent<ParticleSystem>().main;
+                splashSettings.startColor = creature.BloodColor;
+                Instantiate(splash, e.Damage.Position, Quaternion.identity, this.transform);
+            }
+            // Damage part
             creature.Damage(e.Damage, DamageModifier, dmgModAmount);
         }
 
@@ -139,7 +154,7 @@ namespace CreatuePartSystems
             Transform effectParent = this.transform;
             Color bloodColor = creature.BloodColor;
             // Create Blood Splash
-            GameObject splash = EffectsManager.Instance.BloodSplash;
+            GameObject splash = EffectsManager.Instance.BloodSplashLarge;
             ParticleSystem.MainModule splashSettings = splash.GetComponent<ParticleSystem>().main;
             splashSettings.startColor = bloodColor;
             Instantiate(splash, effectPos, effectRot, effectParent);

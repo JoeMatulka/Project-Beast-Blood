@@ -38,7 +38,7 @@ public class Explosion : MonoBehaviour
                 Hitbox hitbox = colliders[i].GetComponent<Hitbox>();
                 if (hitbox != null)
                 {
-                    hitbox.ReceiveDamage(Damage, this.transform.position);
+                    hitbox.ReceiveDamage(Damage, colliders[i].transform.position);
                 }
             }
             yield return new WaitForFixedUpdate();

@@ -90,7 +90,7 @@ public class PlayerWeaponController : MonoBehaviour
             if (hit.collider != null)
             {
                 // If the hit has a hitbox to receive damage, then damage it
-                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(player.EquippedWeapon.Damage, player.transform.position);
+                hit.collider.GetComponent<Hitbox>()?.ReceiveDamage(player.EquippedWeapon.Damage, hit.point);
                 // If the hit is a creature that is staggered, perform a fatal attack
                 Creature creature = hit.collider.transform.root.GetComponent<Creature>();
                 if (creature != null && creature.IsStaggered)

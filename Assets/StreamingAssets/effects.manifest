@@ -1,12 +1,12 @@
 ManifestFileVersion: 0
-CRC: 305063072
+CRC: 1036337256
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 91f641131399b684dea0bf39c4785729
+    Hash: 5b5d17f2f1e434ab72760e70788cac48
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c94d7c9eaa4fd9e6ee871e066c63881b
+    Hash: 59fe110650f2bedf9b7e6e0b7e915f02
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -16,6 +16,8 @@ ClassTypes:
 - Class: 21
   Script: {instanceID: 0}
 - Class: 28
+  Script: {instanceID: 0}
+- Class: 43
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
@@ -31,15 +33,17 @@ ClassTypes:
   Script: {instanceID: 0}
 Assets:
 - Assets/Shaders/Weapon/Iron/Iron.mat
+- Assets/Effects/Fire/Spark/Spark.prefab
 - Assets/Shaders/Fire/Burning.mat
 - Assets/Shaders/Bloodied/Bloodied.mat
 - Assets/Shaders/Weapon/Warm/Warm.mat
 - Assets/Effects/Fire/Fire_Burning.prefab
 - Assets/Effects/Fire/Smolder/Smolder.prefab
 - Assets/Effects/Gore/Blood Spurt.prefab
+- Assets/Effects/Gore/Blood Splash Small.prefab
 - Assets/Effects/Fire/Explosion/Fire_Explosion.prefab
 - Assets/Effects/Gore/Bleeding.prefab
-- Assets/Effects/Gore/Blood Splash.prefab
+- Assets/Effects/Gore/Blood Splash Large.prefab
 - Assets/Shaders/Poison/Poisoned.mat
 - Assets/Shaders/Weapon/Rusty/Rusty.mat
 Dependencies: []

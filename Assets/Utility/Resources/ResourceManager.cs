@@ -31,9 +31,14 @@ namespace ResourceManager
             get { return effectsBundle.LoadAsset<Material>("Bloodied"); }
         }
 
-        public GameObject BloodSplash
+        public GameObject BloodSplashLarge
         {
-            get { return effectsBundle.LoadAsset<GameObject>("Blood Splash"); }
+            get { return effectsBundle.LoadAsset<GameObject>("Blood Splash Large"); }
+        }
+
+        public GameObject BloodSplashSmall
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Blood Splash Small"); }
         }
 
         public GameObject BloodSpurt
@@ -45,6 +50,12 @@ namespace ResourceManager
         {
             get { return effectsBundle.LoadAsset<GameObject>("Smolder"); }
         }
+
+        public GameObject Spark
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Spark");  }
+        }
+
         public GameObject Bleeding
         {
             get { return effectsBundle.LoadAsset<GameObject>("Bleeding"); }

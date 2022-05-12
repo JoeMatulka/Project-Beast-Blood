@@ -457,7 +457,7 @@ namespace CreatureSystems
             switch (fx)
             {
                 case CreatureOnEffect.BloodSplash:
-                    effect = EffectsManager.Instance.BloodSplash;
+                    effect = EffectsManager.Instance.BloodSplashLarge;
                     break;
                 case CreatureOnEffect.BloodSpurt:
                     effect = EffectsManager.Instance.BloodSpurt;
