@@ -70,7 +70,7 @@ public class Player : MonoBehaviour
         SceneLinkedSMB<Player>.Initialise(Animator, this);
 
         // TODO These should come from some inventory load out in the future
-        EquippedWeapon = PlayerWeaponLibrary.Weapons[PlayerWeaponLibrary.WARM_IRON_SWORD_ID];
+        EquippedWeapon = PlayerWeaponLibrary.Weapons[PlayerWeaponLibrary.IRON_SWORD_ID];
         EquippedItems = new Dictionary<PlayerItem, Tuple<int, int>>()
         {
             { PlayerItemLibrary.Items[PlayerItemLibrary.FIREBOMB_ID], new Tuple<int, int>(PlayerItemLibrary.GetItemStackSize(ItemType.THROW), PlayerItemLibrary.GetItemStackSize(ItemType.THROW)) },
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
     {
         // Lock flipping on controller for Air controls
         Controller.LockFlipping = IsAttacking || IsDoingAction;
-        
+
         // Check for cancel animations in Update since they will be called before in order for the animator to cancel and act within the same frame
         if (Input.GetButtonDown("MainWeaponAction") || Input.GetButtonDown("Equipment") || Mathf.Abs(Input.GetAxisRaw("Horizontal")) > 0 && !stopInput)
         {
@@ -192,6 +192,9 @@ public class Player : MonoBehaviour
             Vector3 dmgPos = dmg.Position;
             Vector3 forceDir = Vector3.zero;
 
+            // If no damage values are being applied return
+            if (damage <= 0) return;
+
             Animator.SetInteger("DamageId", 0);
             if (DMG_KNOCKBACK_THRESHOLD <= damage || !Controller.IsGrounded)
             {
@@ -224,7 +227,22 @@ public class Player : MonoBehaviour
                 Animator.SetInteger("DamageId", (int)PlayerDamageId.LIGHT);
             }
             Animator.SetTrigger("Damage");
-            // TODO Apply Hit spark here
+
+            // spawn hit spark
+            if (dmg.Type.Equals(DamageElementType.FIRE))
+            {
+                // Spawn fire spark for hit effect
+                GameObject spark = EffectsManager.Instance.Spark;
+                Instantiate(spark, this.transform.position, Quaternion.identity, this.transform);
+            }
+            else if (dmg.Type.Equals(DamageElementType.POISON))
+            {
+                // Spawn poison puff for hit effect
+                GameObject puff = EffectsManager.Instance.PoisonPuff;
+                Instantiate(puff, this.transform.position, Quaternion.identity, this.transform);
+            }
+            GameObject splash = EffectsManager.Instance.BloodSplashSmall;
+            Instantiate(splash, this.transform.position, Quaternion.identity, this.transform);
 
             Health -= damage;
         }

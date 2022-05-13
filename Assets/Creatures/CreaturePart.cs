@@ -122,7 +122,7 @@ namespace CreatuePartSystems
             // If incoming damage is FIRE, apply buring build up and burn status if threshold is met
             if (e.Damage.Type.Equals(DamageElementType.FIRE) && !creature.isBurning)
             {
-                // Spawn small blood splash for hit effect
+                // Spawn fire spark for hit effect
                 GameObject spark = EffectsManager.Instance.Spark;
                 Instantiate(spark, e.Damage.Position, Quaternion.identity, this.transform);
                 BurnBuildUp += e.Damage.Value;
@@ -131,6 +131,9 @@ namespace CreatuePartSystems
             // If incoming damage is Poison, apply poisoned build up and poison status if threshold is met
             if (e.Damage.Type.Equals(DamageElementType.POISON))
             {
+                // Spawn poison puff for hit effect
+                GameObject puff = EffectsManager.Instance.PoisonPuff;
+                Instantiate(puff, e.Damage.Position, Quaternion.identity, this.transform);
                 PoisonBuildUp += e.Damage.Value;
                 if (PoisonBuildUp >= creature.Stats.PoisonThreshold) ApplyPoisonedEffectsToPart();
             }

@@ -53,7 +53,7 @@ namespace ResourceManager
 
         public GameObject Spark
         {
-            get { return effectsBundle.LoadAsset<GameObject>("Spark");  }
+            get { return effectsBundle.LoadAsset<GameObject>("Spark"); }
         }
 
         public GameObject Bleeding
@@ -69,6 +69,11 @@ namespace ResourceManager
         public Material PoisonedMaterial
         {
             get { return effectsBundle.LoadAsset<Material>("Poisoned"); }
+        }
+
+        public GameObject PoisonPuff
+        {
+            get { return effectsBundle.LoadAsset<GameObject>("Poison_Puff"); }
         }
 
         public GameObject FireBurning

@@ -1,9 +1,9 @@
 ManifestFileVersion: 0
-CRC: 1036337256
+CRC: 2909799164
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5b5d17f2f1e434ab72760e70788cac48
+    Hash: 04bfad4015b4d7999e2a88028ed2a723
   TypeTreeHash:
     serializedVersion: 2
     Hash: 59fe110650f2bedf9b7e6e0b7e915f02
@@ -39,6 +39,7 @@ Assets:
 - Assets/Shaders/Weapon/Warm/Warm.mat
 - Assets/Effects/Fire/Fire_Burning.prefab
 - Assets/Effects/Fire/Smolder/Smolder.prefab
+- Assets/Effects/Poison/Poison_Puff.prefab
 - Assets/Effects/Gore/Blood Spurt.prefab
 - Assets/Effects/Gore/Blood Splash Small.prefab
 - Assets/Effects/Fire/Explosion/Fire_Explosion.prefab
