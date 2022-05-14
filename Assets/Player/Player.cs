@@ -198,10 +198,7 @@ public class Player : MonoBehaviour
             Animator.SetInteger("DamageId", 0);
             if (DMG_KNOCKBACK_THRESHOLD <= damage || !Controller.IsGrounded)
             {
-                // Cancel any animations currently happening
-                ApplyAttackAnimationCancel(true);
-                EndAttack();
-                EndAction();
+                ClearActionsAndAttacksFromDamage();
                 // Face towards damage and apply force direction
                 if (dmgPos.x >= transform.position.x)
                 {
@@ -220,10 +217,7 @@ public class Player : MonoBehaviour
             }
             else if (DMG_LIGHT_THRESHOLD <= damage && DMG_KNOCKBACK_THRESHOLD >= damage)
             {
-                // Cancel any animations currently happening
-                ApplyAttackAnimationCancel(true);
-                EndAttack();
-                EndAction();
+                ClearActionsAndAttacksFromDamage();
                 Animator.SetInteger("DamageId", (int)PlayerDamageId.LIGHT);
             }
             Animator.SetTrigger("Damage");
@@ -243,9 +237,19 @@ public class Player : MonoBehaviour
             }
             GameObject splash = EffectsManager.Instance.BloodSplashSmall;
             Instantiate(splash, this.transform.position, Quaternion.identity, this.transform);
-
             Health -= damage;
         }
+    }
+
+    // Used to ensure you are entering a new animation with a clear animator
+    private void ClearActionsAndAttacksFromDamage() {
+        // Restart damage animation from first
+        Animator.ResetTrigger("Damage");
+
+        // Cancel any animations currently happening
+        ApplyAttackAnimationCancel(true);
+        EndAttack();
+        EndAction();
     }
 
     public void OnLanding()

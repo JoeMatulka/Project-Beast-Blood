@@ -40,10 +40,10 @@ namespace CreatureAttackLibrary
 
         private static CreatureAttackDamageCalculation DEF_ATK_DMG_CALC = (in Damage damage, in CreaturePart attackPart) =>
         {
-            Damage dmg = damage;
+            float damageValue = damage.OriginalValue;
             // Reduce damage when attack part is broken
-            if (attackPart.IsBroken) { dmg = new Damage(damage.Value / 1.5f, damage.Type); }
-            return dmg;
+            if (attackPart.IsBroken) { damageValue = damageValue / 1.5f; }
+            return damageValue;
         };
 
         public static CreatureAttack LowPunch
@@ -115,7 +115,7 @@ namespace CreatureAttackLibrary
                     },
                     (in Damage damage, in CreaturePart attackPart) =>
                     {
-                        return damage;
+                        return 0;
                     },
                     new Damage(0, DamageElementType.RAW)
                 );
@@ -126,7 +126,7 @@ namespace CreatureAttackLibrary
     // Used to determine if the conditions are met for a creature to use a specific attack
     public delegate bool CreatureAttackCondition(in Vector2 targetPos, in Creature creature, in CreaturePart attackPart);
     // Used to calculate the damage of the creature attack, useful for setting affects from broken attack parts
-    public delegate Damage CreatureAttackDamageCalculation(in Damage damage, in CreaturePart attackPart);
+    public delegate float CreatureAttackDamageCalculation(in Damage damage, in CreaturePart attackPart);
 
     public struct CreatureAttackSpriteSwap
     {
@@ -213,7 +213,7 @@ namespace CreatureAttackLibrary
             Damage dmg = this.damage;
             if (attackDmgCalc != null)
             {
-                dmg = attackDmgCalc(dmg, AttackPart);
+                dmg.Value = attackDmgCalc(dmg, AttackPart);
             }
             return dmg;
         }

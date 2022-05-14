@@ -21,7 +21,8 @@ public class Damage
 {
     private Guid id;
 
-    private readonly float value;
+    public float Value;
+    public readonly float OriginalValue;
 
     private readonly DamageElementType element;
 
@@ -38,14 +39,16 @@ public class Damage
     public Damage(float value, DamageElementType element)
     {
         this.id = Guid.NewGuid();
-        this.value = value;
+        this.Value = value;
+        this.OriginalValue = value;
         this.element = element;
     }
 
     public Damage(float value, DamageElementType element, Dictionary<DamageModType, float> mods)
     {
         this.id = Guid.NewGuid();
-        this.value = value;
+        this.Value = value;
+        this.OriginalValue = value;
         this.element = element;
         this.mods = mods;
     }
@@ -53,7 +56,8 @@ public class Damage
     public Damage(float value, DamageElementType element, Vector2 force)
     {
         this.id = Guid.NewGuid();
-        this.value = value;
+        this.Value = value;
+        this.OriginalValue = value;
         this.element = element;
         this.force = force;
     }
@@ -66,11 +70,6 @@ public class Damage
     public Guid ID
     {
         get { return this.id; }
-    }
-
-    public float Value
-    {
-        get { return this.value; }
     }
 
     public Dictionary<DamageModType, float> Mods
